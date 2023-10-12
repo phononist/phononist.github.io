@@ -22,30 +22,33 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"phononist.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":["utterances"],"storage":true,"lazyload":false,"nav":{"utterances":{"order":-2}}},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeIn","post_body":"fadeIn","coll_header":"fadeIn","sidebar":"fadeIn"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+    <meta name="description" content="Consider a crystal in which unit cells are labeled by \(\boldsymbol{l}\), and atoms in each cell are labeled by \(\boldsymbol{b}\). The total energy of the system, noted by \(\mathcal{V}\), can be exp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://phononist.github.io/2023/10/hello-world/index.html">
+<meta property="og:title" content="Solve phonon dispersion relation by the classical approach">
+<meta property="og:url" content="https://phononist.github.io/2023/10/phonon-dispersion/index.html">
 <meta property="og:site_name" content="Harmony Hideaway">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta property="og:description" content="Consider a crystal in which unit cells are labeled by \(\boldsymbol{l}\), and atoms in each cell are labeled by \(\boldsymbol{b}\). The total energy of the system, noted by \(\mathcal{V}\), can be exp">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-10-11T04:14:01.813Z">
-<meta property="article:modified_time" content="2023-10-11T05:28:28.719Z">
+<meta property="og:image" content="https://phononist.github.io/images/2023/dispersion.png">
+<meta property="article:published_time" content="2023-10-12T07:05:00.000Z">
+<meta property="article:modified_time" content="2023-10-12T07:11:50.413Z">
 <meta property="article:author" content="Phononist">
-<meta property="article:tag" content="Hexo">
-<meta property="article:tag" content="Blog">
-<meta property="article:tag" content="Test">
+<meta property="article:tag" content="Phonon">
+<meta property="article:tag" content="Interatomic force constant">
+<meta property="article:tag" content="Dynamical matrix">
+<meta property="article:tag" content="Dispersion relation">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://phononist.github.io/images/2023/dispersion.png">
 
 
-<link rel="canonical" href="https://phononist.github.io/2023/10/hello-world/">
+<link rel="canonical" href="https://phononist.github.io/2023/10/phonon-dispersion/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://phononist.github.io/2023/10/hello-world/","path":"2023/10/hello-world/","title":"Hello World"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://phononist.github.io/2023/10/phonon-dispersion/","path":"2023/10/phonon-dispersion/","title":"Solve phonon dispersion relation by the classical approach"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Hello World | Harmony Hideaway</title>
+<title>Solve phonon dispersion relation by the classical approach | Harmony Hideaway</title>
   
 
 
@@ -132,7 +135,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <div class="sidebar-inner sidebar-overview-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -145,7 +148,6 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#quick-start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -209,7 +211,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://phononist.github.io/2023/10/hello-world/">
+    <link itemprop="mainEntityOfPage" href="https://phononist.github.io/2023/10/phonon-dispersion/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/design/avatar_beer.jpg">
@@ -222,12 +224,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Hello World | Harmony Hideaway">
+      <meta itemprop="name" content="Solve phonon dispersion relation by the classical approach | Harmony Hideaway">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello World
+          Solve phonon dispersion relation by the classical approach
         </h1>
 
         <div class="post-meta-container">
@@ -239,7 +241,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2023-10-10 21:14:01 / Modified: 22:28:28" itemprop="dateCreated datePublished" datetime="2023-10-10T21:14:01-07:00">2023-10-10</time>
+      <time title="Created: 2023-10-12 00:05:00 / Modified: 00:11:50" itemprop="dateCreated datePublished" datetime="2023-10-12T00:05:00-07:00">2023-10-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -247,7 +249,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
+          <a href="/categories/Solid-State-Physics/" itemprop="url" rel="index"><span itemprop="name">Solid State Physics</span></a>
         </span>
     </span>
 
@@ -257,7 +259,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">Word count in article: </span>
-      <span>79</span>
+      <span>1.1k</span>
     </span>
 </div>
 
@@ -267,30 +269,150 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very
-first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for
-more info. If you get any problems when using Hexo, you can find the
-answer in <a
-target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or
-you can ask me on <a
-target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-<h2 id="quick-start">Quick Start</h2>
-<h3 id="create-a-new-post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a
-target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="run-server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="generate-static-files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+    <div class="post-body" itemprop="articleBody"><p>Consider a crystal in which unit cells are labeled by <span
+class="math inline">\(\boldsymbol{l}\)</span>, and atoms in each cell
+are labeled by <span class="math inline">\(\boldsymbol{b}\)</span>. The
+total energy of the system, noted by <span
+class="math inline">\(\mathcal{V}\)</span>, can be expanded using
+Taylor's expansion (greek letters mean direction): <span
+class="math display">\[
+\begin{aligned}
+    \mathcal{V} = &amp; \mathcal{V}_0 +
+\underbrace{\sum_{\boldsymbol{l},\boldsymbol{b}}\sum_{\alpha}
+\Phi_{\alpha}(\boldsymbol{l}\boldsymbol{b})
+u_{\alpha}(\boldsymbol{l}\boldsymbol{b})}_{\mathcal{V}_1} +
+\underbrace{\frac{1}{2}\sum_{\boldsymbol{l},\boldsymbol{b},\boldsymbol{l}&#39;,\boldsymbol{b}&#39;}\sum_{\alpha,\beta}
+\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)u_{\alpha}(\boldsymbol{l}\boldsymbol{b})u_{\beta}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;)}_{\mathcal{V}_2}
++ \cdots\\
+    &amp; \quad +
+\frac{1}{n!}\sum_{\boldsymbol{l}_1,\boldsymbol{b}_1,\boldsymbol{l}_2,\boldsymbol{b}_2,\cdots,\boldsymbol{l}_n,\boldsymbol{b}_n}\sum_{\alpha_1,\alpha_2,\cdots,\alpha_n}\Phi_{\alpha_1,\alpha_2,\cdots,\alpha_n}(\boldsymbol{l}_1,\boldsymbol{b}_1;\boldsymbol{l}_2,\boldsymbol{b}_2;\cdots;\boldsymbol{l}_n,\boldsymbol{b}_n)u_{\alpha_1}(\boldsymbol{l}_1,\boldsymbol{b}_1)\cdots
+u_{\alpha_n}(\boldsymbol{l}_n \boldsymbol{b}_n)
+\end{aligned}
+\]</span> Where we note the nth order interatomic force constants (IFCs)
+using <span class="math inline">\(\Phi\)</span>, and we note <span
+class="math inline">\(u_{\alpha}(\boldsymbol{l}\boldsymbol{b})\)</span>
+represent the spatial deviation of atom <span
+class="math inline">\(\boldsymbol{b}\)</span> in cell <span
+class="math inline">\(\boldsymbol{l}\)</span> along <span
+class="math inline">\(\alpha\)</span> direction.<span id="more"></span> It is clear
+to see that:</p>
+<ul>
+<li>The first order IFCs should be cancelled, that <span
+class="math inline">\(\mathcal{V}_1=0\)</span>, due to that the system
+is stable.</li>
+<li>The second order term <span
+class="math inline">\(\mathcal{V}_2\)</span> represent the combination
+of many interatomic harmonic oscillators.</li>
+</ul>
+<p>Let's ignore the higher order term, keeping only <span
+class="math inline">\(\mathcal{V}_2\)</span>. Using Newton's second law,
+<span class="math display">\[
+F_{\boldsymbol{l}\boldsymbol{b}\alpha} = m_{\boldsymbol{b}}
+\ddot{u}_{\alpha}(\boldsymbol{l}\boldsymbol{b}) =-\frac{\partial
+\mathcal{V}}{\mathcal{u_{\alpha}}(\boldsymbol{l}\boldsymbol{b})}= -
+\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}
+\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+u_{\beta}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;),\quad \forall
+\boldsymbol{l},\boldsymbol{b},\alpha
+\]</span> Note that the above equation exploits the symmetry of second
+order IFCs, that <span
+class="math inline">\(\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+=
+\Phi_{\beta,\alpha}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;,\boldsymbol{l}\boldsymbol{b})\)</span>.
+We now seek a solution in the form of plane waves: <span
+class="math display">\[
+u_{\alpha} (\boldsymbol{l}\boldsymbol{b}) =
+\frac{1}{\sqrt{m_{\boldsymbol{b}}}} \sum_{\boldsymbol{q}}
+U_{\alpha}(\boldsymbol{q};\boldsymbol{b})\exp \big[ i
+\boldsymbol{q}\cdot \boldsymbol{l}-\omega t\big]
+\]</span></p>
+<div class="note info"><ul>
+<li>The purpose of seaking a solution that is multiplied by <span
+class="math inline">\(1/\sqrt{m_{\boldsymbol{b}}}\)</span> is just to
+make the form of dynamical matrix simple and beautiful, so don't be
+confused.</li>
+<li>The value <span
+class="math inline">\(U_{\alpha}(\boldsymbol{q};\boldsymbol{b})\)</span>
+is complex. Specifically, it contains the phase information of atom
+<span class="math inline">\(\boldsymbol{b}\)</span>.</li>
+</ul>
+</div>
+<p>A specific wavevector <span
+class="math inline">\(\boldsymbol{q}\)</span> yields, <span
+class="math display">\[
+\omega^2 \sqrt{m_{\boldsymbol{b}}}
+U_{\alpha}(\boldsymbol{q};\boldsymbol{b}) \exp
+\big[i\boldsymbol{q}\cdot\boldsymbol{l}-\omega t\big] =
+-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;-\omega
+t\big]
+\]</span> Cancel the exponential term on both sides. Notice that due to
+translational invariance, <span
+class="math inline">\(\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)=\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};(\boldsymbol{l}-\boldsymbol{l}&#39;)\boldsymbol{b}&#39;)\)</span>,
+thus, <span class="math display">\[
+\begin{aligned}
+  \omega^2 \sqrt{m_{\boldsymbol{b}}}
+U_{\alpha}(\boldsymbol{q};\boldsymbol{b}) &amp;=
+-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot(\boldsymbol{l}&#39;-\boldsymbol{l})\big]\\
+  &amp;=
+-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};(\boldsymbol{l}&#39;-\boldsymbol{l})\boldsymbol{b}&#39;)
+\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot(\boldsymbol{l}&#39;-\boldsymbol{l})\big]\\
+  &amp;=
+-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;\big]
+\end{aligned}
+\]</span> Therefore, if we note a matrix called "dynamical matrix", as:
+<span class="math display">\[
+D_{\alpha\beta} (\boldsymbol{b}\boldsymbol{b}&#39; | \boldsymbol{q}) =
+\frac{1}{\sqrt{m_{\boldsymbol{b}}m_{\boldsymbol{b}&#39;}}}
+\sum_{\boldsymbol{l}&#39;}
+\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)\exp[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;]
+\]</span> The dynamical equations are thus in the form of matrix
+multiplication, <span class="math display">\[
+\omega^2 U_{\alpha} (\boldsymbol{q};\boldsymbol{b}) =
+\sum_{\boldsymbol{b}&#39;,\beta}D_{\alpha\beta}(\boldsymbol{b}\boldsymbol{b}&#39;|\boldsymbol{q})
+U_{\beta} (\boldsymbol{q};\boldsymbol{b}&#39;)
+\]</span> Solving the above equation, we find that <span
+class="math inline">\(\omega\)</span> is in fact the eigenvalue of the
+dynamical matrix. Due to that <span
+class="math inline">\(D_{\cdot,\cdot}(\cdot,\cdot|\boldsymbol{q})\)</span>
+is a matrix of <span class="math inline">\(3p\times 3p\)</span>, where
+<span class="math inline">\(p\)</span> is the number of atoms per unit
+cell, and <span class="math inline">\(3\)</span> is the directions that
+<span class="math inline">\(\alpha,\beta\)</span> can take, for any
+given <span class="math inline">\(\boldsymbol{q}\)</span>, there are
+<span class="math inline">\(3p\)</span> eigenvalues and <span
+class="math inline">\(3p\)</span> eigenvectors, that correspond to
+different phonon branches.</p>
+<p><strong>Example: 1D diatomic chain</strong></p>
+<p>Consider the 1D diatomic chain as following:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> g     g     g     g     g</span><br><span class="line">---[m]---[M]---[m]---[M]---</span><br><span class="line">     |&lt;--- a ---&gt;|</span><br></pre></td></tr></table></figure>
+<p>The total energy is: <span class="math display">\[
+U= \frac{1}{2}g\sum_n \left[(u_{n,1}-u_{n,2})^2 +
+(u_{n,2}-u_{n+1,1})^2\right]
+\]</span> where <span class="math inline">\(n\)</span> labels the unit
+cell, <span class="math inline">\(1\)</span> and <span
+class="math inline">\(2\)</span> represent <span
+class="math inline">\(M\)</span> or <span
+class="math inline">\(m\)</span>. The dynamical matrix is <span
+class="math inline">\(2\times 2\)</span>, due to that there are two
+atoms in each unit cell, and there is only one direction. According to
+the definition, the dynamical matrix is written as, <span
+class="math display">\[
+D_q = \begin{bmatrix}
+\frac{2g}{M} &amp; -\frac{g}{\sqrt{Mm}}(1+e^{-iqa})\\
+-\frac{g}{\sqrt{Mm}}(1+e^{iqa}) &amp; \frac{2g}{m}
+\end{bmatrix}
+\]</span> The two eigenvalues are: <span class="math display">\[
+\Rightarrow \omega^2 = g \left(\frac{1}{M} + \frac{1}{m}\right) \pm
+g\sqrt{\left(\frac{1}{M} + \frac{1}{m}\right)^2-\frac{4}{Mm}
+\sin^2\left(\frac{qa}{2}\right)}
+\]</span> If we plot the two branches from <span
+class="math inline">\(q=-\pi/a\)</span> to <span
+class="math inline">\(q=\pi/a\)</span>, the dispersion relation will be
+shown as:</p>
+<p><img src="/images/2023/dispersion.png" alt="dispersion" style="zoom: 25%;" /></p>
 
     </div>
 
@@ -300,20 +422,21 @@ target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Hexo/" rel="tag"><i class="fa fa-tag"></i> Hexo</a>
-              <a href="/tags/Blog/" rel="tag"><i class="fa fa-tag"></i> Blog</a>
-              <a href="/tags/Test/" rel="tag"><i class="fa fa-tag"></i> Test</a>
+              <a href="/tags/Phonon/" rel="tag"><i class="fa fa-tag"></i> Phonon</a>
+              <a href="/tags/Interatomic-force-constant/" rel="tag"><i class="fa fa-tag"></i> Interatomic force constant</a>
+              <a href="/tags/Dynamical-matrix/" rel="tag"><i class="fa fa-tag"></i> Dynamical matrix</a>
+              <a href="/tags/Dispersion-relation/" rel="tag"><i class="fa fa-tag"></i> Dispersion relation</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
+                <a href="/2023/10/hello-world/" rel="prev" title="Hello World">
+                  <i class="fa fa-angle-left"></i> Hello World
+                </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/10/phonon-dispersion/" rel="next" title="Solve phonon dispersion relation by the classical approach">
-                  Solve phonon dispersion relation by the classical approach <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
