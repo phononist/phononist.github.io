@@ -33,8 +33,8 @@
 <meta property="article:modified_time" content="2023-10-14T07:18:27.000Z">
 <meta property="article:author" content="Phononist">
 <meta property="article:tag" content="Phonon">
-<meta property="article:tag" content="Scattering">
 <meta property="article:tag" content="Interatomic force constant">
+<meta property="article:tag" content="Scattering">
 <meta property="article:tag" content="Fermi&#39;s golden rule">
 <meta name="twitter:card" content="summary">
 
@@ -260,7 +260,7 @@ operators</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="na
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">Word count in article: </span>
-      <span>5.3k</span>
+      <span>5.4k</span>
     </span>
 </div>
 
@@ -952,7 +952,7 @@ transition rate between initial state <span
 class="math inline">\(i\)</span> and final state <span
 class="math inline">\(j\)</span> by:</p>
 <p><span class="math display">\[
-P_{i\rightarrow j} = \frac{2\pi}{\hbar^2}
+P_{i\rightarrow j} = \frac{2\pi}{\hbar}
 \big|\bra{i}\mathcal{V}_3\ket{j}\big|^2 \delta(E_i-E_j)
 \]</span></p>
 <p>There are two classes of three-phonon scattering:</p>
@@ -968,10 +968,10 @@ class="math inline">\(\boldsymbol{q}\rightarrow\boldsymbol{q}&#39; +
 <p><span class="math display">\[
 \begin{aligned}
     P_{\boldsymbol{q}s,\boldsymbol{q}&#39;s&#39;\rightarrow
-\boldsymbol{q}&#39;&#39;s&#39;&#39;} &amp;= \frac{2\pi}{\hbar^2}
+\boldsymbol{q}&#39;&#39;s&#39;&#39;} &amp;= \frac{2\pi}{\hbar}
 \big|\bra{n_{\boldsymbol{q}s}-1,n_{\boldsymbol{q}&#39;s&#39;}-1,n_{\boldsymbol{q}&#39;&#39;s&#39;&#39;}+1}\mathcal{V}_3\ket{n_{\boldsymbol{q}s},n_{\boldsymbol{q}&#39;s&#39;},n_{\boldsymbol{q}&#39;&#39;s&#39;&#39;}}\big|^2\delta
 (\omega(\boldsymbol{q}s)+\omega(\boldsymbol{q}&#39;s&#39;)-\omega(\boldsymbol{q}&#39;&#39;s&#39;&#39;))\\
-    &amp;= \frac{2\pi}{\hbar^2}
+    &amp;= \frac{2\pi}{\hbar}
 \big|\Phi(-\boldsymbol{q}s,-\boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;)\big|^2
 n_{\boldsymbol{q}s}n_{\boldsymbol{q}&#39;s&#39;}
 (n_{\boldsymbol{q}&#39;&#39;s&#39;&#39;}+1)\delta
@@ -984,7 +984,7 @@ n_{\boldsymbol{q}s}n_{\boldsymbol{q}&#39;s&#39;}
     P_{\boldsymbol{q}s,\boldsymbol{q}&#39;s&#39;\rightarrow
 \boldsymbol{q}&#39;&#39;s&#39;&#39;} -
 P_{\boldsymbol{q}&#39;&#39;s&#39;&#39;,\rightarrow
-\boldsymbol{q}s,\boldsymbol{q}&#39;s&#39;} &amp;= \frac{2\pi}{\hbar^2}
+\boldsymbol{q}s,\boldsymbol{q}&#39;s&#39;} &amp;= \frac{2\pi}{\hbar}
 \big|\Phi(-\boldsymbol{q}s,-\boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;)\big|^2
 \delta
 (\omega(\boldsymbol{q}s)+\omega(\boldsymbol{q}&#39;s&#39;)-\omega(\boldsymbol{q}&#39;&#39;s&#39;&#39;))\\
@@ -1001,7 +1001,7 @@ n_{\boldsymbol{q}&#39;&#39;s&#39;&#39;} \Big]
     P_{\boldsymbol{q}s\rightarrow
 \boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;} -
 P_{\boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;
-\rightarrow \boldsymbol{q}s} &amp;= \frac{2\pi}{\hbar^2}
+\rightarrow \boldsymbol{q}s} &amp;= \frac{2\pi}{\hbar}
 \big|\Phi(\boldsymbol{q}s,-\boldsymbol{q}&#39;s&#39;,-\boldsymbol{q}&#39;&#39;s&#39;&#39;)\big|^2
 \delta
 (\omega(\boldsymbol{q}s)-\omega(\boldsymbol{q}&#39;s&#39;)-\omega(\boldsymbol{q}&#39;&#39;s&#39;&#39;))\\
@@ -1011,6 +1011,24 @@ P_{\boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;
 (n_{\boldsymbol{q}s}+1)n_{\boldsymbol{q}&#39;s&#39;}n_{\boldsymbol{q}&#39;&#39;s&#39;&#39;}\Big]
 \end{aligned}
 \]</span></p>
+<p>Yielding the net three-phonon scattering rate,</p>
+<p><span class="math display">\[
+\begin{aligned}
+    -\left(\frac{\partial n_{\boldsymbol{q}s}}{\partial
+t}\right)_{\text{scatt}} &amp;=
+\sum_{\boldsymbol{q}&#39;s&#39;\boldsymbol{q}&#39;&#39;s&#39;&#39;}
+\left[(P_{\boldsymbol{q}s,\boldsymbol{q}&#39;s&#39;\rightarrow
+\boldsymbol{q}&#39;&#39;s&#39;&#39;} -
+P_{\boldsymbol{q}&#39;&#39;s&#39;&#39;,\rightarrow
+\boldsymbol{q}s,\boldsymbol{q}&#39;s&#39;})  +  \frac{1}{2}
+(P_{\boldsymbol{q}s\rightarrow
+\boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;} -
+P_{\boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;
+\rightarrow \boldsymbol{q}s})\right]
+\end{aligned}
+\]</span></p>
+<p>where the factor <span class="math inline">\(\frac{1}{2}\)</span> is
+to avoid double counting.</p>
 <h1 id="references">References</h1>
 <ol type="1">
 <li>Griffiths's <em>Introduction to quantum mechanics</em>.</li>
@@ -1028,8 +1046,8 @@ Bulk, Disordered, and Nanostructured Materials</em> (MIT 2011).</li>
     <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/Phonon/" rel="tag"><i class="fa fa-tag"></i> Phonon</a>
-              <a href="/tags/Scattering/" rel="tag"><i class="fa fa-tag"></i> Scattering</a>
               <a href="/tags/Interatomic-force-constant/" rel="tag"><i class="fa fa-tag"></i> Interatomic force constant</a>
+              <a href="/tags/Scattering/" rel="tag"><i class="fa fa-tag"></i> Scattering</a>
               <a href="/tags/Fermi-s-golden-rule/" rel="tag"><i class="fa fa-tag"></i> Fermi's golden rule</a>
           </div>
 
@@ -1073,7 +1091,7 @@ Bulk, Disordered, and Nanostructured Materials</em> (MIT 2011).</li>
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="Word count total">6k</span>
+    <span title="Word count total">7k</span>
   </span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>

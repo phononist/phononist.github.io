@@ -1,6 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Hello World</title>
+    <url>/2023/10/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very
+first post. Check <a href="https://hexo.io/docs/">documentation</a> for
+more info. If you get any problems when using Hexo, you can find the
+answer in <a
+href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or
+you can ask me on <a
+href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<span id="more"></span>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="create-a-new-post">Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="run-server">Run server</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="generate-static-files">Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Blog</tag>
+        <tag>Test</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Solve phonon dispersion relation by the classical approach</title>
+    <url>/2023/10/phonon-dispersion/</url>
+    <content><![CDATA[<p>Consider a crystal in which unit cells are labeled by <span
+class="math inline">\(\boldsymbol{l}\)</span>, and atoms in each cell
+are labeled by <span class="math inline">\(\boldsymbol{b}\)</span>. The
+total energy of the system, noted by <span
+class="math inline">\(\mathcal{V}\)</span>, can be expanded using
+Taylor's expansion (greek letters mean direction): <span
+class="math display">\[
+\begin{aligned}
+    \mathcal{V} = &amp; \mathcal{V}_0 +
+\underbrace{\sum_{\boldsymbol{l},\boldsymbol{b}}\sum_{\alpha}
+\Phi_{\alpha}(\boldsymbol{l}\boldsymbol{b})
+u_{\alpha}(\boldsymbol{l}\boldsymbol{b})}_{\mathcal{V}_1} +
+\underbrace{\frac{1}{2}\sum_{\boldsymbol{l},\boldsymbol{b},\boldsymbol{l}&#39;,\boldsymbol{b}&#39;}\sum_{\alpha,\beta}
+\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)u_{\alpha}(\boldsymbol{l}\boldsymbol{b})u_{\beta}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;)}_{\mathcal{V}_2}
++ \cdots\\
+    &amp; \quad +
+\frac{1}{n!}\sum_{\boldsymbol{l}_1,\boldsymbol{b}_1,\boldsymbol{l}_2,\boldsymbol{b}_2,\cdots,\boldsymbol{l}_n,\boldsymbol{b}_n}\sum_{\alpha_1,\alpha_2,\cdots,\alpha_n}\Phi_{\alpha_1,\alpha_2,\cdots,\alpha_n}(\boldsymbol{l}_1,\boldsymbol{b}_1;\boldsymbol{l}_2,\boldsymbol{b}_2;\cdots;\boldsymbol{l}_n,\boldsymbol{b}_n)u_{\alpha_1}(\boldsymbol{l}_1,\boldsymbol{b}_1)\cdots
+u_{\alpha_n}(\boldsymbol{l}_n \boldsymbol{b}_n)
+\end{aligned}
+\]</span> Where we note the nth order interatomic force constants (IFCs)
+using <span class="math inline">\(\Phi\)</span>, and we note <span
+class="math inline">\(u_{\alpha}(\boldsymbol{l}\boldsymbol{b})\)</span>
+represent the spatial deviation of atom <span
+class="math inline">\(\boldsymbol{b}\)</span> in cell <span
+class="math inline">\(\boldsymbol{l}\)</span> along <span
+class="math inline">\(\alpha\)</span> direction.<span id="more"></span> It is clear
+to see that:</p>
+<ul>
+<li>The first order IFCs should be cancelled, that <span
+class="math inline">\(\mathcal{V}_1=0\)</span>, due to that the system
+is stable.</li>
+<li>The second order term <span
+class="math inline">\(\mathcal{V}_2\)</span> represent the combination
+of many interatomic harmonic oscillators.</li>
+</ul>
+<p>Let's ignore the higher order term, keeping only <span
+class="math inline">\(\mathcal{V}_2\)</span>. Using Newton's second law,
+<span class="math display">\[
+F_{\boldsymbol{l}\boldsymbol{b}\alpha} = m_{\boldsymbol{b}}
+\ddot{u}_{\alpha}(\boldsymbol{l}\boldsymbol{b}) =-\frac{\partial
+\mathcal{V}}{\mathcal{u_{\alpha}}(\boldsymbol{l}\boldsymbol{b})}= -
+\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}
+\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+u_{\beta}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;),\quad \forall
+\boldsymbol{l},\boldsymbol{b},\alpha
+\]</span> Note that the above equation exploits the symmetry of second
+order IFCs, that <span
+class="math inline">\(\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+=
+\Phi_{\beta,\alpha}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;,\boldsymbol{l}\boldsymbol{b})\)</span>.
+We now seek a solution in the form of plane waves: <span
+class="math display">\[
+u_{\alpha} (\boldsymbol{l}\boldsymbol{b}) =
+\frac{1}{\sqrt{m_{\boldsymbol{b}}}} \sum_{\boldsymbol{q}}
+U_{\alpha}(\boldsymbol{q};\boldsymbol{b})\exp \big[ i
+\boldsymbol{q}\cdot \boldsymbol{l}-\omega t\big]
+\]</span></p>
+<div class="note info"><ul>
+<li>The purpose of seaking a solution that is multiplied by <span
+class="math inline">\(1/\sqrt{m_{\boldsymbol{b}}}\)</span> is just to
+make the form of dynamical matrix simple and beautiful, so don't be
+confused.</li>
+<li>The value <span
+class="math inline">\(U_{\alpha}(\boldsymbol{q};\boldsymbol{b})\)</span>
+is complex. Specifically, it contains the phase information of atom
+<span class="math inline">\(\boldsymbol{b}\)</span>.</li>
+</ul>
+</div>
+<p>A specific wavevector <span
+class="math inline">\(\boldsymbol{q}\)</span> yields, <span
+class="math display">\[
+\omega^2 \sqrt{m_{\boldsymbol{b}}}
+U_{\alpha}(\boldsymbol{q};\boldsymbol{b}) \exp
+\big[i\boldsymbol{q}\cdot\boldsymbol{l}-\omega t\big] =
+-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;-\omega
+t\big]
+\]</span> Cancel the exponential term on both sides. Notice that due to
+translational invariance, <span
+class="math inline">\(\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)=\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};(\boldsymbol{l}-\boldsymbol{l}&#39;)\boldsymbol{b}&#39;)\)</span>,
+thus, <span class="math display">\[
+\begin{aligned}
+  \omega^2 \sqrt{m_{\boldsymbol{b}}}
+U_{\alpha}(\boldsymbol{q};\boldsymbol{b}) &amp;=
+-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot(\boldsymbol{l}&#39;-\boldsymbol{l})\big]\\
+  &amp;=
+-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};(\boldsymbol{l}&#39;-\boldsymbol{l})\boldsymbol{b}&#39;)
+\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot(\boldsymbol{l}&#39;-\boldsymbol{l})\big]\\
+  &amp;=
+-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;\big]
+\end{aligned}
+\]</span> Therefore, if we note a matrix called "dynamical matrix", as:
+<span class="math display">\[
+D_{\alpha\beta} (\boldsymbol{b}\boldsymbol{b}&#39; | \boldsymbol{q}) =
+\frac{1}{\sqrt{m_{\boldsymbol{b}}m_{\boldsymbol{b}&#39;}}}
+\sum_{\boldsymbol{l}&#39;}
+\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)\exp[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;]
+\]</span> The dynamical equations are thus in the form of matrix
+multiplication, <span class="math display">\[
+\omega^2 U_{\alpha} (\boldsymbol{q};\boldsymbol{b}) =
+\sum_{\boldsymbol{b}&#39;,\beta}D_{\alpha\beta}(\boldsymbol{b}\boldsymbol{b}&#39;|\boldsymbol{q})
+U_{\beta} (\boldsymbol{q};\boldsymbol{b}&#39;)
+\]</span> Solving the above equation, we find that <span
+class="math inline">\(\omega\)</span> is in fact the eigenvalue of the
+dynamical matrix. Due to that <span
+class="math inline">\(D_{\cdot,\cdot}(\cdot,\cdot|\boldsymbol{q})\)</span>
+is a matrix of <span class="math inline">\(3p\times 3p\)</span>, where
+<span class="math inline">\(p\)</span> is the number of atoms per unit
+cell, and <span class="math inline">\(3\)</span> is the directions that
+<span class="math inline">\(\alpha,\beta\)</span> can take, for any
+given <span class="math inline">\(\boldsymbol{q}\)</span>, there are
+<span class="math inline">\(3p\)</span> eigenvalues and <span
+class="math inline">\(3p\)</span> eigenvectors, that correspond to
+different phonon branches.</p>
+<p><strong>Example: 1D diatomic chain</strong></p>
+<p>Consider the 1D diatomic chain as following:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> g     g     g     g     g</span><br><span class="line">---[m]---[M]---[m]---[M]---</span><br><span class="line">     |&lt;--- a ---&gt;|</span><br></pre></td></tr></table></figure>
+<p>The total energy is: <span class="math display">\[
+U= \frac{1}{2}g\sum_n \left[(u_{n,1}-u_{n,2})^2 +
+(u_{n,2}-u_{n+1,1})^2\right]
+\]</span> where <span class="math inline">\(n\)</span> labels the unit
+cell, <span class="math inline">\(1\)</span> and <span
+class="math inline">\(2\)</span> represent <span
+class="math inline">\(M\)</span> or <span
+class="math inline">\(m\)</span>. The dynamical matrix is <span
+class="math inline">\(2\times 2\)</span>, due to that there are two
+atoms in each unit cell, and there is only one direction. According to
+the definition, the dynamical matrix is written as, <span
+class="math display">\[
+D_q = \begin{bmatrix}
+\frac{2g}{M} &amp; -\frac{g}{\sqrt{Mm}}(1+e^{-iqa})\\
+-\frac{g}{\sqrt{Mm}}(1+e^{iqa}) &amp; \frac{2g}{m}
+\end{bmatrix}
+\]</span> The two eigenvalues are: <span class="math display">\[
+\Rightarrow \omega^2 = g \left(\frac{1}{M} + \frac{1}{m}\right) \pm
+g\sqrt{\left(\frac{1}{M} + \frac{1}{m}\right)^2-\frac{4}{Mm}
+\sin^2\left(\frac{qa}{2}\right)}
+\]</span> If we plot the two branches from <span
+class="math inline">\(q=-\pi/a\)</span> to <span
+class="math inline">\(q=\pi/a\)</span>, the dispersion relation will be
+shown as:</p>
+<p><img src="/images/2023/dispersion.png" alt="dispersion" style="zoom: 25%;" /></p>
+]]></content>
+      <categories>
+        <category>Solid State Physics</category>
+      </categories>
+      <tags>
+        <tag>Phonon</tag>
+        <tag>Interatomic force constant</tag>
+        <tag>Dynamical matrix</tag>
+        <tag>Dispersion relation</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Derive phonon scattering rate from anharmonic potential</title>
     <url>/2023/10/anharmonicity/</url>
     <content><![CDATA[<h1 id="hamiltonian-of-a-crystal">Hamiltonian of a crystal</h1>
@@ -685,7 +880,7 @@ transition rate between initial state <span
 class="math inline">\(i\)</span> and final state <span
 class="math inline">\(j\)</span> by:</p>
 <p><span class="math display">\[
-P_{i\rightarrow j} = \frac{2\pi}{\hbar^2}
+P_{i\rightarrow j} = \frac{2\pi}{\hbar}
 \big|\bra{i}\mathcal{V}_3\ket{j}\big|^2 \delta(E_i-E_j)
 \]</span></p>
 <p>There are two classes of three-phonon scattering:</p>
@@ -701,10 +896,10 @@ class="math inline">\(\boldsymbol{q}\rightarrow\boldsymbol{q}&#39; +
 <p><span class="math display">\[
 \begin{aligned}
     P_{\boldsymbol{q}s,\boldsymbol{q}&#39;s&#39;\rightarrow
-\boldsymbol{q}&#39;&#39;s&#39;&#39;} &amp;= \frac{2\pi}{\hbar^2}
+\boldsymbol{q}&#39;&#39;s&#39;&#39;} &amp;= \frac{2\pi}{\hbar}
 \big|\bra{n_{\boldsymbol{q}s}-1,n_{\boldsymbol{q}&#39;s&#39;}-1,n_{\boldsymbol{q}&#39;&#39;s&#39;&#39;}+1}\mathcal{V}_3\ket{n_{\boldsymbol{q}s},n_{\boldsymbol{q}&#39;s&#39;},n_{\boldsymbol{q}&#39;&#39;s&#39;&#39;}}\big|^2\delta
 (\omega(\boldsymbol{q}s)+\omega(\boldsymbol{q}&#39;s&#39;)-\omega(\boldsymbol{q}&#39;&#39;s&#39;&#39;))\\
-    &amp;= \frac{2\pi}{\hbar^2}
+    &amp;= \frac{2\pi}{\hbar}
 \big|\Phi(-\boldsymbol{q}s,-\boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;)\big|^2
 n_{\boldsymbol{q}s}n_{\boldsymbol{q}&#39;s&#39;}
 (n_{\boldsymbol{q}&#39;&#39;s&#39;&#39;}+1)\delta
@@ -717,7 +912,7 @@ n_{\boldsymbol{q}s}n_{\boldsymbol{q}&#39;s&#39;}
     P_{\boldsymbol{q}s,\boldsymbol{q}&#39;s&#39;\rightarrow
 \boldsymbol{q}&#39;&#39;s&#39;&#39;} -
 P_{\boldsymbol{q}&#39;&#39;s&#39;&#39;,\rightarrow
-\boldsymbol{q}s,\boldsymbol{q}&#39;s&#39;} &amp;= \frac{2\pi}{\hbar^2}
+\boldsymbol{q}s,\boldsymbol{q}&#39;s&#39;} &amp;= \frac{2\pi}{\hbar}
 \big|\Phi(-\boldsymbol{q}s,-\boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;)\big|^2
 \delta
 (\omega(\boldsymbol{q}s)+\omega(\boldsymbol{q}&#39;s&#39;)-\omega(\boldsymbol{q}&#39;&#39;s&#39;&#39;))\\
@@ -734,7 +929,7 @@ n_{\boldsymbol{q}&#39;&#39;s&#39;&#39;} \Big]
     P_{\boldsymbol{q}s\rightarrow
 \boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;} -
 P_{\boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;
-\rightarrow \boldsymbol{q}s} &amp;= \frac{2\pi}{\hbar^2}
+\rightarrow \boldsymbol{q}s} &amp;= \frac{2\pi}{\hbar}
 \big|\Phi(\boldsymbol{q}s,-\boldsymbol{q}&#39;s&#39;,-\boldsymbol{q}&#39;&#39;s&#39;&#39;)\big|^2
 \delta
 (\omega(\boldsymbol{q}s)-\omega(\boldsymbol{q}&#39;s&#39;)-\omega(\boldsymbol{q}&#39;&#39;s&#39;&#39;))\\
@@ -744,6 +939,24 @@ P_{\boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;
 (n_{\boldsymbol{q}s}+1)n_{\boldsymbol{q}&#39;s&#39;}n_{\boldsymbol{q}&#39;&#39;s&#39;&#39;}\Big]
 \end{aligned}
 \]</span></p>
+<p>Yielding the net three-phonon scattering rate,</p>
+<p><span class="math display">\[
+\begin{aligned}
+    -\left(\frac{\partial n_{\boldsymbol{q}s}}{\partial
+t}\right)_{\text{scatt}} &amp;=
+\sum_{\boldsymbol{q}&#39;s&#39;\boldsymbol{q}&#39;&#39;s&#39;&#39;}
+\left[(P_{\boldsymbol{q}s,\boldsymbol{q}&#39;s&#39;\rightarrow
+\boldsymbol{q}&#39;&#39;s&#39;&#39;} -
+P_{\boldsymbol{q}&#39;&#39;s&#39;&#39;,\rightarrow
+\boldsymbol{q}s,\boldsymbol{q}&#39;s&#39;})  +  \frac{1}{2}
+(P_{\boldsymbol{q}s\rightarrow
+\boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;} -
+P_{\boldsymbol{q}&#39;s&#39;,\boldsymbol{q}&#39;&#39;s&#39;&#39;
+\rightarrow \boldsymbol{q}s})\right]
+\end{aligned}
+\]</span></p>
+<p>where the factor <span class="math inline">\(\frac{1}{2}\)</span> is
+to avoid double counting.</p>
 <h1 id="references">References</h1>
 <ol type="1">
 <li>Griffiths's <em>Introduction to quantum mechanics</em>.</li>
@@ -757,204 +970,9 @@ Bulk, Disordered, and Nanostructured Materials</em> (MIT 2011).</li>
       </categories>
       <tags>
         <tag>Phonon</tag>
+        <tag>Interatomic force constant</tag>
         <tag>Scattering</tag>
-        <tag>Interatomic force constant</tag>
         <tag>Fermi&#39;s golden rule</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Solve phonon dispersion relation by the classical approach</title>
-    <url>/2023/10/phonon-dispersion/</url>
-    <content><![CDATA[<p>Consider a crystal in which unit cells are labeled by <span
-class="math inline">\(\boldsymbol{l}\)</span>, and atoms in each cell
-are labeled by <span class="math inline">\(\boldsymbol{b}\)</span>. The
-total energy of the system, noted by <span
-class="math inline">\(\mathcal{V}\)</span>, can be expanded using
-Taylor's expansion (greek letters mean direction): <span
-class="math display">\[
-\begin{aligned}
-    \mathcal{V} = &amp; \mathcal{V}_0 +
-\underbrace{\sum_{\boldsymbol{l},\boldsymbol{b}}\sum_{\alpha}
-\Phi_{\alpha}(\boldsymbol{l}\boldsymbol{b})
-u_{\alpha}(\boldsymbol{l}\boldsymbol{b})}_{\mathcal{V}_1} +
-\underbrace{\frac{1}{2}\sum_{\boldsymbol{l},\boldsymbol{b},\boldsymbol{l}&#39;,\boldsymbol{b}&#39;}\sum_{\alpha,\beta}
-\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)u_{\alpha}(\boldsymbol{l}\boldsymbol{b})u_{\beta}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;)}_{\mathcal{V}_2}
-+ \cdots\\
-    &amp; \quad +
-\frac{1}{n!}\sum_{\boldsymbol{l}_1,\boldsymbol{b}_1,\boldsymbol{l}_2,\boldsymbol{b}_2,\cdots,\boldsymbol{l}_n,\boldsymbol{b}_n}\sum_{\alpha_1,\alpha_2,\cdots,\alpha_n}\Phi_{\alpha_1,\alpha_2,\cdots,\alpha_n}(\boldsymbol{l}_1,\boldsymbol{b}_1;\boldsymbol{l}_2,\boldsymbol{b}_2;\cdots;\boldsymbol{l}_n,\boldsymbol{b}_n)u_{\alpha_1}(\boldsymbol{l}_1,\boldsymbol{b}_1)\cdots
-u_{\alpha_n}(\boldsymbol{l}_n \boldsymbol{b}_n)
-\end{aligned}
-\]</span> Where we note the nth order interatomic force constants (IFCs)
-using <span class="math inline">\(\Phi\)</span>, and we note <span
-class="math inline">\(u_{\alpha}(\boldsymbol{l}\boldsymbol{b})\)</span>
-represent the spatial deviation of atom <span
-class="math inline">\(\boldsymbol{b}\)</span> in cell <span
-class="math inline">\(\boldsymbol{l}\)</span> along <span
-class="math inline">\(\alpha\)</span> direction.<span id="more"></span> It is clear
-to see that:</p>
-<ul>
-<li>The first order IFCs should be cancelled, that <span
-class="math inline">\(\mathcal{V}_1=0\)</span>, due to that the system
-is stable.</li>
-<li>The second order term <span
-class="math inline">\(\mathcal{V}_2\)</span> represent the combination
-of many interatomic harmonic oscillators.</li>
-</ul>
-<p>Let's ignore the higher order term, keeping only <span
-class="math inline">\(\mathcal{V}_2\)</span>. Using Newton's second law,
-<span class="math display">\[
-F_{\boldsymbol{l}\boldsymbol{b}\alpha} = m_{\boldsymbol{b}}
-\ddot{u}_{\alpha}(\boldsymbol{l}\boldsymbol{b}) =-\frac{\partial
-\mathcal{V}}{\mathcal{u_{\alpha}}(\boldsymbol{l}\boldsymbol{b})}= -
-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}
-\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
-u_{\beta}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;),\quad \forall
-\boldsymbol{l},\boldsymbol{b},\alpha
-\]</span> Note that the above equation exploits the symmetry of second
-order IFCs, that <span
-class="math inline">\(\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
-=
-\Phi_{\beta,\alpha}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;,\boldsymbol{l}\boldsymbol{b})\)</span>.
-We now seek a solution in the form of plane waves: <span
-class="math display">\[
-u_{\alpha} (\boldsymbol{l}\boldsymbol{b}) =
-\frac{1}{\sqrt{m_{\boldsymbol{b}}}} \sum_{\boldsymbol{q}}
-U_{\alpha}(\boldsymbol{q};\boldsymbol{b})\exp \big[ i
-\boldsymbol{q}\cdot \boldsymbol{l}-\omega t\big]
-\]</span></p>
-<div class="note info"><ul>
-<li>The purpose of seaking a solution that is multiplied by <span
-class="math inline">\(1/\sqrt{m_{\boldsymbol{b}}}\)</span> is just to
-make the form of dynamical matrix simple and beautiful, so don't be
-confused.</li>
-<li>The value <span
-class="math inline">\(U_{\alpha}(\boldsymbol{q};\boldsymbol{b})\)</span>
-is complex. Specifically, it contains the phase information of atom
-<span class="math inline">\(\boldsymbol{b}\)</span>.</li>
-</ul>
-</div>
-<p>A specific wavevector <span
-class="math inline">\(\boldsymbol{q}\)</span> yields, <span
-class="math display">\[
-\omega^2 \sqrt{m_{\boldsymbol{b}}}
-U_{\alpha}(\boldsymbol{q};\boldsymbol{b}) \exp
-\big[i\boldsymbol{q}\cdot\boldsymbol{l}-\omega t\big] =
--\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
-\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;-\omega
-t\big]
-\]</span> Cancel the exponential term on both sides. Notice that due to
-translational invariance, <span
-class="math inline">\(\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)=\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};(\boldsymbol{l}-\boldsymbol{l}&#39;)\boldsymbol{b}&#39;)\)</span>,
-thus, <span class="math display">\[
-\begin{aligned}
-  \omega^2 \sqrt{m_{\boldsymbol{b}}}
-U_{\alpha}(\boldsymbol{q};\boldsymbol{b}) &amp;=
--\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
-\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot(\boldsymbol{l}&#39;-\boldsymbol{l})\big]\\
-  &amp;=
--\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};(\boldsymbol{l}&#39;-\boldsymbol{l})\boldsymbol{b}&#39;)
-\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot(\boldsymbol{l}&#39;-\boldsymbol{l})\big]\\
-  &amp;=
--\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
-\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;\big]
-\end{aligned}
-\]</span> Therefore, if we note a matrix called "dynamical matrix", as:
-<span class="math display">\[
-D_{\alpha\beta} (\boldsymbol{b}\boldsymbol{b}&#39; | \boldsymbol{q}) =
-\frac{1}{\sqrt{m_{\boldsymbol{b}}m_{\boldsymbol{b}&#39;}}}
-\sum_{\boldsymbol{l}&#39;}
-\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)\exp[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;]
-\]</span> The dynamical equations are thus in the form of matrix
-multiplication, <span class="math display">\[
-\omega^2 U_{\alpha} (\boldsymbol{q};\boldsymbol{b}) =
-\sum_{\boldsymbol{b}&#39;,\beta}D_{\alpha\beta}(\boldsymbol{b}\boldsymbol{b}&#39;|\boldsymbol{q})
-U_{\beta} (\boldsymbol{q};\boldsymbol{b}&#39;)
-\]</span> Solving the above equation, we find that <span
-class="math inline">\(\omega\)</span> is in fact the eigenvalue of the
-dynamical matrix. Due to that <span
-class="math inline">\(D_{\cdot,\cdot}(\cdot,\cdot|\boldsymbol{q})\)</span>
-is a matrix of <span class="math inline">\(3p\times 3p\)</span>, where
-<span class="math inline">\(p\)</span> is the number of atoms per unit
-cell, and <span class="math inline">\(3\)</span> is the directions that
-<span class="math inline">\(\alpha,\beta\)</span> can take, for any
-given <span class="math inline">\(\boldsymbol{q}\)</span>, there are
-<span class="math inline">\(3p\)</span> eigenvalues and <span
-class="math inline">\(3p\)</span> eigenvectors, that correspond to
-different phonon branches.</p>
-<p><strong>Example: 1D diatomic chain</strong></p>
-<p>Consider the 1D diatomic chain as following:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> g     g     g     g     g</span><br><span class="line">---[m]---[M]---[m]---[M]---</span><br><span class="line">     |&lt;--- a ---&gt;|</span><br></pre></td></tr></table></figure>
-<p>The total energy is: <span class="math display">\[
-U= \frac{1}{2}g\sum_n \left[(u_{n,1}-u_{n,2})^2 +
-(u_{n,2}-u_{n+1,1})^2\right]
-\]</span> where <span class="math inline">\(n\)</span> labels the unit
-cell, <span class="math inline">\(1\)</span> and <span
-class="math inline">\(2\)</span> represent <span
-class="math inline">\(M\)</span> or <span
-class="math inline">\(m\)</span>. The dynamical matrix is <span
-class="math inline">\(2\times 2\)</span>, due to that there are two
-atoms in each unit cell, and there is only one direction. According to
-the definition, the dynamical matrix is written as, <span
-class="math display">\[
-D_q = \begin{bmatrix}
-\frac{2g}{M} &amp; -\frac{g}{\sqrt{Mm}}(1+e^{-iqa})\\
--\frac{g}{\sqrt{Mm}}(1+e^{iqa}) &amp; \frac{2g}{m}
-\end{bmatrix}
-\]</span> The two eigenvalues are: <span class="math display">\[
-\Rightarrow \omega^2 = g \left(\frac{1}{M} + \frac{1}{m}\right) \pm
-g\sqrt{\left(\frac{1}{M} + \frac{1}{m}\right)^2-\frac{4}{Mm}
-\sin^2\left(\frac{qa}{2}\right)}
-\]</span> If we plot the two branches from <span
-class="math inline">\(q=-\pi/a\)</span> to <span
-class="math inline">\(q=\pi/a\)</span>, the dispersion relation will be
-shown as:</p>
-<p><img src="/images/2023/dispersion.png" alt="dispersion" style="zoom: 25%;" /></p>
-]]></content>
-      <categories>
-        <category>Solid State Physics</category>
-      </categories>
-      <tags>
-        <tag>Phonon</tag>
-        <tag>Interatomic force constant</tag>
-        <tag>Dynamical matrix</tag>
-        <tag>Dispersion relation</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2023/10/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very
-first post. Check <a href="https://hexo.io/docs/">documentation</a> for
-more info. If you get any problems when using Hexo, you can find the
-answer in <a
-href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or
-you can ask me on <a
-href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-<h2 id="quick-start">Quick Start</h2>
-<h3 id="create-a-new-post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="run-server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="generate-static-files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-        <tag>Blog</tag>
-        <tag>Test</tag>
       </tags>
   </entry>
 </search>
