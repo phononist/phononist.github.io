@@ -783,11 +783,13 @@ e_{\beta}^*(\boldsymbol{b}&#39;|\boldsymbol{q}s)
 <p>The derivation of the 2nd term uses the fact that <span
 class="math inline">\(\boldsymbol{e}(\boldsymbol{b}|\boldsymbol{q}s)\)</span>
 is the eigenvector of <span
-class="math inline">\(\boldsymbol{D}(\boldsymbol{q})\)</span>, and the
-corresponding eigenvalue is <span class="math inline">\(\omega
-(\boldsymbol{q}s)^2\)</span>. <strong>Still, the author does not know
-how to eliminate <span class="math inline">\(s&#39;\)</span>. So please
-kindly comment below if you have the answer.</strong></p>
+class="math inline">\(\boldsymbol{D}(\boldsymbol{q})\)</span> (the
+dynamical matrix, see <a href="/2023/10/phonon-dispersion">the previous
+post</a>), and the corresponding eigenvalue is <span
+class="math inline">\(\omega (\boldsymbol{q}s)^2\)</span>.
+<strong>Still, the author does not know how to eliminate <span
+class="math inline">\(s&#39;\)</span>. So please kindly comment below if
+you have the answer.</strong></p>
 <p>As for the 3rd term, we have:</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -818,11 +820,10 @@ e_{\gamma}(\boldsymbol{b}&#39;&#39;|\boldsymbol{q}&#39;&#39;s&#39;&#39;)
 \underbrace{\sum_{\alpha\beta\gamma\boldsymbol{b}\boldsymbol{b}&#39;\boldsymbol{b}&#39;&#39;}\frac{i}{\sqrt{N_0}}
 \sqrt{\frac{\hbar^3}{8m_{\boldsymbol{b}}m_{\boldsymbol{b}&#39;}m_{\boldsymbol{b}&#39;&#39;}\omega
 (\boldsymbol{q}s)\omega (\boldsymbol{q}&#39;s&#39;)\omega
-(\boldsymbol{q}&#39;&#39;s&#39;&#39;)}}
-e_{\alpha}(\boldsymbol{b}|\boldsymbol{q}s)
-\Phi_{\alpha\beta\gamma}(\boldsymbol{q}\boldsymbol{b},
+(\boldsymbol{q}&#39;&#39;s&#39;&#39;)}}  \Phi_{\alpha\beta\gamma}(\boldsymbol{q}\boldsymbol{b},
 \boldsymbol{q}&#39;\boldsymbol{b}&#39;,
 \boldsymbol{q}&#39;&#39;\boldsymbol{b}&#39;&#39;)
+e_{\alpha}(\boldsymbol{b}|\boldsymbol{q}s)
 e_{\beta}(\boldsymbol{b}&#39;|\boldsymbol{q}&#39;s&#39;)
 e_{\gamma}(\boldsymbol{b}&#39;&#39;|\boldsymbol{q}&#39;&#39;s&#39;&#39;)
 }_{\equiv \Phi
@@ -936,7 +937,7 @@ equation,</p>
 \bra{n_{\boldsymbol{q}s}} \hat{a}_{\boldsymbol{q}s}^\dagger
 \hat{a}_{\boldsymbol{q}s} \ket{n_{\boldsymbol{q}s}} =
 n_{\boldsymbol{q}s} = n_{\boldsymbol{q}s}
-\braket{n_{n_{\boldsymbol{q}s}-1|\boldsymbol{q}s}-1}
+\braket{n_{\boldsymbol{q}s}-1|n_{\boldsymbol{q}s}-1}
 \]</span></p>
 <p>Thus <span
 class="math inline">\(\hat{a}_{\boldsymbol{q}s}\ket{n_{\boldsymbol{q}s}}

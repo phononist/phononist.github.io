@@ -1,43 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2023/10/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very
-first post. Check <a href="https://hexo.io/docs/">documentation</a> for
-more info. If you get any problems when using Hexo, you can find the
-answer in <a
-href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or
-you can ask me on <a
-href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-<h2 id="quick-start">Quick Start</h2>
-<h3 id="create-a-new-post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="run-server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="generate-static-files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-        <tag>Blog</tag>
-        <tag>Test</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Derive phonon scattering rate from anharmonic potential</title>
     <url>/2023/10/anharmonicity/</url>
     <content><![CDATA[<h1 id="hamiltonian-of-a-crystal">Hamiltonian of a crystal</h1>
@@ -553,11 +516,13 @@ e_{\beta}^*(\boldsymbol{b}&#39;|\boldsymbol{q}s)
 <p>The derivation of the 2nd term uses the fact that <span
 class="math inline">\(\boldsymbol{e}(\boldsymbol{b}|\boldsymbol{q}s)\)</span>
 is the eigenvector of <span
-class="math inline">\(\boldsymbol{D}(\boldsymbol{q})\)</span>, and the
-corresponding eigenvalue is <span class="math inline">\(\omega
-(\boldsymbol{q}s)^2\)</span>. <strong>Still, the author does not know
-how to eliminate <span class="math inline">\(s&#39;\)</span>. So please
-kindly comment below if you have the answer.</strong></p>
+class="math inline">\(\boldsymbol{D}(\boldsymbol{q})\)</span> (the
+dynamical matrix, see <a href="/2023/10/phonon-dispersion">the previous
+post</a>), and the corresponding eigenvalue is <span
+class="math inline">\(\omega (\boldsymbol{q}s)^2\)</span>.
+<strong>Still, the author does not know how to eliminate <span
+class="math inline">\(s&#39;\)</span>. So please kindly comment below if
+you have the answer.</strong></p>
 <p>As for the 3rd term, we have:</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -588,11 +553,10 @@ e_{\gamma}(\boldsymbol{b}&#39;&#39;|\boldsymbol{q}&#39;&#39;s&#39;&#39;)
 \underbrace{\sum_{\alpha\beta\gamma\boldsymbol{b}\boldsymbol{b}&#39;\boldsymbol{b}&#39;&#39;}\frac{i}{\sqrt{N_0}}
 \sqrt{\frac{\hbar^3}{8m_{\boldsymbol{b}}m_{\boldsymbol{b}&#39;}m_{\boldsymbol{b}&#39;&#39;}\omega
 (\boldsymbol{q}s)\omega (\boldsymbol{q}&#39;s&#39;)\omega
-(\boldsymbol{q}&#39;&#39;s&#39;&#39;)}}
-e_{\alpha}(\boldsymbol{b}|\boldsymbol{q}s)
-\Phi_{\alpha\beta\gamma}(\boldsymbol{q}\boldsymbol{b},
+(\boldsymbol{q}&#39;&#39;s&#39;&#39;)}}  \Phi_{\alpha\beta\gamma}(\boldsymbol{q}\boldsymbol{b},
 \boldsymbol{q}&#39;\boldsymbol{b}&#39;,
 \boldsymbol{q}&#39;&#39;\boldsymbol{b}&#39;&#39;)
+e_{\alpha}(\boldsymbol{b}|\boldsymbol{q}s)
 e_{\beta}(\boldsymbol{b}&#39;|\boldsymbol{q}&#39;s&#39;)
 e_{\gamma}(\boldsymbol{b}&#39;&#39;|\boldsymbol{q}&#39;&#39;s&#39;&#39;)
 }_{\equiv \Phi
@@ -706,7 +670,7 @@ equation,</p>
 \bra{n_{\boldsymbol{q}s}} \hat{a}_{\boldsymbol{q}s}^\dagger
 \hat{a}_{\boldsymbol{q}s} \ket{n_{\boldsymbol{q}s}} =
 n_{\boldsymbol{q}s} = n_{\boldsymbol{q}s}
-\braket{n_{n_{\boldsymbol{q}s}-1|\boldsymbol{q}s}-1}
+\braket{n_{\boldsymbol{q}s}-1|n_{\boldsymbol{q}s}-1}
 \]</span></p>
 <p>Thus <span
 class="math inline">\(\hat{a}_{\boldsymbol{q}s}\ket{n_{\boldsymbol{q}s}}
@@ -954,6 +918,43 @@ shown as:</p>
         <tag>Interatomic force constant</tag>
         <tag>Dynamical matrix</tag>
         <tag>Dispersion relation</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2023/10/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very
+first post. Check <a href="https://hexo.io/docs/">documentation</a> for
+more info. If you get any problems when using Hexo, you can find the
+answer in <a
+href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or
+you can ask me on <a
+href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<span id="more"></span>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="create-a-new-post">Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="run-server">Run server</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="generate-static-files">Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Blog</tag>
+        <tag>Test</tag>
       </tags>
   </entry>
 </search>
