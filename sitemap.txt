@@ -6,9 +6,6 @@ https://phononist.github.io/tags/index.html
 https://phononist.github.io/categories/index.html
 https://phononist.github.io/2023/10/hello-world/
 https://phononist.github.io/
-https://phononist.github.io/tags/Hexo/
-https://phononist.github.io/tags/Blog/
-https://phononist.github.io/tags/Test/
 https://phononist.github.io/tags/Fermi-s-golden-rule/
 https://phononist.github.io/tags/Quantum-physics/
 https://phononist.github.io/tags/Phonon/
@@ -16,6 +13,9 @@ https://phononist.github.io/tags/Interatomic-force-constant/
 https://phononist.github.io/tags/Dynamical-matrix/
 https://phononist.github.io/tags/Dispersion-relation/
 https://phononist.github.io/tags/Scattering/
-https://phononist.github.io/categories/Hexo/
+https://phononist.github.io/tags/Hexo/
+https://phononist.github.io/tags/Blog/
+https://phononist.github.io/tags/Test/
 https://phononist.github.io/categories/Quantum-Physics/
 https://phononist.github.io/categories/Solid-State-Physics/
+https://phononist.github.io/categories/Hexo/

@@ -74,27 +74,6 @@
 
   
   <url>
-    <loc>https://phononist.github.io/tags/Hexo/</loc>
-    <lastmod>2023-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://phononist.github.io/tags/Blog/</loc>
-    <lastmod>2023-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://phononist.github.io/tags/Test/</loc>
-    <lastmod>2023-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://phononist.github.io/tags/Fermi-s-golden-rule/</loc>
     <lastmod>2023-10-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -143,14 +122,28 @@
     <priority>0.2</priority>
   </url>
   
-
-  
   <url>
-    <loc>https://phononist.github.io/categories/Hexo/</loc>
+    <loc>https://phononist.github.io/tags/Hexo/</loc>
     <lastmod>2023-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
+  
+  <url>
+    <loc>https://phononist.github.io/tags/Blog/</loc>
+    <lastmod>2023-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://phononist.github.io/tags/Test/</loc>
+    <lastmod>2023-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
   
   <url>
     <loc>https://phononist.github.io/categories/Quantum-Physics/</loc>
@@ -161,6 +154,13 @@
   
   <url>
     <loc>https://phononist.github.io/categories/Solid-State-Physics/</loc>
+    <lastmod>2023-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://phononist.github.io/categories/Hexo/</loc>
     <lastmod>2023-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

@@ -1,43 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2023/10/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very
-first post. Check <a href="https://hexo.io/docs/">documentation</a> for
-more info. If you get any problems when using Hexo, you can find the
-answer in <a
-href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or
-you can ask me on <a
-href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-<h2 id="quick-start">Quick Start</h2>
-<h3 id="create-a-new-post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="run-server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="generate-static-files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-        <tag>Blog</tag>
-        <tag>Test</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Fermi&#39;s golden rule</title>
     <url>/2023/10/golden-rule/</url>
     <content><![CDATA[<h1 id="perturbation-of-a-quantum-system">Perturbation of a quantum
@@ -142,7 +105,7 @@ that the scale of energy difference is <span class="math inline">\(\sim
 \hbar\omega\)</span>. Thus, except for the case where <span
 class="math inline">\(E_f=E_i\)</span>, the term <span
 class="math inline">\(\frac{(E_j-E_i)t}{2\hbar} \gg
-\frac{(E_j-E_i)}{\hbar\omega}\gg 1\)</span>, making the term <span
+\frac{(E_j-E_i)}{\hbar\omega}\sim 1\)</span>, making the term <span
 class="math inline">\(\sin
 ((E_j-E_i)t/2\hbar)/((E_j-E_i)t/2\hbar)\)</span> to be either <span
 class="math inline">\(1\)</span> or <span
@@ -170,6 +133,13 @@ of the derivation of the scattering rate in the <a
 href="/2023/10/anharmonicity">previous post</a>, where we use the
 anharmonic potential as the perturbation with respect to the harmonic
 Hamiltonian.</p>
+<h1 id="reference">Reference</h1>
+<ol type="1">
+<li>Davies, John H., Scattering Rates: the Golden Rule (A chapter from
+the book <em>The Physics of Low-dimensional Semiconductors: An
+Introduction</em>).</li>
+<li>Griffths, David J., <em>Introduction to Quantum Mechanics</em>.</li>
+</ol>
 ]]></content>
       <categories>
         <category>Quantum Physics</category>
@@ -1127,6 +1097,43 @@ Bulk, Disordered, and Nanostructured Materials</em> (MIT 2011).</li>
         <tag>Phonon</tag>
         <tag>Interatomic force constant</tag>
         <tag>Scattering</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2023/10/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very
+first post. Check <a href="https://hexo.io/docs/">documentation</a> for
+more info. If you get any problems when using Hexo, you can find the
+answer in <a
+href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or
+you can ask me on <a
+href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<span id="more"></span>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="create-a-new-post">Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="run-server">Run server</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="generate-static-files">Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Blog</tag>
+        <tag>Test</tag>
       </tags>
   </entry>
 </search>
