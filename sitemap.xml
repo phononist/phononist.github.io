@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://phononist.github.io/2023/10/anharmonicity/</loc>
+    <loc>https://phononist.github.io/2023/10/golden-rule/</loc>
     
     <lastmod>2023-10-17</lastmod>
     
@@ -13,7 +13,16 @@
   <url>
     <loc>https://phononist.github.io/milestone/index.html</loc>
     
-    <lastmod>2023-10-12</lastmod>
+    <lastmod>2023-10-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://phononist.github.io/2023/10/anharmonicity/</loc>
+    
+    <lastmod>2023-10-17</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -86,6 +95,20 @@
   </url>
   
   <url>
+    <loc>https://phononist.github.io/tags/Fermi-s-golden-rule/</loc>
+    <lastmod>2023-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://phononist.github.io/tags/Quantum-physics/</loc>
+    <lastmod>2023-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://phononist.github.io/tags/Phonon/</loc>
     <lastmod>2023-10-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -120,17 +143,17 @@
     <priority>0.2</priority>
   </url>
   
+
+  
   <url>
-    <loc>https://phononist.github.io/tags/Fermi-s-golden-rule/</loc>
+    <loc>https://phononist.github.io/categories/Hexo/</loc>
     <lastmod>2023-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
-
-  
   <url>
-    <loc>https://phononist.github.io/categories/Hexo/</loc>
+    <loc>https://phononist.github.io/categories/Quantum-Physics/</loc>
     <lastmod>2023-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
