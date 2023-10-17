@@ -376,6 +376,9 @@ we know that:</p>
 \delta_{\alpha\beta}\delta_{\boldsymbol{q}\boldsymbol{q}&#39;}\delta_{\boldsymbol{b}\boldsymbol{b}&#39;}
 \end{aligned}
 \]</span></p>
+<p>Also, the reason why we multiply <span
+class="math inline">\(1/\sqrt{N_0}\)</span> in the transformation is
+that, we want to obtain the above canonical commutation relation.</p>
 </div>
 <p>With the above equations, the Hamiltonian can be rewritten as:</p>
 <p><span class="math display">\[
@@ -693,15 +696,6 @@ e_{\beta}^*(\boldsymbol{b}&#39;|\boldsymbol{q}s&#39;)
 \left(\hat{a}_{\boldsymbol{q}s}^\dagger -
 \hat{a}_{-\boldsymbol{q}s}\right) \left(\hat{a}_{\boldsymbol{q}s&#39;} -
 \hat{a}^\dagger_{-\boldsymbol{q}s&#39;}\right)\\
-    &amp;=\frac{1}{2}
-\sum_{\alpha\beta}\sum_{\boldsymbol{q}\boldsymbol{b}\boldsymbol{b}&#39;}
-\sum_{s} D_{\alpha\beta}^\dagger
-(\boldsymbol{b}\boldsymbol{b}&#39;|\boldsymbol{q}) \frac{\hbar}{2\omega
-(\boldsymbol{q}s)} e_{\alpha}(\boldsymbol{b}|\boldsymbol{q}s)
-e_{\beta}^*(\boldsymbol{b}&#39;|\boldsymbol{q}s)
-\left(\hat{a}_{\boldsymbol{q}s}^\dagger -
-\hat{a}_{-\boldsymbol{q}s}\right) \left(\hat{a}_{\boldsymbol{q}s} -
-\hat{a}^\dagger_{-\boldsymbol{q}s}\right)\\
     &amp; = \frac{1}{4} \sum_{\boldsymbol{q}s} \hbar\omega
 (\boldsymbol{q}s) \left(\hat{a}_{\boldsymbol{q}s}^\dagger -
 \hat{a}_{-\boldsymbol{q}s}\right) \left(\hat{a}_{\boldsymbol{q}s} -
@@ -714,10 +708,28 @@ is the eigenvector of <span
 class="math inline">\(\boldsymbol{D}(\boldsymbol{q})\)</span> (the
 dynamical matrix, see <a href="/2023/10/phonon-dispersion">the previous
 post</a>), and the corresponding eigenvalue is <span
-class="math inline">\(\omega (\boldsymbol{q}s)^2\)</span>.
-<strong>Still, the author does not know how to eliminate <span
-class="math inline">\(s&#39;\)</span>. So please kindly comment below if
-you have the answer.</strong></p>
+class="math inline">\(\omega (\boldsymbol{q}s)^2\)</span>.</p>
+<div class="note warning"><p>Above, the summation over <span class="math inline">\(s&#39;\)</span>
+in the second term is cancelled due to the orthogonality of the
+eigenvectors for the summation over <span
+class="math inline">\(\alpha\)</span> and <span
+class="math inline">\(\beta\)</span>. Specifically,</p>
+<p><span class="math display">\[
+\begin{aligned}
+    \sum_{\boldsymbol{b}\boldsymbol{b}&#39;}\sum_{\alpha,\beta}
+D_{\alpha\beta}^{\dagger}
+(\boldsymbol{b}\boldsymbol{b}&#39;|\boldsymbol{q}) e_{\alpha}
+(\boldsymbol{b}|\boldsymbol{q}s) e_{\beta}^*
+(\boldsymbol{b}&#39;|\boldsymbol{q}s&#39;) &amp;= \omega^2
+(\boldsymbol{q}s&#39;)
+\sum_{\boldsymbol{b}\boldsymbol{b}&#39;}\sum_{\alpha,\beta} e_{\alpha}
+(\boldsymbol{b}|\boldsymbol{q}s) e_{\beta}^*
+(\boldsymbol{b}&#39;|\boldsymbol{q}s&#39;)\\
+    &amp;= \omega^2 (\boldsymbol{q}s&#39;) \delta_{ss&#39;}
+\delta_{\boldsymbol{b}\boldsymbol{b}&#39;}
+\end{aligned}
+\]</span></p>
+</div>
 <p>As for the 3rd term, we have:</p>
 <p><span class="math display">\[
 \begin{aligned}
