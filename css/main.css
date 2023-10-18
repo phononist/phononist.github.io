@@ -2981,3 +2981,17 @@ header.header {
     font-size: 1em;
   }
 }
+.block-light-only {
+  display: block;
+}
+.block-dark-only {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  .block-dark-only {
+    display: block;
+  }
+  .block-light-only {
+    display: none;
+  }
+}
