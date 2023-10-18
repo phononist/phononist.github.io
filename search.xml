@@ -1,155 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Fermi&#39;s golden rule</title>
-    <url>/2023/10/golden-rule/</url>
-    <content><![CDATA[<h1 id="perturbation-of-a-quantum-system">Perturbation of a quantum
-system</h1>
-<p>Consider a quantum system that is characterized by a Hamiltonian
-<span class="math inline">\(\hat{H}_0\)</span>. Note that its
-eigenstates are represented by <span
-class="math inline">\(\Phi_{n}=\phi_{n}\exp(-iE_n t/\hbar),
-n=1,2,\dots\)</span>, thus the time-independent Schrödinger equation is
-given by</p>
-<p><span class="math display">\[
-\hat{H}_0\phi_{n} = E_{n}\phi_{n}
-\]</span></p>
-<p>Now, we perturb the system by adding a perturbation <span
-class="math inline">\(\hat{\mathcal{V}}(t)\)</span>, by which the new
-Hamiltonian becomes <span class="math inline">\(\hat{H} = \hat{H}_0 +
-\hat{\mathcal{V}}(t)\)</span>, and we try to solve the new Schrödinger
-equation. Note that those eigenstates constitute a complete set,
-thus,</p>
-<p><span class="math display">\[
-\begin{aligned}
-    \underbrace{\left( \hat{H}_0 +
-\hat{\mathcal{V}}(t)\right)}_{\bar{H}} \underbrace{\sum_{j} c_{j}(t)
-\Phi_{j}}_{\Phi} = i\hbar \frac{\partial}{\partial t}
-\underbrace{\sum_{j} c_{j}(t) \Phi_{j}}_{\Phi}
-\end{aligned}
-\]</span></p>
-<p>Due to that for any <span class="math inline">\(j\)</span>, <span
-class="math inline">\(\hat{H}\Phi_j = i\hbar\frac{\partial}{\partial
-t}\Phi_j\)</span>, the above equation can be rewritten by cancelling
-stuff related with the original Hamiltonian <span
-class="math inline">\(\hat{H}_0\)</span>,</p>
-<p><span class="math display">\[
-\hat{\mathcal{V}}(t) \sum_{j} c_j (t) \Phi_{j}= i\hbar \sum_j \Phi_{j}
-\frac{\mathrm{d} c_j (t)}{\mathrm{d} t}
-\]</span></p>
-<p>Mathematically, for any <span class="math inline">\(f\)</span>, we
-can try to multiply <span class="math inline">\(\Phi_f^*\)</span> on
-both sides of the above equation, and then integrate over the whole
-space, thus,</p>
-<p><span class="math display">\[
-\sum_{j} c_j (t) \Braket{\Phi_f | \hat{\mathcal{V}}(t) | \Phi_j} =
-i\hbar \frac{\mathrm{d} c_f (t)}{\mathrm{d} t}
-\]</span></p>
-<p>The braket on the left side can be further expressed as,</p>
-<p><span class="math display">\[
-\Braket{\Phi_f | \hat{\mathcal{V}}(t) | \Phi_j} =
-\underbrace{\Braket{\phi_f | \hat{\mathcal{V}}(t) | \phi_j}}_{\equiv
-\mathcal{V}_{fj}} \exp\left( \frac{i(E_f - E_j)t}{\hbar} \right)
-\]</span></p>
-<p>Therefore, our task to study the perturbated system is then relying
-on the following equations:</p>
-<p><span class="math display">\[
-i\hbar \frac{\mathrm{d}c_f (t)}{\mathrm{d}t} = \sum_{j} \mathcal{V}_{fj}
-c_j (t) e^{\frac{i (E_f-E_j)t}{\hbar}},\quad \forall f
-\]</span></p>
-<p>Notice that the above equation is a set of coupled differential
-equations that depict the transitions from different states <span
-class="math inline">\(\phi_{n}\)</span>. It is then clear to say, if we
-want to study the transition from state <span
-class="math inline">\(i\)</span> to state <span
-class="math inline">\(f\)</span>, we will give the initial
-conditions:</p>
-<p><span class="math display">\[
-c_j(t)\Big|_{t=0} = \delta_{ij}
-\]</span></p>
-<h1
-id="st-order-approximation-of-time-independent-perturbation">1st-order
-approximation of time-independent perturbation</h1>
-<p>We now consider a simple case where the perturbation is
-time-independent, i.e., <span class="math inline">\(\hat{\mathcal{V}}(t)
-= \hat{\mathcal{V}}\)</span>. Also, we only consider the transition from
-state <span class="math inline">\(i\)</span> to state <span
-class="math inline">\(f\)</span>, that is to set <span
-class="math inline">\(c_j(t)|_{t=0}=\delta_{ij}\)</span>. The
-first-order approximation of such problem is given by,</p>
-<p><span class="math display">\[
-i\hbar \frac{\mathrm{d}c_f (t)}{\mathrm{d}t} = \mathcal{V}_{fi}
-\cancelto{1}{c_i (t)} e^{\frac{i (E_f-E_i)t}{\hbar}}
-\]</span></p>
-<p><span class="math display">\[
-\Rightarrow c_f(t) = -\frac{\mathcal{V}_{fi}}{E_f-E_i} e^{\frac{i
-(E_f-E_i)t&#39;}{\hbar}} \Big|_{t&#39;=0}^{t&#39;=t} =
--\frac{\mathcal{V}_{fi}t}{\hbar} \frac{\sin
-((E_j-E_i)t/2\hbar)}{(E_j-E_i)t/2\hbar} i e^{i(E_j-E_i)t/2\hbar}
-\]</span></p>
-<p>The module of the final state <span class="math inline">\(f\)</span>
-is then given by,</p>
-<p><span class="math display">\[
-\begin{aligned}
-    \left|c_f (t)\right|^2 &amp;= |\mathcal{V}_{fi}|^2
-\left(\frac{t}{\hbar}\frac{\sin ((E_j-E_i)t/2\hbar)}{(E_j-E_i)t/2\hbar}
-\right)^2\\
-    &amp;= \frac{2\pi}{\hbar} |\mathcal{V}_{fi}|^2 t
-\times\delta(E_f-E_i)
-\end{aligned}
-\]</span></p>
-<div class="note primary"><p>When we are talking about a quantum mode that has a frequency <span
-class="math inline">\(\sim\omega\)</span>, the time scale should be much
-larger than <span class="math inline">\(1/\omega\)</span>. It is normal
-that the scale of energy difference is <span class="math inline">\(\sim
-\hbar\omega\)</span>. Thus, except for the case where <span
-class="math inline">\(E_f=E_i\)</span>, the term <span
-class="math inline">\(\frac{(E_j-E_i)t}{2\hbar} \gg
-\frac{(E_j-E_i)}{\hbar\omega}\sim 1\)</span>, making the term <span
-class="math inline">\(\sin
-((E_j-E_i)t/2\hbar)/((E_j-E_i)t/2\hbar)\)</span> to be either <span
-class="math inline">\(1\)</span> or <span
-class="math inline">\(0\)</span>. Also, for t much larger than <span
-class="math inline">\(1/\omega\)</span>, with <span
-class="math inline">\(|\mathcal{V}|_{fi}\)</span> the same magnitude as
-<span class="math inline">\(\hbar\omega\)</span>, the whole term is then
-proportional to the dirac delta function <span
-class="math inline">\(\delta(E_f-E_i)\)</span>.</p>
-<p>After careful examination, it is written as,</p>
-<p><span class="math display">\[
-\left(\frac{t}{\hbar}\frac{\sin ((E_j-E_i)t/2\hbar)}{(E_j-E_i)t/2\hbar}
-\right)^2 = \frac{2\pi}{\hbar} t \times\delta(E_f-E_i)
-\]</span></p>
-<p>due to that <span class="math inline">\(\int_{-\infty}^{\infty} (\sin
-x)^2/x^2 \mathrm{d}x = \pi\)</span>.</p>
-</div>
-<p>The transition rate can be read from <span class="math inline">\(|c_f
-(t)|^2\)</span>:</p>
-<p><span class="math display">\[
-W_{fi} = \frac{2\pi}{\hbar} |\mathcal{V}_{fi}|^2 \delta(E_f-E_i)
-\]</span></p>
-<p>This is the very golden rule that we are looking for. It is the basis
-of the derivation of the scattering rate in the <a
-href="/2023/10/anharmonicity">previous post</a>, where we use the
-anharmonic potential as the perturbation with respect to the harmonic
-Hamiltonian.</p>
-<h1 id="reference">Reference</h1>
-<ol type="1">
-<li>Davies, John H., Scattering Rates: the Golden Rule (A chapter from
-the book <em>The Physics of Low-dimensional Semiconductors: An
-Introduction</em>).</li>
-<li>Griffths, David J., <em>Introduction to Quantum Mechanics</em>.</li>
-</ol>
-]]></content>
-      <categories>
-        <category>Quantum Physics</category>
-      </categories>
-      <tags>
-        <tag>Fermi&#39;s golden rule</tag>
-        <tag>Quantum physics</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Solve phonon dispersion relation by the classical approach</title>
     <url>/2023/10/phonon-dispersion/</url>
     <content><![CDATA[<p>Consider a crystal in which unit cells are labeled by <span
@@ -305,6 +156,192 @@ shown as:</p>
         <tag>Interatomic force constant</tag>
         <tag>Dynamical matrix</tag>
         <tag>Dispersion relation</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Fermi&#39;s golden rule</title>
+    <url>/2023/10/golden-rule/</url>
+    <content><![CDATA[<h1 id="perturbation-of-a-quantum-system">Perturbation of a quantum
+system</h1>
+<p>Consider a quantum system that is characterized by a Hamiltonian
+<span class="math inline">\(\hat{H}_0\)</span>. Note that its
+eigenstates are represented by <span
+class="math inline">\(\Phi_{n}=\phi_{n}\exp(-iE_n t/\hbar),
+n=1,2,\dots\)</span>, thus the time-independent Schrödinger equation is
+given by</p>
+<p><span class="math display">\[
+\hat{H}_0\phi_{n} = E_{n}\phi_{n}
+\]</span></p>
+<p>Now, we perturb the system by adding a perturbation <span
+class="math inline">\(\hat{\mathcal{V}}(t)\)</span>, by which the new
+Hamiltonian becomes <span class="math inline">\(\hat{H} = \hat{H}_0 +
+\hat{\mathcal{V}}(t)\)</span>, and we try to solve the new Schrödinger
+equation. Note that those eigenstates constitute a complete set,
+thus,</p>
+<p><span class="math display">\[
+\begin{aligned}
+    \underbrace{\left( \hat{H}_0 +
+\hat{\mathcal{V}}(t)\right)}_{\bar{H}} \underbrace{\sum_{j} c_{j}(t)
+\Phi_{j}}_{\Phi} = i\hbar \frac{\partial}{\partial t}
+\underbrace{\sum_{j} c_{j}(t) \Phi_{j}}_{\Phi}
+\end{aligned}
+\]</span></p>
+<p>Due to that for any <span class="math inline">\(j\)</span>, <span
+class="math inline">\(\hat{H}\Phi_j = i\hbar\frac{\partial}{\partial
+t}\Phi_j\)</span>, the above equation can be rewritten by cancelling
+stuff related with the original Hamiltonian <span
+class="math inline">\(\hat{H}_0\)</span>,</p>
+<p><span class="math display">\[
+\hat{\mathcal{V}}(t) \sum_{j} c_j (t) \Phi_{j}= i\hbar \sum_j \Phi_{j}
+\frac{\mathrm{d} c_j (t)}{\mathrm{d} t}
+\]</span></p>
+<p>Mathematically, for any <span class="math inline">\(f\)</span>, we
+can try to multiply <span class="math inline">\(\Phi_f^*\)</span> on
+both sides of the above equation, and then integrate over the whole
+space, thus,</p>
+<p><span class="math display">\[
+\sum_{j} c_j (t) \Braket{\Phi_f | \hat{\mathcal{V}}(t) | \Phi_j} =
+i\hbar \frac{\mathrm{d} c_f (t)}{\mathrm{d} t}
+\]</span></p>
+<p>The braket on the left side can be further expressed as,</p>
+<p><span class="math display">\[
+\Braket{\Phi_f | \hat{\mathcal{V}}(t) | \Phi_j} =
+\underbrace{\Braket{\phi_f | \hat{\mathcal{V}}(t) | \phi_j}}_{\equiv
+\mathcal{V}_{fj}} \exp\left( \frac{i(E_f - E_j)t}{\hbar} \right)
+\]</span></p>
+<p>Therefore, our task to study the perturbated system is then relying
+on the following equations:</p>
+<p><span class="math display">\[
+i\hbar \frac{\mathrm{d}c_f (t)}{\mathrm{d}t} = \sum_{j} \mathcal{V}_{fj}
+c_j (t) e^{\frac{i (E_f-E_j)t}{\hbar}},\quad \forall f
+\]</span></p>
+<p>Notice that the above equation is a set of coupled differential
+equations that depict the transitions from different states <span
+class="math inline">\(\phi_{n}\)</span>. It is then clear to say, if we
+want to study the transition from state <span
+class="math inline">\(i\)</span> to state <span
+class="math inline">\(f\)</span>, we will give the initial
+conditions:</p>
+<p><span class="math display">\[
+c_j(t)\Big|_{t=0} = \delta_{ij}
+\]</span></p>
+<h1
+id="st-order-approximation-of-time-independent-perturbation">1st-order
+approximation of time-independent perturbation</h1>
+<p>We now consider a simple case where the perturbation is
+time-independent, i.e., <span class="math inline">\(\hat{\mathcal{V}}(t)
+= \hat{\mathcal{V}}\)</span>. Also, we only consider the transition from
+state <span class="math inline">\(i\)</span> to state <span
+class="math inline">\(f\)</span>, that is to set <span
+class="math inline">\(c_j(t)|_{t=0}=\delta_{ij}\)</span>. The
+first-order approximation of such problem is given by,</p>
+<p><span class="math display">\[
+i\hbar \frac{\mathrm{d}c_f (t)}{\mathrm{d}t} = \mathcal{V}_{fi}
+\cancelto{1}{c_i (t)} e^{\frac{i (E_f-E_i)t}{\hbar}}
+\]</span></p>
+<p><span class="math display">\[
+\Rightarrow c_f(t) = -\frac{\mathcal{V}_{fi}}{E_f-E_i} e^{\frac{i
+(E_f-E_i)t&#39;}{\hbar}} \Big|_{t&#39;=0}^{t&#39;=t} =
+-\frac{\mathcal{V}_{fi}t}{\hbar} \frac{\sin
+((E_j-E_i)t/2\hbar)}{(E_j-E_i)t/2\hbar} i e^{i(E_j-E_i)t/2\hbar}
+\]</span></p>
+<p>The module of the final state <span class="math inline">\(f\)</span>
+is then given by,</p>
+<p><span class="math display">\[
+\begin{aligned}
+    \left|c_f (t)\right|^2 &amp;= |\mathcal{V}_{fi}|^2
+\left(\frac{t}{\hbar}\frac{\sin ((E_j-E_i)t/2\hbar)}{(E_j-E_i)t/2\hbar}
+\right)^2\\
+    &amp;= \frac{2\pi}{\hbar} |\mathcal{V}_{fi}|^2 t
+\times\delta(E_f-E_i)
+\end{aligned}
+\]</span></p>
+<div class="note primary"><p>When we are talking about a quantum mode that has a frequency <span
+class="math inline">\(\sim\omega\)</span>, the time scale should be much
+larger than <span class="math inline">\(1/\omega\)</span>. It is normal
+that the scale of energy difference is <span class="math inline">\(\sim
+\hbar\omega\)</span>. Thus, except for the case where <span
+class="math inline">\(E_f=E_i\)</span>, the term <span
+class="math inline">\(\frac{(E_j-E_i)t}{2\hbar} \gg
+\frac{(E_j-E_i)}{\hbar\omega}\sim 1\)</span>, making the term <span
+class="math inline">\(\sin
+((E_j-E_i)t/2\hbar)/((E_j-E_i)t/2\hbar)\)</span> to be either <span
+class="math inline">\(1\)</span> or <span
+class="math inline">\(0\)</span>. Also, for t much larger than <span
+class="math inline">\(1/\omega\)</span>, with <span
+class="math inline">\(|\mathcal{V}|_{fi}\)</span> the same magnitude as
+<span class="math inline">\(\hbar\omega\)</span>, the whole term is then
+proportional to the dirac delta function <span
+class="math inline">\(\delta(E_f-E_i)\)</span>.</p>
+<p>After careful examination, it is written as,</p>
+<p><span class="math display">\[
+\left(\frac{t}{\hbar}\frac{\sin ((E_j-E_i)t/2\hbar)}{(E_j-E_i)t/2\hbar}
+\right)^2 = \frac{2\pi}{\hbar} t \times\delta(E_f-E_i)
+\]</span></p>
+<p>due to that <span class="math inline">\(\int_{-\infty}^{\infty} (\sin
+x)^2/x^2 \mathrm{d}x = \pi\)</span>.</p>
+</div>
+<p>The transition rate can be read from <span class="math inline">\(|c_f
+(t)|^2\)</span>:</p>
+<p><span class="math display">\[
+W_{fi} = \frac{2\pi}{\hbar} |\mathcal{V}_{fi}|^2 \delta(E_f-E_i)
+\]</span></p>
+<p>This is the very golden rule that we are looking for. It is the basis
+of the derivation of the scattering rate in the <a
+href="/2023/10/anharmonicity">previous post</a>, where we use the
+anharmonic potential as the perturbation with respect to the harmonic
+Hamiltonian.</p>
+<h1 id="reference">Reference</h1>
+<ol type="1">
+<li>Davies, John H., Scattering Rates: the Golden Rule (A chapter from
+the book <em>The Physics of Low-dimensional Semiconductors: An
+Introduction</em>).</li>
+<li>Griffths, David J., <em>Introduction to Quantum Mechanics</em>.</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Quantum Physics</category>
+      </categories>
+      <tags>
+        <tag>Fermi&#39;s golden rule</tag>
+        <tag>Quantum physics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2023/10/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very
+first post. Check <a href="https://hexo.io/docs/">documentation</a> for
+more info. If you get any problems when using Hexo, you can find the
+answer in <a
+href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or
+you can ask me on <a
+href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<span id="more"></span>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="create-a-new-post">Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="run-server">Run server</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="generate-static-files">Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Blog</tag>
+        <tag>Test</tag>
       </tags>
   </entry>
   <entry>
@@ -1093,47 +1130,10 @@ Bulk, Disordered, and Nanostructured Materials</em> (MIT 2011).</li>
         <category>Solid State Physics</category>
       </categories>
       <tags>
-        <tag>Fermi&#39;s golden rule</tag>
         <tag>Phonon</tag>
         <tag>Interatomic force constant</tag>
+        <tag>Fermi&#39;s golden rule</tag>
         <tag>Scattering</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2023/10/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very
-first post. Check <a href="https://hexo.io/docs/">documentation</a> for
-more info. If you get any problems when using Hexo, you can find the
-answer in <a
-href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or
-you can ask me on <a
-href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-<h2 id="quick-start">Quick Start</h2>
-<h3 id="create-a-new-post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="run-server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="generate-static-files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-        <tag>Blog</tag>
-        <tag>Test</tag>
       </tags>
   </entry>
 </search>
