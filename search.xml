@@ -306,6 +306,11 @@ single core. Just be patient for a while.</p>
 <code>si222.result</code>. Here we plot the thermal conductivity, and
 compare it with the data in literature, shown below:</p>
 <img src="/images/2023/ab-initio/thermal_conductivity.png" class="" width="500" title="Thermal conductivity">
+<p>If we redo all the stuff above for Si333, a nearly same result will
+be obtained, and we plot the data from 250 K to 450 K, it is shown that
+the difference between the calculated data for Si222 and Si333 is within
+4.22 W/mK, and is about 2.5% of the value of Si222.</p>
+<img src="/images/2023/ab-initio/thermal_conductivity_333.png" class="" width="500" title="Thermal conductivity comparing Si222 and Si333">
 <p>It is so amazing that the calculated thermal conductivity is just in
 very good agreement with the experimental data. This is the power of
 physics, that we can absoultely calculate anything in the <em>ab
@@ -339,6 +344,350 @@ Conductivity of Silicon from 300 to 1400°K. <em>Phys. Rev.</em> 130,
         <tag>Dispersion relation</tag>
         <tag>Ab initio calculation</tag>
         <tag>Relaxation time approximation</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Solve phonon dispersion relation by the classical approach</title>
+    <url>/2023/10/phonon-dispersion/</url>
+    <content><![CDATA[<p>Consider a crystal in which unit cells are labeled by <span
+class="math inline">\(\boldsymbol{l}\)</span>, and atoms in each cell
+are labeled by <span class="math inline">\(\boldsymbol{b}\)</span>. The
+total energy of the system, noted by <span
+class="math inline">\(\mathcal{V}\)</span>, can be expanded using
+Taylor's expansion (greek letters mean direction): <span
+class="math display">\[
+\begin{aligned}
+    \mathcal{V} = &amp; \mathcal{V}_0 +
+\underbrace{\sum_{\boldsymbol{l},\boldsymbol{b}}\sum_{\alpha}
+\Phi_{\alpha}(\boldsymbol{l}\boldsymbol{b})
+u_{\alpha}(\boldsymbol{l}\boldsymbol{b})}_{\mathcal{V}_1} +
+\underbrace{\frac{1}{2}\sum_{\boldsymbol{l},\boldsymbol{b},\boldsymbol{l}&#39;,\boldsymbol{b}&#39;}\sum_{\alpha,\beta}
+\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)u_{\alpha}(\boldsymbol{l}\boldsymbol{b})u_{\beta}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;)}_{\mathcal{V}_2}
++ \cdots\\
+    &amp; \quad +
+\frac{1}{n!}\sum_{\boldsymbol{l}_1,\boldsymbol{b}_1,\boldsymbol{l}_2,\boldsymbol{b}_2,\cdots,\boldsymbol{l}_n,\boldsymbol{b}_n}\sum_{\alpha_1,\alpha_2,\cdots,\alpha_n}\Phi_{\alpha_1,\alpha_2,\cdots,\alpha_n}(\boldsymbol{l}_1,\boldsymbol{b}_1;\boldsymbol{l}_2,\boldsymbol{b}_2;\cdots;\boldsymbol{l}_n,\boldsymbol{b}_n)u_{\alpha_1}(\boldsymbol{l}_1,\boldsymbol{b}_1)\cdots
+u_{\alpha_n}(\boldsymbol{l}_n \boldsymbol{b}_n)
+\end{aligned}
+\]</span> Where we note the nth order interatomic force constants (IFCs)
+using <span class="math inline">\(\Phi\)</span>, and we note <span
+class="math inline">\(u_{\alpha}(\boldsymbol{l}\boldsymbol{b})\)</span>
+represent the spatial deviation of atom <span
+class="math inline">\(\boldsymbol{b}\)</span> in cell <span
+class="math inline">\(\boldsymbol{l}\)</span> along <span
+class="math inline">\(\alpha\)</span> direction.<span id="more"></span> It is clear
+to see that:</p>
+<ul>
+<li>The first order IFCs should be cancelled, that <span
+class="math inline">\(\mathcal{V}_1=0\)</span>, due to that the system
+is stable.</li>
+<li>The second order term <span
+class="math inline">\(\mathcal{V}_2\)</span> represent the combination
+of many interatomic harmonic oscillators.</li>
+</ul>
+<p>Let's ignore the higher order term, keeping only <span
+class="math inline">\(\mathcal{V}_2\)</span>. Using Newton's second law,
+<span class="math display">\[
+F_{\boldsymbol{l}\boldsymbol{b}\alpha} = m_{\boldsymbol{b}}
+\ddot{u}_{\alpha}(\boldsymbol{l}\boldsymbol{b}) =-\frac{\partial
+\mathcal{V}}{\mathcal{u_{\alpha}}(\boldsymbol{l}\boldsymbol{b})}= -
+\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}
+\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+u_{\beta}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;),\quad \forall
+\boldsymbol{l},\boldsymbol{b},\alpha
+\]</span> Note that the above equation exploits the symmetry of second
+order IFCs, that <span
+class="math inline">\(\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+=
+\Phi_{\beta,\alpha}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;,\boldsymbol{l}\boldsymbol{b})\)</span>.
+We now seek a solution in the form of plane waves: <span
+class="math display">\[
+u_{\alpha} (\boldsymbol{l}\boldsymbol{b}) =
+\frac{1}{\sqrt{m_{\boldsymbol{b}}}} \sum_{\boldsymbol{q}}
+U_{\alpha}(\boldsymbol{q};\boldsymbol{b})\exp \big[ i
+\boldsymbol{q}\cdot \boldsymbol{l}-\omega t\big]
+\]</span></p>
+<div class="note info"><ul>
+<li>The purpose of seaking a solution that is multiplied by <span
+class="math inline">\(1/\sqrt{m_{\boldsymbol{b}}}\)</span> is just to
+make the form of dynamical matrix simple and beautiful, so don't be
+confused.</li>
+<li>The value <span
+class="math inline">\(U_{\alpha}(\boldsymbol{q};\boldsymbol{b})\)</span>
+is complex. Specifically, it contains the phase information of atom
+<span class="math inline">\(\boldsymbol{b}\)</span>.</li>
+</ul>
+</div>
+<p>A specific wavevector <span
+class="math inline">\(\boldsymbol{q}\)</span> yields, <span
+class="math display">\[
+\omega^2 \sqrt{m_{\boldsymbol{b}}}
+U_{\alpha}(\boldsymbol{q};\boldsymbol{b}) \exp
+\big[i\boldsymbol{q}\cdot\boldsymbol{l}-\omega t\big] =
+-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;-\omega
+t\big]
+\]</span> Cancel the exponential term on both sides. Notice that due to
+translational invariance, <span
+class="math inline">\(\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)=\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};(\boldsymbol{l}-\boldsymbol{l}&#39;)\boldsymbol{b}&#39;)\)</span>,
+thus, <span class="math display">\[
+\begin{aligned}
+  \omega^2 \sqrt{m_{\boldsymbol{b}}}
+U_{\alpha}(\boldsymbol{q};\boldsymbol{b}) &amp;=
+-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot(\boldsymbol{l}&#39;-\boldsymbol{l})\big]\\
+  &amp;=
+-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};(\boldsymbol{l}&#39;-\boldsymbol{l})\boldsymbol{b}&#39;)
+\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot(\boldsymbol{l}&#39;-\boldsymbol{l})\big]\\
+  &amp;=
+-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;\big]
+\end{aligned}
+\]</span> Therefore, if we note a matrix called "dynamical matrix", as:
+<span class="math display">\[
+D_{\alpha\beta} (\boldsymbol{b}\boldsymbol{b}&#39; | \boldsymbol{q}) =
+\frac{1}{\sqrt{m_{\boldsymbol{b}}m_{\boldsymbol{b}&#39;}}}
+\sum_{\boldsymbol{l}&#39;}
+\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)\exp[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;]
+\]</span> The dynamical equations are thus in the form of matrix
+multiplication, <span class="math display">\[
+\omega^2 U_{\alpha} (\boldsymbol{q};\boldsymbol{b}) =
+\sum_{\boldsymbol{b}&#39;,\beta}D_{\alpha\beta}(\boldsymbol{b}\boldsymbol{b}&#39;|\boldsymbol{q})
+U_{\beta} (\boldsymbol{q};\boldsymbol{b}&#39;)
+\]</span> Solving the above equation, we find that <span
+class="math inline">\(\omega\)</span> is in fact the eigenvalue of the
+dynamical matrix. Due to that <span
+class="math inline">\(D_{\cdot,\cdot}(\cdot,\cdot|\boldsymbol{q})\)</span>
+is a matrix of <span class="math inline">\(3p\times 3p\)</span>, where
+<span class="math inline">\(p\)</span> is the number of atoms per unit
+cell, and <span class="math inline">\(3\)</span> is the directions that
+<span class="math inline">\(\alpha,\beta\)</span> can take, for any
+given <span class="math inline">\(\boldsymbol{q}\)</span>, there are
+<span class="math inline">\(3p\)</span> eigenvalues and <span
+class="math inline">\(3p\)</span> eigenvectors, that correspond to
+different phonon branches.</p>
+<p><strong>Example: 1D diatomic chain</strong></p>
+<p>Consider the 1D diatomic chain as following:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> g     g     g     g     g</span><br><span class="line">---[m]---[M]---[m]---[M]---</span><br><span class="line">     |&lt;--- a ---&gt;|</span><br></pre></td></tr></table></figure>
+<p>The total energy is: <span class="math display">\[
+U= \frac{1}{2}g\sum_n \left[(u_{n,1}-u_{n,2})^2 +
+(u_{n,2}-u_{n+1,1})^2\right]
+\]</span> where <span class="math inline">\(n\)</span> labels the unit
+cell, <span class="math inline">\(1\)</span> and <span
+class="math inline">\(2\)</span> represent <span
+class="math inline">\(M\)</span> or <span
+class="math inline">\(m\)</span>. The dynamical matrix is <span
+class="math inline">\(2\times 2\)</span>, due to that there are two
+atoms in each unit cell, and there is only one direction. According to
+the definition, the dynamical matrix is written as, <span
+class="math display">\[
+D_q = \begin{bmatrix}
+\frac{2g}{M} &amp; -\frac{g}{\sqrt{Mm}}(1+e^{-iqa})\\
+-\frac{g}{\sqrt{Mm}}(1+e^{iqa}) &amp; \frac{2g}{m}
+\end{bmatrix}
+\]</span> The two eigenvalues are: <span class="math display">\[
+\Rightarrow \omega^2 = g \left(\frac{1}{M} + \frac{1}{m}\right) \pm
+g\sqrt{\left(\frac{1}{M} + \frac{1}{m}\right)^2-\frac{4}{Mm}
+\sin^2\left(\frac{qa}{2}\right)}
+\]</span> If we plot the two branches from <span
+class="math inline">\(q=-\pi/a\)</span> to <span
+class="math inline">\(q=\pi/a\)</span>, the dispersion relation will be
+shown as:</p>
+<p><img src="/images/2023/dispersion.png" alt="dispersion" style="zoom: 25%;" /></p>
+]]></content>
+      <categories>
+        <category>Solid State Physics</category>
+      </categories>
+      <tags>
+        <tag>Phonon</tag>
+        <tag>Interatomic force constant</tag>
+        <tag>Dispersion relation</tag>
+        <tag>Dynamical matrix</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Fermi&#39;s golden rule</title>
+    <url>/2023/10/golden-rule/</url>
+    <content><![CDATA[<h1 id="perturbation-of-a-quantum-system">Perturbation of a quantum
+system</h1>
+<p>Consider a quantum system that is characterized by a Hamiltonian
+<span class="math inline">\(\hat{H}_0\)</span>. Note that its
+eigenstates are represented by <span
+class="math inline">\(\Phi_{n}=\phi_{n}\exp(-iE_n t/\hbar),
+n=1,2,\dots\)</span>, thus the time-independent Schrödinger equation is
+given by</p>
+<p><span class="math display">\[
+\hat{H}_0\phi_{n} = E_{n}\phi_{n}
+\]</span></p>
+<p>Now, we perturb the system by adding a perturbation <span
+class="math inline">\(\hat{\mathcal{V}}(t)\)</span>, by which the new
+Hamiltonian becomes <span class="math inline">\(\hat{H} = \hat{H}_0 +
+\hat{\mathcal{V}}(t)\)</span>, and we try to solve the new Schrödinger
+equation. Note that those eigenstates constitute a complete set,
+thus,</p>
+<p><span class="math display">\[
+\begin{aligned}
+    \underbrace{\left( \hat{H}_0 +
+\hat{\mathcal{V}}(t)\right)}_{\bar{H}} \underbrace{\sum_{j} c_{j}(t)
+\Phi_{j}}_{\Phi} = i\hbar \frac{\partial}{\partial t}
+\underbrace{\sum_{j} c_{j}(t) \Phi_{j}}_{\Phi}
+\end{aligned}
+\]</span></p>
+<p>Due to that for any <span class="math inline">\(j\)</span>, <span
+class="math inline">\(\hat{H}\Phi_j = i\hbar\frac{\partial}{\partial
+t}\Phi_j\)</span>, the above equation can be rewritten by cancelling
+stuff related with the original Hamiltonian <span
+class="math inline">\(\hat{H}_0\)</span>,</p>
+<p><span class="math display">\[
+\hat{\mathcal{V}}(t) \sum_{j} c_j (t) \Phi_{j}= i\hbar \sum_j \Phi_{j}
+\frac{\mathrm{d} c_j (t)}{\mathrm{d} t}
+\]</span></p>
+<p>Mathematically, for any <span class="math inline">\(f\)</span>, we
+can try to multiply <span class="math inline">\(\Phi_f^*\)</span> on
+both sides of the above equation, and then integrate over the whole
+space, thus,</p>
+<p><span class="math display">\[
+\sum_{j} c_j (t) \Braket{\Phi_f | \hat{\mathcal{V}}(t) | \Phi_j} =
+i\hbar \frac{\mathrm{d} c_f (t)}{\mathrm{d} t}
+\]</span></p>
+<p>The braket on the left side can be further expressed as,</p>
+<p><span class="math display">\[
+\Braket{\Phi_f | \hat{\mathcal{V}}(t) | \Phi_j} =
+\underbrace{\Braket{\phi_f | \hat{\mathcal{V}}(t) | \phi_j}}_{\equiv
+\mathcal{V}_{fj}} \exp\left( \frac{i(E_f - E_j)t}{\hbar} \right)
+\]</span></p>
+<p>Therefore, our task to study the perturbated system is then relying
+on the following equations:</p>
+<p><span class="math display">\[
+i\hbar \frac{\mathrm{d}c_f (t)}{\mathrm{d}t} = \sum_{j} \mathcal{V}_{fj}
+c_j (t) e^{\frac{i (E_f-E_j)t}{\hbar}},\quad \forall f
+\]</span></p>
+<p>Notice that the above equation is a set of coupled differential
+equations that depict the transitions from different states <span
+class="math inline">\(\phi_{n}\)</span>. It is then clear to say, if we
+want to study the transition from state <span
+class="math inline">\(i\)</span> to state <span
+class="math inline">\(f\)</span>, we will give the initial
+conditions:</p>
+<p><span class="math display">\[
+c_j(t)\Big|_{t=0} = \delta_{ij}
+\]</span></p>
+<h1
+id="st-order-approximation-of-time-independent-perturbation">1st-order
+approximation of time-independent perturbation</h1>
+<p>We now consider a simple case where the perturbation is
+time-independent, i.e., <span class="math inline">\(\hat{\mathcal{V}}(t)
+= \hat{\mathcal{V}}\)</span>. Also, we only consider the transition from
+state <span class="math inline">\(i\)</span> to state <span
+class="math inline">\(f\)</span>, that is to set <span
+class="math inline">\(c_j(t)|_{t=0}=\delta_{ij}\)</span>. The
+first-order approximation of such problem is given by,</p>
+<p><span class="math display">\[
+i\hbar \frac{\mathrm{d}c_f (t)}{\mathrm{d}t} = \mathcal{V}_{fi}
+\cancelto{1}{c_i (t)} e^{\frac{i (E_f-E_i)t}{\hbar}}
+\]</span></p>
+<p><span class="math display">\[
+\Rightarrow c_f(t) = -\frac{\mathcal{V}_{fi}}{E_f-E_i} e^{\frac{i
+(E_f-E_i)t&#39;}{\hbar}} \Big|_{t&#39;=0}^{t&#39;=t} =
+-\frac{\mathcal{V}_{fi}t}{\hbar} \frac{\sin
+((E_j-E_i)t/2\hbar)}{(E_j-E_i)t/2\hbar} i e^{i(E_j-E_i)t/2\hbar}
+\]</span></p>
+<p>The module of the final state <span class="math inline">\(f\)</span>
+is then given by,</p>
+<p><span class="math display">\[
+\begin{aligned}
+    \left|c_f (t)\right|^2 &amp;= |\mathcal{V}_{fi}|^2
+\left(\frac{t}{\hbar}\frac{\sin ((E_j-E_i)t/2\hbar)}{(E_j-E_i)t/2\hbar}
+\right)^2\\
+    &amp;= \frac{2\pi}{\hbar} |\mathcal{V}_{fi}|^2 t
+\times\delta(E_f-E_i)
+\end{aligned}
+\]</span></p>
+<div class="note primary"><p>When we are talking about a quantum mode that has a frequency <span
+class="math inline">\(\sim\omega\)</span>, the time scale should be much
+larger than <span class="math inline">\(1/\omega\)</span>. It is normal
+that the scale of energy difference is <span class="math inline">\(\sim
+\hbar\omega\)</span>. Thus, except for the case where <span
+class="math inline">\(E_f=E_i\)</span>, the term <span
+class="math inline">\(\frac{(E_j-E_i)t}{2\hbar} \gg
+\frac{(E_j-E_i)}{\hbar\omega}\sim 1\)</span>, making the term <span
+class="math inline">\(\sin
+((E_j-E_i)t/2\hbar)/((E_j-E_i)t/2\hbar)\)</span> to be either <span
+class="math inline">\(1\)</span> or <span
+class="math inline">\(0\)</span>. Also, for t much larger than <span
+class="math inline">\(1/\omega\)</span>, with <span
+class="math inline">\(|\mathcal{V}|_{fi}\)</span> the same magnitude as
+<span class="math inline">\(\hbar\omega\)</span>, the whole term is then
+proportional to the dirac delta function <span
+class="math inline">\(\delta(E_f-E_i)\)</span>.</p>
+<p>After careful examination, it is written as,</p>
+<p><span class="math display">\[
+\left(\frac{t}{\hbar}\frac{\sin ((E_j-E_i)t/2\hbar)}{(E_j-E_i)t/2\hbar}
+\right)^2 = \frac{2\pi}{\hbar} t \times\delta(E_f-E_i)
+\]</span></p>
+<p>due to that <span class="math inline">\(\int_{-\infty}^{\infty} (\sin
+x)^2/x^2 \mathrm{d}x = \pi\)</span>.</p>
+</div>
+<p>The transition rate can be read from <span class="math inline">\(|c_f
+(t)|^2\)</span>:</p>
+<p><span class="math display">\[
+W_{fi} = \frac{2\pi}{\hbar} |\mathcal{V}_{fi}|^2 \delta(E_f-E_i)
+\]</span></p>
+<p>This is the very golden rule that we are looking for. It is the basis
+of the derivation of the scattering rate in the <a
+href="/2023/10/anharmonicity">previous post</a>, where we use the
+anharmonic potential as the perturbation with respect to the harmonic
+Hamiltonian.</p>
+<h1 id="reference">Reference</h1>
+<ol type="1">
+<li>Davies, John H., Scattering Rates: the Golden Rule (A chapter from
+the book <em>The Physics of Low-dimensional Semiconductors: An
+Introduction</em>).</li>
+<li>Griffths, David J., <em>Introduction to Quantum Mechanics</em>.</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Quantum Physics</category>
+      </categories>
+      <tags>
+        <tag>Fermi&#39;s golden rule</tag>
+        <tag>Quantum physics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2023/10/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very
+first post. Check <a href="https://hexo.io/docs/">documentation</a> for
+more info. If you get any problems when using Hexo, you can find the
+answer in <a
+href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or
+you can ask me on <a
+href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<span id="more"></span>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="create-a-new-post">Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="run-server">Run server</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="generate-static-files">Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Blog</tag>
+        <tag>Test</tag>
       </tags>
   </entry>
   <entry>
@@ -1129,352 +1478,8 @@ Bulk, Disordered, and Nanostructured Materials</em> (MIT 2011).</li>
       <tags>
         <tag>Phonon</tag>
         <tag>Interatomic force constant</tag>
+        <tag>Fermi&#39;s golden rule</tag>
         <tag>Scattering</tag>
-        <tag>Fermi&#39;s golden rule</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2023/10/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very
-first post. Check <a href="https://hexo.io/docs/">documentation</a> for
-more info. If you get any problems when using Hexo, you can find the
-answer in <a
-href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or
-you can ask me on <a
-href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-<h2 id="quick-start">Quick Start</h2>
-<h3 id="create-a-new-post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="run-server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="generate-static-files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-        <tag>Blog</tag>
-        <tag>Test</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Solve phonon dispersion relation by the classical approach</title>
-    <url>/2023/10/phonon-dispersion/</url>
-    <content><![CDATA[<p>Consider a crystal in which unit cells are labeled by <span
-class="math inline">\(\boldsymbol{l}\)</span>, and atoms in each cell
-are labeled by <span class="math inline">\(\boldsymbol{b}\)</span>. The
-total energy of the system, noted by <span
-class="math inline">\(\mathcal{V}\)</span>, can be expanded using
-Taylor's expansion (greek letters mean direction): <span
-class="math display">\[
-\begin{aligned}
-    \mathcal{V} = &amp; \mathcal{V}_0 +
-\underbrace{\sum_{\boldsymbol{l},\boldsymbol{b}}\sum_{\alpha}
-\Phi_{\alpha}(\boldsymbol{l}\boldsymbol{b})
-u_{\alpha}(\boldsymbol{l}\boldsymbol{b})}_{\mathcal{V}_1} +
-\underbrace{\frac{1}{2}\sum_{\boldsymbol{l},\boldsymbol{b},\boldsymbol{l}&#39;,\boldsymbol{b}&#39;}\sum_{\alpha,\beta}
-\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)u_{\alpha}(\boldsymbol{l}\boldsymbol{b})u_{\beta}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;)}_{\mathcal{V}_2}
-+ \cdots\\
-    &amp; \quad +
-\frac{1}{n!}\sum_{\boldsymbol{l}_1,\boldsymbol{b}_1,\boldsymbol{l}_2,\boldsymbol{b}_2,\cdots,\boldsymbol{l}_n,\boldsymbol{b}_n}\sum_{\alpha_1,\alpha_2,\cdots,\alpha_n}\Phi_{\alpha_1,\alpha_2,\cdots,\alpha_n}(\boldsymbol{l}_1,\boldsymbol{b}_1;\boldsymbol{l}_2,\boldsymbol{b}_2;\cdots;\boldsymbol{l}_n,\boldsymbol{b}_n)u_{\alpha_1}(\boldsymbol{l}_1,\boldsymbol{b}_1)\cdots
-u_{\alpha_n}(\boldsymbol{l}_n \boldsymbol{b}_n)
-\end{aligned}
-\]</span> Where we note the nth order interatomic force constants (IFCs)
-using <span class="math inline">\(\Phi\)</span>, and we note <span
-class="math inline">\(u_{\alpha}(\boldsymbol{l}\boldsymbol{b})\)</span>
-represent the spatial deviation of atom <span
-class="math inline">\(\boldsymbol{b}\)</span> in cell <span
-class="math inline">\(\boldsymbol{l}\)</span> along <span
-class="math inline">\(\alpha\)</span> direction.<span id="more"></span> It is clear
-to see that:</p>
-<ul>
-<li>The first order IFCs should be cancelled, that <span
-class="math inline">\(\mathcal{V}_1=0\)</span>, due to that the system
-is stable.</li>
-<li>The second order term <span
-class="math inline">\(\mathcal{V}_2\)</span> represent the combination
-of many interatomic harmonic oscillators.</li>
-</ul>
-<p>Let's ignore the higher order term, keeping only <span
-class="math inline">\(\mathcal{V}_2\)</span>. Using Newton's second law,
-<span class="math display">\[
-F_{\boldsymbol{l}\boldsymbol{b}\alpha} = m_{\boldsymbol{b}}
-\ddot{u}_{\alpha}(\boldsymbol{l}\boldsymbol{b}) =-\frac{\partial
-\mathcal{V}}{\mathcal{u_{\alpha}}(\boldsymbol{l}\boldsymbol{b})}= -
-\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}
-\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
-u_{\beta}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;),\quad \forall
-\boldsymbol{l},\boldsymbol{b},\alpha
-\]</span> Note that the above equation exploits the symmetry of second
-order IFCs, that <span
-class="math inline">\(\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
-=
-\Phi_{\beta,\alpha}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;,\boldsymbol{l}\boldsymbol{b})\)</span>.
-We now seek a solution in the form of plane waves: <span
-class="math display">\[
-u_{\alpha} (\boldsymbol{l}\boldsymbol{b}) =
-\frac{1}{\sqrt{m_{\boldsymbol{b}}}} \sum_{\boldsymbol{q}}
-U_{\alpha}(\boldsymbol{q};\boldsymbol{b})\exp \big[ i
-\boldsymbol{q}\cdot \boldsymbol{l}-\omega t\big]
-\]</span></p>
-<div class="note info"><ul>
-<li>The purpose of seaking a solution that is multiplied by <span
-class="math inline">\(1/\sqrt{m_{\boldsymbol{b}}}\)</span> is just to
-make the form of dynamical matrix simple and beautiful, so don't be
-confused.</li>
-<li>The value <span
-class="math inline">\(U_{\alpha}(\boldsymbol{q};\boldsymbol{b})\)</span>
-is complex. Specifically, it contains the phase information of atom
-<span class="math inline">\(\boldsymbol{b}\)</span>.</li>
-</ul>
-</div>
-<p>A specific wavevector <span
-class="math inline">\(\boldsymbol{q}\)</span> yields, <span
-class="math display">\[
-\omega^2 \sqrt{m_{\boldsymbol{b}}}
-U_{\alpha}(\boldsymbol{q};\boldsymbol{b}) \exp
-\big[i\boldsymbol{q}\cdot\boldsymbol{l}-\omega t\big] =
--\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
-\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;-\omega
-t\big]
-\]</span> Cancel the exponential term on both sides. Notice that due to
-translational invariance, <span
-class="math inline">\(\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)=\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};(\boldsymbol{l}-\boldsymbol{l}&#39;)\boldsymbol{b}&#39;)\)</span>,
-thus, <span class="math display">\[
-\begin{aligned}
-  \omega^2 \sqrt{m_{\boldsymbol{b}}}
-U_{\alpha}(\boldsymbol{q};\boldsymbol{b}) &amp;=
--\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
-\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot(\boldsymbol{l}&#39;-\boldsymbol{l})\big]\\
-  &amp;=
--\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};(\boldsymbol{l}&#39;-\boldsymbol{l})\boldsymbol{b}&#39;)
-\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot(\boldsymbol{l}&#39;-\boldsymbol{l})\big]\\
-  &amp;=
--\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
-\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;\big]
-\end{aligned}
-\]</span> Therefore, if we note a matrix called "dynamical matrix", as:
-<span class="math display">\[
-D_{\alpha\beta} (\boldsymbol{b}\boldsymbol{b}&#39; | \boldsymbol{q}) =
-\frac{1}{\sqrt{m_{\boldsymbol{b}}m_{\boldsymbol{b}&#39;}}}
-\sum_{\boldsymbol{l}&#39;}
-\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)\exp[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;]
-\]</span> The dynamical equations are thus in the form of matrix
-multiplication, <span class="math display">\[
-\omega^2 U_{\alpha} (\boldsymbol{q};\boldsymbol{b}) =
-\sum_{\boldsymbol{b}&#39;,\beta}D_{\alpha\beta}(\boldsymbol{b}\boldsymbol{b}&#39;|\boldsymbol{q})
-U_{\beta} (\boldsymbol{q};\boldsymbol{b}&#39;)
-\]</span> Solving the above equation, we find that <span
-class="math inline">\(\omega\)</span> is in fact the eigenvalue of the
-dynamical matrix. Due to that <span
-class="math inline">\(D_{\cdot,\cdot}(\cdot,\cdot|\boldsymbol{q})\)</span>
-is a matrix of <span class="math inline">\(3p\times 3p\)</span>, where
-<span class="math inline">\(p\)</span> is the number of atoms per unit
-cell, and <span class="math inline">\(3\)</span> is the directions that
-<span class="math inline">\(\alpha,\beta\)</span> can take, for any
-given <span class="math inline">\(\boldsymbol{q}\)</span>, there are
-<span class="math inline">\(3p\)</span> eigenvalues and <span
-class="math inline">\(3p\)</span> eigenvectors, that correspond to
-different phonon branches.</p>
-<p><strong>Example: 1D diatomic chain</strong></p>
-<p>Consider the 1D diatomic chain as following:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> g     g     g     g     g</span><br><span class="line">---[m]---[M]---[m]---[M]---</span><br><span class="line">     |&lt;--- a ---&gt;|</span><br></pre></td></tr></table></figure>
-<p>The total energy is: <span class="math display">\[
-U= \frac{1}{2}g\sum_n \left[(u_{n,1}-u_{n,2})^2 +
-(u_{n,2}-u_{n+1,1})^2\right]
-\]</span> where <span class="math inline">\(n\)</span> labels the unit
-cell, <span class="math inline">\(1\)</span> and <span
-class="math inline">\(2\)</span> represent <span
-class="math inline">\(M\)</span> or <span
-class="math inline">\(m\)</span>. The dynamical matrix is <span
-class="math inline">\(2\times 2\)</span>, due to that there are two
-atoms in each unit cell, and there is only one direction. According to
-the definition, the dynamical matrix is written as, <span
-class="math display">\[
-D_q = \begin{bmatrix}
-\frac{2g}{M} &amp; -\frac{g}{\sqrt{Mm}}(1+e^{-iqa})\\
--\frac{g}{\sqrt{Mm}}(1+e^{iqa}) &amp; \frac{2g}{m}
-\end{bmatrix}
-\]</span> The two eigenvalues are: <span class="math display">\[
-\Rightarrow \omega^2 = g \left(\frac{1}{M} + \frac{1}{m}\right) \pm
-g\sqrt{\left(\frac{1}{M} + \frac{1}{m}\right)^2-\frac{4}{Mm}
-\sin^2\left(\frac{qa}{2}\right)}
-\]</span> If we plot the two branches from <span
-class="math inline">\(q=-\pi/a\)</span> to <span
-class="math inline">\(q=\pi/a\)</span>, the dispersion relation will be
-shown as:</p>
-<p><img src="/images/2023/dispersion.png" alt="dispersion" style="zoom: 25%;" /></p>
-]]></content>
-      <categories>
-        <category>Solid State Physics</category>
-      </categories>
-      <tags>
-        <tag>Phonon</tag>
-        <tag>Interatomic force constant</tag>
-        <tag>Dispersion relation</tag>
-        <tag>Dynamical matrix</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Fermi&#39;s golden rule</title>
-    <url>/2023/10/golden-rule/</url>
-    <content><![CDATA[<h1 id="perturbation-of-a-quantum-system">Perturbation of a quantum
-system</h1>
-<p>Consider a quantum system that is characterized by a Hamiltonian
-<span class="math inline">\(\hat{H}_0\)</span>. Note that its
-eigenstates are represented by <span
-class="math inline">\(\Phi_{n}=\phi_{n}\exp(-iE_n t/\hbar),
-n=1,2,\dots\)</span>, thus the time-independent Schrödinger equation is
-given by</p>
-<p><span class="math display">\[
-\hat{H}_0\phi_{n} = E_{n}\phi_{n}
-\]</span></p>
-<p>Now, we perturb the system by adding a perturbation <span
-class="math inline">\(\hat{\mathcal{V}}(t)\)</span>, by which the new
-Hamiltonian becomes <span class="math inline">\(\hat{H} = \hat{H}_0 +
-\hat{\mathcal{V}}(t)\)</span>, and we try to solve the new Schrödinger
-equation. Note that those eigenstates constitute a complete set,
-thus,</p>
-<p><span class="math display">\[
-\begin{aligned}
-    \underbrace{\left( \hat{H}_0 +
-\hat{\mathcal{V}}(t)\right)}_{\bar{H}} \underbrace{\sum_{j} c_{j}(t)
-\Phi_{j}}_{\Phi} = i\hbar \frac{\partial}{\partial t}
-\underbrace{\sum_{j} c_{j}(t) \Phi_{j}}_{\Phi}
-\end{aligned}
-\]</span></p>
-<p>Due to that for any <span class="math inline">\(j\)</span>, <span
-class="math inline">\(\hat{H}\Phi_j = i\hbar\frac{\partial}{\partial
-t}\Phi_j\)</span>, the above equation can be rewritten by cancelling
-stuff related with the original Hamiltonian <span
-class="math inline">\(\hat{H}_0\)</span>,</p>
-<p><span class="math display">\[
-\hat{\mathcal{V}}(t) \sum_{j} c_j (t) \Phi_{j}= i\hbar \sum_j \Phi_{j}
-\frac{\mathrm{d} c_j (t)}{\mathrm{d} t}
-\]</span></p>
-<p>Mathematically, for any <span class="math inline">\(f\)</span>, we
-can try to multiply <span class="math inline">\(\Phi_f^*\)</span> on
-both sides of the above equation, and then integrate over the whole
-space, thus,</p>
-<p><span class="math display">\[
-\sum_{j} c_j (t) \Braket{\Phi_f | \hat{\mathcal{V}}(t) | \Phi_j} =
-i\hbar \frac{\mathrm{d} c_f (t)}{\mathrm{d} t}
-\]</span></p>
-<p>The braket on the left side can be further expressed as,</p>
-<p><span class="math display">\[
-\Braket{\Phi_f | \hat{\mathcal{V}}(t) | \Phi_j} =
-\underbrace{\Braket{\phi_f | \hat{\mathcal{V}}(t) | \phi_j}}_{\equiv
-\mathcal{V}_{fj}} \exp\left( \frac{i(E_f - E_j)t}{\hbar} \right)
-\]</span></p>
-<p>Therefore, our task to study the perturbated system is then relying
-on the following equations:</p>
-<p><span class="math display">\[
-i\hbar \frac{\mathrm{d}c_f (t)}{\mathrm{d}t} = \sum_{j} \mathcal{V}_{fj}
-c_j (t) e^{\frac{i (E_f-E_j)t}{\hbar}},\quad \forall f
-\]</span></p>
-<p>Notice that the above equation is a set of coupled differential
-equations that depict the transitions from different states <span
-class="math inline">\(\phi_{n}\)</span>. It is then clear to say, if we
-want to study the transition from state <span
-class="math inline">\(i\)</span> to state <span
-class="math inline">\(f\)</span>, we will give the initial
-conditions:</p>
-<p><span class="math display">\[
-c_j(t)\Big|_{t=0} = \delta_{ij}
-\]</span></p>
-<h1
-id="st-order-approximation-of-time-independent-perturbation">1st-order
-approximation of time-independent perturbation</h1>
-<p>We now consider a simple case where the perturbation is
-time-independent, i.e., <span class="math inline">\(\hat{\mathcal{V}}(t)
-= \hat{\mathcal{V}}\)</span>. Also, we only consider the transition from
-state <span class="math inline">\(i\)</span> to state <span
-class="math inline">\(f\)</span>, that is to set <span
-class="math inline">\(c_j(t)|_{t=0}=\delta_{ij}\)</span>. The
-first-order approximation of such problem is given by,</p>
-<p><span class="math display">\[
-i\hbar \frac{\mathrm{d}c_f (t)}{\mathrm{d}t} = \mathcal{V}_{fi}
-\cancelto{1}{c_i (t)} e^{\frac{i (E_f-E_i)t}{\hbar}}
-\]</span></p>
-<p><span class="math display">\[
-\Rightarrow c_f(t) = -\frac{\mathcal{V}_{fi}}{E_f-E_i} e^{\frac{i
-(E_f-E_i)t&#39;}{\hbar}} \Big|_{t&#39;=0}^{t&#39;=t} =
--\frac{\mathcal{V}_{fi}t}{\hbar} \frac{\sin
-((E_j-E_i)t/2\hbar)}{(E_j-E_i)t/2\hbar} i e^{i(E_j-E_i)t/2\hbar}
-\]</span></p>
-<p>The module of the final state <span class="math inline">\(f\)</span>
-is then given by,</p>
-<p><span class="math display">\[
-\begin{aligned}
-    \left|c_f (t)\right|^2 &amp;= |\mathcal{V}_{fi}|^2
-\left(\frac{t}{\hbar}\frac{\sin ((E_j-E_i)t/2\hbar)}{(E_j-E_i)t/2\hbar}
-\right)^2\\
-    &amp;= \frac{2\pi}{\hbar} |\mathcal{V}_{fi}|^2 t
-\times\delta(E_f-E_i)
-\end{aligned}
-\]</span></p>
-<div class="note primary"><p>When we are talking about a quantum mode that has a frequency <span
-class="math inline">\(\sim\omega\)</span>, the time scale should be much
-larger than <span class="math inline">\(1/\omega\)</span>. It is normal
-that the scale of energy difference is <span class="math inline">\(\sim
-\hbar\omega\)</span>. Thus, except for the case where <span
-class="math inline">\(E_f=E_i\)</span>, the term <span
-class="math inline">\(\frac{(E_j-E_i)t}{2\hbar} \gg
-\frac{(E_j-E_i)}{\hbar\omega}\sim 1\)</span>, making the term <span
-class="math inline">\(\sin
-((E_j-E_i)t/2\hbar)/((E_j-E_i)t/2\hbar)\)</span> to be either <span
-class="math inline">\(1\)</span> or <span
-class="math inline">\(0\)</span>. Also, for t much larger than <span
-class="math inline">\(1/\omega\)</span>, with <span
-class="math inline">\(|\mathcal{V}|_{fi}\)</span> the same magnitude as
-<span class="math inline">\(\hbar\omega\)</span>, the whole term is then
-proportional to the dirac delta function <span
-class="math inline">\(\delta(E_f-E_i)\)</span>.</p>
-<p>After careful examination, it is written as,</p>
-<p><span class="math display">\[
-\left(\frac{t}{\hbar}\frac{\sin ((E_j-E_i)t/2\hbar)}{(E_j-E_i)t/2\hbar}
-\right)^2 = \frac{2\pi}{\hbar} t \times\delta(E_f-E_i)
-\]</span></p>
-<p>due to that <span class="math inline">\(\int_{-\infty}^{\infty} (\sin
-x)^2/x^2 \mathrm{d}x = \pi\)</span>.</p>
-</div>
-<p>The transition rate can be read from <span class="math inline">\(|c_f
-(t)|^2\)</span>:</p>
-<p><span class="math display">\[
-W_{fi} = \frac{2\pi}{\hbar} |\mathcal{V}_{fi}|^2 \delta(E_f-E_i)
-\]</span></p>
-<p>This is the very golden rule that we are looking for. It is the basis
-of the derivation of the scattering rate in the <a
-href="/2023/10/anharmonicity">previous post</a>, where we use the
-anharmonic potential as the perturbation with respect to the harmonic
-Hamiltonian.</p>
-<h1 id="reference">Reference</h1>
-<ol type="1">
-<li>Davies, John H., Scattering Rates: the Golden Rule (A chapter from
-the book <em>The Physics of Low-dimensional Semiconductors: An
-Introduction</em>).</li>
-<li>Griffths, David J., <em>Introduction to Quantum Mechanics</em>.</li>
-</ol>
-]]></content>
-      <categories>
-        <category>Quantum Physics</category>
-      </categories>
-      <tags>
-        <tag>Fermi&#39;s golden rule</tag>
-        <tag>Quantum physics</tag>
       </tags>
   </entry>
 </search>
