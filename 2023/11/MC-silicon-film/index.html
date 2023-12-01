@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#2774AE" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#003B5C" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.0.0">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/design/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/design/favicon/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/design/favicon/favicon.ico">
+  <link rel="mask-icon" href="/images/design/favicon/safari-pinned-tab.svg" color="#2774AE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC:300,300italic,400,400italic,700,700italic%7CSatisfy:300,300italic,400,400italic,700,700italic%7CNoto+Sans+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.24/fancybox/fancybox.css" integrity="sha256-vQkngPS8jiHHH0I6ABTZroZk8NPZ7b+MUReOFE9UsXQ=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"phononist.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":true,"height":400},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":["utterances"],"storage":true,"lazyload":false,"nav":{"utterances":{"order":-2}}},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeIn","post_body":"fadeIn","coll_header":"fadeIn","sidebar":"fadeIn"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="The variance-reduced Monte Carlo simulation of phonon transport solves the following equation: \[ \frac{\partial e^{\text{d}}}{\partial t} + \boldsymbol{v}_{\mathrm{g}} \cdot \nabla e^{\text{d}} &#x3D; -\f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Variance-reduced Monte Carlo simulation of phonon transport in silicon films">
+<meta property="og:url" content="https://phononist.github.io/2023/11/MC-silicon-film/index.html">
+<meta property="og:site_name" content="Harmony Hideaway">
+<meta property="og:description" content="The variance-reduced Monte Carlo simulation of phonon transport solves the following equation: \[ \frac{\partial e^{\text{d}}}{\partial t} + \boldsymbol{v}_{\mathrm{g}} \cdot \nabla e^{\text{d}} &#x3D; -\f">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://phononist.github.io/images/2023/MC-silicon-film/model.png">
+<meta property="og:image" content="https://phononist.github.io/images/2023/MC-silicon-film/200nm.png">
+<meta property="og:image" content="https://phononist.github.io/images/2023/MC-silicon-film/10um.png">
+<meta property="og:image" content="https://phononist.github.io/images/2023/MC-silicon-film/100um.png">
+<meta property="og:image" content="https://phononist.github.io/images/2023/MC-silicon-film/thickness.png">
+<meta property="article:published_time" content="2023-12-01T03:48:57.000Z">
+<meta property="article:modified_time" content="2023-12-01T03:48:57.000Z">
+<meta property="article:author" content="Phononist">
+<meta property="article:tag" content="Ab initio calculation">
+<meta property="article:tag" content="Variance-reduced Monte Carlo">
+<meta property="article:tag" content="Size effect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://phononist.github.io/images/2023/MC-silicon-film/model.png">
+
+
+<link rel="canonical" href="https://phononist.github.io/2023/11/MC-silicon-film/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://phononist.github.io/2023/11/MC-silicon-film/","path":"2023/11/MC-silicon-film/","title":"Variance-reduced Monte Carlo simulation of phonon transport in silicon films"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Variance-reduced Monte Carlo simulation of phonon transport in silicon films | Harmony Hideaway</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Harmony Hideaway</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Unveiling Vibrational Symphonies</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-milestones"><a href="/milestone/" rel="section"><i class="fa fa-flag fa-fw"></i>Milestones</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#method"><span class="nav-number">1.</span> <span class="nav-text">Method</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#phonon-initialization"><span class="nav-number">1.1.</span> <span class="nav-text">Phonon initialization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#phonon-advection-and-scattering"><span class="nav-number">1.2.</span> <span class="nav-text">Phonon advection and
+scattering</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#results"><span class="nav-number">2.</span> <span class="nav-text">Results</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#l200mathrmnm-strong-size-effect"><span class="nav-number">2.1.</span> <span class="nav-text">\(L&#x3D;200\,\mathrm{nm}\): strong size
+effect</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#l10mathrmmu-m-almost-fourier"><span class="nav-number">2.2.</span> <span class="nav-text">\(L&#x3D;10\,\mathrm{\mu m}\): almost Fourier</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#l100mathrmmu-m-fourier"><span class="nav-number">2.3.</span> <span class="nav-text">\(L&#x3D;100\,\mathrm{\mu m}\): Fourier</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#effective-thermal-conductivity-vs.-film-thickness"><span class="nav-number">2.4.</span> <span class="nav-text">Effective
+thermal conductivity vs. film thickness</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-number">3.</span> <span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Phononist"
+      src="/images/design/avatar_beer.jpg">
+  <p class="site-author-name" itemprop="name">Phononist</p>
+  <div class="site-description" itemprop="description">Stay young, stay simple 👓</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="mailto:phononist@gmail.com" title="E-Mail → mailto:phononist@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fas fa-square-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+<img class="block-dark-only" src="/images/activities_dark.png">
+<img class="block-light-only" src="/images/activities_light.png">
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://phononist.github.io/2023/11/MC-silicon-film/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/design/avatar_beer.jpg">
+      <meta itemprop="name" content="Phononist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Harmony Hideaway">
+      <meta itemprop="description" content="Stay young, stay simple 👓">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Variance-reduced Monte Carlo simulation of phonon transport in silicon films | Harmony Hideaway">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Variance-reduced Monte Carlo simulation of phonon transport in silicon films
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-11-30 19:48:57" itemprop="dateCreated datePublished" datetime="2023-11-30T19:48:57-08:00">2023-11-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Solid-State-Physics/" itemprop="url" rel="index"><span itemprop="name">Solid State Physics</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Solid-State-Physics/Ab-Initio-Calculation/" itemprop="url" rel="index"><span itemprop="name">Ab Initio Calculation</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.5k</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>The variance-reduced Monte Carlo simulation of phonon transport
+solves the following equation:</p>
+<p><span class="math display">\[
+\frac{\partial e^{\text{d}}}{\partial t} + \boldsymbol{v}_{\mathrm{g}}
+\cdot \nabla e^{\text{d}} = -\frac{e^{\mathrm{d}} -
+(e^{\mathrm{eq}}(T)-e^{\mathrm{eq}}(T_{\mathrm{eq}}))}{\tau}
+\]</span></p>
+<p>Here, relaxation time approximation is used, and <span
+class="math inline">\(\tau\)</span> takes <em>ab initio</em> calculated
+value, see <a href="/2023/10/anharmonicity">the previous post</a>. In
+this equation, <span class="math inline">\(e^{\mathrm{d}} = \hbar\omega
+(f(\omega)-f_{\mathrm{BE}}(\omega, T_{\mathrm{eq}}))\)</span> for each
+phonon mode, where <span class="math inline">\(f\)</span> is the
+distribution function (not necessarily equilibrium). While <span
+class="math inline">\(e^{\mathrm{eq}}(T)=\hbar\omega
+(f_{\mathrm{BE}}(\omega, T)-f_{\mathrm{BE}}(\omega,
+T_{\mathrm{eq}}))\)</span> follows the Bose-Einstein distribution. Note
+that here <span class="math inline">\(T_{\mathrm{eq}}\)</span> is a
+reference temperature, and <span class="math inline">\(T\)</span> is the
+local temperature that deviates from <span
+class="math inline">\(T_{\mathrm{eq}}\)</span>.</p>
+<span id="more"></span>
+<h1 id="method">Method</h1>
+<p>To solve the above equation in a Monte Carlo way, we need to
+understand the meaning of each sampling step. The traditional Monte
+Carlo is easy to understand, which simulates the original phonon
+BTE:</p>
+<p><span class="math display">\[
+\frac{\partial f}{\partial t} + \boldsymbol{v}_{\mathrm{g}} \cdot \nabla
+f = -\frac{f - f_{\mathrm{eq}}(T)}{\tau}
+\]</span></p>
+<p>and it is direct that each sample represents a fixed amount of
+phonons. Analogously, in the energy-based variance-reduced formulation,
+each sample represents a fixed amount of energy, and please keep that in
+mind, which is important for understanding the rules of initialization.
+Also, it is also worth noting that <span
+class="math inline">\(e^{\mathrm{d}}\)</span> can be positive or
+negative, and that will give each sampled phonon a sign of energy.</p>
+<p>To put things simple enough, here we just consider the cross-plane
+transport of a silicon film. In that case, only temperature boundaries
+are considered.</p>
+<img src="/images/2023/MC-silicon-film/model.png" class="" width="400" title="Model">
+<h2 id="phonon-initialization">Phonon initialization</h2>
+<p>To draw a phonon for the start, we have to make sure that the
+boundary and initial conditions are met. For the temperature boundaries,
+one thing that we are sure is that, from <span
+class="math inline">\(t=0\)</span> to <span
+class="math inline">\(t_{\mathrm{total}}\)</span>, the total energy
+input from the left boundary is:</p>
+<p><span class="math display">\[
+E_{\mathrm{left}} = t_{\text{total}}\sum_{\boldsymbol{q}s, \text{ s.t. }
+v_{gx}&gt;0} \hbar\omega f(\omega, T_{\text{left}}) v_{gx}
+\]</span></p>
+<p>thus the deviated energy is:</p>
+<p><span class="math display">\[
+E_{\mathrm{left}}^{\mathrm{d}} = t_{\text{total}}\sum_{\boldsymbol{q}s,
+\text{ s.t. } v_{gx}&gt;0} \underbrace{\hbar\omega (f(\omega,
+T_{\text{left}})-f(\omega, T_{\text{eq}}))}_{\approx c_{\boldsymbol{q}s}
+\Delta T_{\text{left}}} v_{gx}
+\]</span></p>
+<p>And the right boundary is the same:</p>
+<p><span class="math display">\[
+E_{\mathrm{right}}^{\mathrm{d}} = t_{\text{total}}\sum_{\boldsymbol{q}s,
+\text{ s.t. } v_{gx}&lt;0} \underbrace{\hbar\omega (f(\omega,
+T_{\text{right}})-f(\omega, T_{\text{eq}}))}_{\approx
+c_{\boldsymbol{q}s} \Delta T_{\text{right}}} v_{gx}
+\]</span></p>
+<p>For the internal area, the story is not the same, as the deviated
+energy does nothing with the time <span
+class="math inline">\(t_{\text{total}}\)</span>, and it is only related
+to the initial temperature:</p>
+<p><span class="math display">\[
+E_{\mathrm{internal}}^{\mathrm{d}} = \sum_{\boldsymbol{q}s} \hbar\omega
+(f(\omega, T_{\text{init}})-f(\omega, T_{\text{eq}})) L \approx
+\sum_{\boldsymbol{q}s} c_{\boldsymbol{q}s} \Delta T_{\text{init}} L
+\]</span></p>
+<p>Recall that each sample represents a fixed amount of energy, we
+should thus draw each phonon mode according to their contribution to the
+total deviated energy. It makes the things worse as the deviated energy
+can be positive or negative, but the good thing is that we can add an
+abosolute value. That leads to the following strategy:</p>
+<ol type="1">
+<li>If we want to study <span class="math inline">\(N\)</span> phonons
+in the simulation, we should calculate the energy that each phonon we
+draw should have, which is <span
+class="math inline">\(\frac{|E_{\mathrm{left}}^{\mathrm{d}}| +
+|E_{\mathrm{internal}}^{\mathrm{d}}| +
+|E_{\mathrm{right}}^{\mathrm{d}}|}{N}\)</span>. This is the abosolute
+value, and the sign will be determined later.</li>
+<li>Draw a random number <span class="math inline">\(r\)</span> from
+<span class="math inline">\([0, 1]\)</span>:
+<ol type="1">
+<li>If <span class="math inline">\(r &lt;
+\frac{|E_{\mathrm{left}}^{\mathrm{d}}|}{|E_{\mathrm{left}}^{\mathrm{d}}|
++ |E_{\mathrm{internal}}^{\mathrm{d}}| +
+|E_{\mathrm{right}}^{\mathrm{d}}|}\)</span>, the phonon is drawn from
+the left boundary:
+<ul>
+<li>Draw the phonon mode according to its contribution to <span
+class="math inline">\(E_{\mathrm{left}}^{\mathrm{d}}\)</span>, thus the
+probability is proportional to <span
+class="math inline">\(c_{\boldsymbol{q}s}v_{\boldsymbol{q}s}\)</span>,
+but make sure that <span
+class="math inline">\(v_{gx}&gt;0\)</span>.</li>
+<li>The sign of the energy is determined by the sign of <span
+class="math inline">\(E_{\mathrm{left}}^{\mathrm{d}}\)</span>.</li>
+</ul></li>
+<li>If <span
+class="math inline">\(\frac{|E_{\mathrm{left}}^{\mathrm{d}}|}{|E_{\mathrm{left}}^{\mathrm{d}}|
++ |E_{\mathrm{internal}}^{\mathrm{d}}| +
+|E_{\mathrm{right}}^{\mathrm{d}}|} \leq r &lt;
+\frac{|E_{\mathrm{left}}^{\mathrm{d}}| +
+|E_{\mathrm{internal}}^{\mathrm{d}}|}{|E_{\mathrm{left}}^{\mathrm{d}}| +
+|E_{\mathrm{internal}}^{\mathrm{d}}| +
+|E_{\mathrm{right}}^{\mathrm{d}}|}\)</span>, the phonon is drawn from
+the internal area:
+<ul>
+<li>Draw the phonon mode according to its contribution to <span
+class="math inline">\(E_{\mathrm{internal}}^{\mathrm{d}}\)</span>, thus
+the probability is proportional to <span
+class="math inline">\(c_{\boldsymbol{q}s}\)</span>.</li>
+<li>Draw another number to determine the initial position of the
+phonon.</li>
+<li>The sign of the energy is determined by the sign of <span
+class="math inline">\(E_{\mathrm{internal}}^{\mathrm{d}}\)</span>.</li>
+</ul></li>
+<li>If <span class="math inline">\(r \geq
+\frac{|E_{\mathrm{left}}^{\mathrm{d}}| +
+|E_{\mathrm{internal}}^{\mathrm{d}}|}{|E_{\mathrm{left}}^{\mathrm{d}}| +
+|E_{\mathrm{internal}}^{\mathrm{d}}| +
+|E_{\mathrm{right}}^{\mathrm{d}}|}\)</span>, the phonon is drawn from
+the right boundary:
+<ul>
+<li>Draw the phonon mode according to <span
+class="math inline">\(E_{\mathrm{right}}^{\mathrm{d}}\)</span>, thus the
+probability <span class="math inline">\(\propto
+c_{\boldsymbol{q}s}v_{\boldsymbol{q}s}\)</span>, but make sure that
+<span class="math inline">\(v_{gx}&lt;0\)</span>.</li>
+</ul></li>
+</ol></li>
+<li>Determine the initial time of the phonon, which is drawn uniformly
+from <span class="math inline">\([0, t_{\mathrm{total}}]\)</span>.</li>
+</ol>
+<h2 id="phonon-advection-and-scattering">Phonon advection and
+scattering</h2>
+<p>After initialized a phonon, we need to advect it and scatter it. We
+first have to determine when the phonon will be scattered. Due to the
+scattering time <span
+class="math inline">\(\tau_{\boldsymbol{q}s}\)</span>, we draw a random
+scattering time <span class="math inline">\(t_{\mathrm{scat}}\)</span>
+following the Poisson process. Draw a random number <span
+class="math inline">\(r\)</span> from <span class="math inline">\([0,
+1]\)</span>, and the scattering time is:</p>
+<p><span class="math display">\[
+t_{\mathrm{scat}} = -\tau_{\boldsymbol{q}s} \log r
+\]</span></p>
+<p>Before the scattering, the phonon is advected according to its group
+velocity. Once the phonon goes beyond the boundary, it is removed from
+the simulation. If the phonon is scattered, we need to draw a new phonon
+mode, but keeps the same amount and sign of energy. The new phonon mode
+is drawn according to the scattering probability:</p>
+<p><span class="math display">\[
+P_{\boldsymbol{q}s} \propto
+\frac{c_{\boldsymbol{q}s}}{\tau_{\boldsymbol{q}s}}
+\]</span></p>
+<div class="note primary"><p>The key is to understand why we draw phonon from <span
+class="math inline">\(c_{\boldsymbol{q}s}\)</span> inside the area and
+from <span
+class="math inline">\(c_{\boldsymbol{q}s}v_{\boldsymbol{q}s}\)</span> at
+the boundaries for initialization, but draw phonon from <span
+class="math inline">\(c_{\boldsymbol{q}s}/\tau_{\boldsymbol{q}s}\)</span>
+for scattering. For the initialization, always keep in mind that each
+sample represents a fixed amount of energy, thus we need to draw phonon
+according to their contribution to the total deviated energy. For the
+scattering, the key is to understand the source term in the BTE, which
+is <span class="math inline">\(\left(-\frac{e^{\mathrm{d}} -
+(e^{\mathrm{eq}}(T)-e^{\mathrm{eq}}(T_{\mathrm{eq}}))}{\tau_{\boldsymbol{q}s}}\right)\)</span>,
+and the first term controls the annihilation, the second term thus
+controls the creation, which is proportional to <span
+class="math inline">\(c_{\boldsymbol{q}s}/\tau_{\boldsymbol{q}s}\)</span>.</p>
+<p>It is also important to understand why each phonon is deleted once it
+goes beyond the boundary. This is because, (take the left boundary as an
+example) we have already considered <strong>all energy goes from left to
+right</strong>, and if the phonon bounces back or diffuses back, it will
+be counted twice.</p>
+</div>
+<h1 id="results">Results</h1>
+<h2 id="l200mathrmnm-strong-size-effect"><span
+class="math inline">\(L=200\,\mathrm{nm}\)</span>: strong size
+effect</h2>
+<img src="/images/2023/MC-silicon-film/200nm.png" class="" width="400" title="200 nm">
+<p>The "Fourier" lines are calculated by solving the thermal diffusion
+equation using <code>fipy</code>. The diffusivity is calculated by the
+<em>ab initio</em> data.</p>
+<p>In this case, <span class="math inline">\(k_{\text{eff}} =
+\frac{|q|}{|T_{\text{left}} - T_{\text{right}}|/L} =
+48.268\,\mathrm{W/mK}\)</span> (34.56% of bulk). And it can be seen that
+Fourier's law propagates heat way too fast.</p>
+<h2 id="l10mathrmmu-m-almost-fourier"><span
+class="math inline">\(L=10\,\mathrm{\mu m}\)</span>: almost Fourier</h2>
+<img src="/images/2023/MC-silicon-film/10um.png" class="" width="400" title="10 um">
+<p>Here <span class="math inline">\(k_{\text{eff}} =
+119.370\,\mathrm{W/mK}\)</span> (85.58% of bulk). Thermal diffusion
+predicted by Fourier's law is still faster, but not that much.</p>
+<h2 id="l100mathrmmu-m-fourier"><span
+class="math inline">\(L=100\,\mathrm{\mu m}\)</span>: Fourier</h2>
+<img src="/images/2023/MC-silicon-film/100um.png" class="" width="400" title="100 um">
+<p>Here <span class="math inline">\(k_{\text{eff}} =
+k_{\text{bulk}}\)</span>. Fourier's law is fully recovered.</p>
+<h2 id="effective-thermal-conductivity-vs.-film-thickness">Effective
+thermal conductivity vs. film thickness</h2>
+<p>Here I compare the effective thermal conductivity calculated by the
+present VRMC and the results reported by Jeong et al. using MD.</p>
+<p>The results are remarkably close. But notice that the predicted bulk
+thermal conductivities are different by 10%. Anyway, it can be at least
+concluded that the trend is the same.</p>
+<img src="/images/2023/MC-silicon-film/thickness.png" class="" width="600" title="k vs. L">
+<h1 id="references">References</h1>
+<ol type="1">
+<li>Péraud and Hadjiconstantinou, PRB 2011, <a
+target="_blank" rel="noopener" href="https://doi.org/10.1103/PhysRevB.84.205331">10.1103/PhysRevB.84.205331</a>.</li>
+<li>Péraud and Hadjiconstantinou, APL 2012, <a
+target="_blank" rel="noopener" href="https://doi.org/10.1063/1.4757607">10.1063/1.4757607</a>.</li>
+<li>Péraud et al., Annual Review of Heat Transfer 2014, <a
+target="_blank" rel="noopener" href="https://doi.org/10.1615/AnnualRevHeatTransfer.2014007381">10.1615/AnnualRevHeatTransfer.2014007381</a>.</li>
+<li>1D_KMC_matlab: <a
+target="_blank" rel="noopener" href="https://github.com/jeanphilippeperaud/1D_KMC_matlab">https://github.com/jeanphilippeperaud/1D_KMC_matlab</a>.</li>
+<li>Jeong et al., JAP 2012, <a
+target="_blank" rel="noopener" href="https://doi.org/10.1063/1.4710993">10.1063/1.4710993</a>.</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Ab-initio-calculation/" rel="tag"><i class="fa fa-tag"></i> Ab initio calculation</a>
+              <a href="/tags/Variance-reduced-Monte-Carlo/" rel="tag"><i class="fa fa-tag"></i> Variance-reduced Monte Carlo</a>
+              <a href="/tags/Size-effect/" rel="tag"><i class="fa fa-tag"></i> Size effect</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/10/ab-initio/" rel="prev" title="Ab initio determination of thermal conductivity of Silicon">
+                  <i class="fa fa-angle-left"></i> Ab initio determination of thermal conductivity of Silicon
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-laptop"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Phononist</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">13k</span>
+  </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="300" alpha="0.3" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.24/fancybox/fancybox.umd.js" integrity="sha256-oyhjPiYRWGXaAt+ny/mTMWOnN1GBoZDUQnzzgC7FRI4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.12/pdfobject.min.js","integrity":"sha256-g2xji1rlE3KsGVClvuxTbcR0Kn2+wtQADSff2Tbb4zA="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js"></script>
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"phononist/phononist.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#2774AE" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#003B5C" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+<meta name="theme-color" content="#003B5C" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.0.0">
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="apple-touch-icon" sizes="180x180" href="/images/design/favicon/apple-touch-icon.png">
@@ -154,7 +154,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -165,7 +165,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -194,6 +194,122 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://phononist.github.io/2023/11/MC-silicon-film/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/design/avatar_beer.jpg">
+      <meta itemprop="name" content="Phononist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Harmony Hideaway">
+      <meta itemprop="description" content="Stay young, stay simple 👓">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Harmony Hideaway">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/11/MC-silicon-film/" class="post-title-link" itemprop="url">Variance-reduced Monte Carlo simulation of phonon transport in silicon films</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-11-30 19:48:57" itemprop="dateCreated datePublished" datetime="2023-11-30T19:48:57-08:00">2023-11-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Solid-State-Physics/" itemprop="url" rel="index"><span itemprop="name">Solid State Physics</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Solid-State-Physics/Ab-Initio-Calculation/" itemprop="url" rel="index"><span itemprop="name">Ab Initio Calculation</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.5k</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>The variance-reduced Monte Carlo simulation of phonon transport
+solves the following equation:</p>
+<p><span class="math display">\[
+\frac{\partial e^{\text{d}}}{\partial t} + \boldsymbol{v}_{\mathrm{g}}
+\cdot \nabla e^{\text{d}} = -\frac{e^{\mathrm{d}} -
+(e^{\mathrm{eq}}(T)-e^{\mathrm{eq}}(T_{\mathrm{eq}}))}{\tau}
+\]</span></p>
+<p>Here, relaxation time approximation is used, and <span
+class="math inline">\(\tau\)</span> takes <em>ab initio</em> calculated
+value, see <a href="/2023/10/anharmonicity">the previous post</a>. In
+this equation, <span class="math inline">\(e^{\mathrm{d}} = \hbar\omega
+(f(\omega)-f_{\mathrm{BE}}(\omega, T_{\mathrm{eq}}))\)</span> for each
+phonon mode, where <span class="math inline">\(f\)</span> is the
+distribution function (not necessarily equilibrium). While <span
+class="math inline">\(e^{\mathrm{eq}}(T)=\hbar\omega
+(f_{\mathrm{BE}}(\omega, T)-f_{\mathrm{BE}}(\omega,
+T_{\mathrm{eq}}))\)</span> follows the Bose-Einstein distribution. Note
+that here <span class="math inline">\(T_{\mathrm{eq}}\)</span> is a
+reference temperature, and <span class="math inline">\(T\)</span> is the
+local temperature that deviates from <span
+class="math inline">\(T_{\mathrm{eq}}\)</span>.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/11/MC-silicon-film/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -746,7 +862,7 @@ target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitH
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="Word count total">11k</span>
+    <span title="Word count total">13k</span>
   </span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
