@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Harmony Hideaway</title>
+  
+  <subtitle>Unveiling Vibrational Symphonies</subtitle>
+  <link href="https://phononist.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://phononist.github.io/"/>
+  <updated>2023-12-02T10:52:00.000Z</updated>
+  <id>https://phononist.github.io/</id>
+  
+  <author>
+    <name>Phononist</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Read ab initio data from ALAMODE output files</title>
+    <link href="https://phononist.github.io/2023/12/read-alamode/"/>
+    <id>https://phononist.github.io/2023/12/read-alamode/</id>
+    <published>2023-12-02T10:52:00.000Z</published>
+    <updated>2023-12-02T10:52:00.000Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;In order to perform a fully &lt;em&gt;ab initio&lt;/em&gt; calculation, for
+example, the VRMC simulation that we did in &lt;a
+href=&quot;/2023/11/MC-silicon-film&quot;&gt;the last post&lt;/a&gt;, &lt;em&gt;ab initio&lt;/em&gt;
+data, such as specific heat (spectral), phonon dispersion, and phonon
+lifetime, is needed. &lt;a
+href=&quot;https://alamode.readthedocs.io/en/latest/index.html&quot;&gt;&lt;code&gt;ALAMODE&lt;/code&gt;&lt;/a&gt;
+is a powerful tool to calculate these data, but the official
+documentation is not very clear about the formats...&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Solid State Physics" scheme="https://phononist.github.io/categories/Solid-State-Physics/"/>
+    
+    <category term="Ab Initio Calculation" scheme="https://phononist.github.io/categories/Solid-State-Physics/Ab-Initio-Calculation/"/>
+    
+    
+    <category term="Ab initio calculation" scheme="https://phononist.github.io/tags/Ab-initio-calculation/"/>
+    
+    <category term="Relaxation time approximation" scheme="https://phononist.github.io/tags/Relaxation-time-approximation/"/>
+    
+    <category term="ALAMODE" scheme="https://phononist.github.io/tags/ALAMODE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Variance-reduced Monte Carlo simulation of phonon transport in silicon films</title>
+    <link href="https://phononist.github.io/2023/11/MC-silicon-film/"/>
+    <id>https://phononist.github.io/2023/11/MC-silicon-film/</id>
+    <published>2023-12-01T03:48:57.000Z</published>
+    <updated>2023-12-01T03:48:57.000Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;The variance-reduced Monte Carlo simulation of phonon transport
+solves the following equation:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;math display&quot;&gt;&#92;[
+&#92;frac{&#92;partial e^{&#92;text{d}}}{&#92;partial t} + &#92;boldsymbol{v}_{&#92;mathrm{g}}
+&#92;cdot &#92;nabla e^{&#92;text{d}} = -&#92;frac{e^{&#92;mathrm{d}} -
+(e^{&#92;mathrm{eq}}(T)-e^{&#92;mathrm{eq}}(T_{&#92;mathrm{eq}}))}{&#92;tau}
+&#92;]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Here, relaxation time approximation is used, and &lt;span
+class=&quot;math inline&quot;&gt;&#92;(&#92;tau&#92;)&lt;/span&gt; takes &lt;em&gt;ab initio&lt;/em&gt; calculated
+value, see &lt;a href=&quot;/2023/10/anharmonicity&quot;&gt;the previous post&lt;/a&gt;. In
+this equation, &lt;span class=&quot;math inline&quot;&gt;&#92;(e^{&#92;mathrm{d}} = &#92;hbar&#92;omega
+(f(&#92;omega)-f_{&#92;mathrm{BE}}(&#92;omega, T_{&#92;mathrm{eq}}))&#92;)&lt;/span&gt; for each
+phonon mode, where &lt;span class=&quot;math inline&quot;&gt;&#92;(f&#92;)&lt;/span&gt; is the
+distribution function (not necessarily equilibrium). While &lt;span
+class=&quot;math inline&quot;&gt;&#92;(e^{&#92;mathrm{eq}}(T)=&#92;hbar&#92;omega
+(f_{&#92;mathrm{BE}}(&#92;omega, T)-f_{&#92;mathrm{BE}}(&#92;omega,
+T_{&#92;mathrm{eq}}))&#92;)&lt;/span&gt; follows the Bose-Einstein distribution. Note
+that here &lt;span class=&quot;math inline&quot;&gt;&#92;(T_{&#92;mathrm{eq}}&#92;)&lt;/span&gt; is a
+reference temperature, and &lt;span class=&quot;math inline&quot;&gt;&#92;(T&#92;)&lt;/span&gt; is the
+local temperature that deviates from &lt;span
+class=&quot;math inline&quot;&gt;&#92;(T_{&#92;mathrm{eq}}&#92;)&lt;/span&gt;.&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Solid State Physics" scheme="https://phononist.github.io/categories/Solid-State-Physics/"/>
+    
+    <category term="Ab Initio Calculation" scheme="https://phononist.github.io/categories/Solid-State-Physics/Ab-Initio-Calculation/"/>
+    
+    
+    <category term="Ab initio calculation" scheme="https://phononist.github.io/tags/Ab-initio-calculation/"/>
+    
+    <category term="Variance-reduced Monte Carlo" scheme="https://phononist.github.io/tags/Variance-reduced-Monte-Carlo/"/>
+    
+    <category term="Size effect" scheme="https://phononist.github.io/tags/Size-effect/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Ab initio determination of thermal conductivity of Silicon</title>
+    <link href="https://phononist.github.io/2023/10/ab-initio/"/>
+    <id>https://phononist.github.io/2023/10/ab-initio/</id>
+    <published>2023-10-21T06:36:20.000Z</published>
+    <updated>2023-10-21T17:00:38.000Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;overview&quot;&gt;Overview&lt;/h1&gt;
+&lt;p&gt;The &lt;em&gt;ab inito&lt;/em&gt; calculation of thermal conductivity is very
+complex and needs several softwares to work together. The basic idea is
+to calculate the interatomic force constants (IFCs) for both the
+harmonic and anharmonic terms, and then use the IFCs to calculate the
+phonon dispersion relation and phonon scattering time using knowledges
+that are summarized in the previous posts about &lt;a
+href=&quot;/2023/10/anharmonicity&quot;&gt;anharmonicity&lt;/a&gt; and &lt;a
+href=&quot;/2023/10/phonon-dispersion&quot;&gt;phonon dispersion&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;workflow&quot;&gt;Workflow&lt;/h2&gt;
+&lt;p&gt;Overall, we use the following open-source softwares:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://phonopy.github.io/phonopy/&quot;&gt;phonopy&lt;/a&gt; that helps
+to generate the supercell we want.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.quantum-espresso.org/&quot;&gt;Quantum Espresso&lt;/a&gt;
+that carries out the &lt;em&gt;ab initio&lt;/em&gt; calculation of electronic
+structures.&lt;/li&gt;
+&lt;li&gt;&lt;a
+href=&quot;https://alamode.readthedocs.io/en/latest/intro.html&quot;&gt;alamode&lt;/a&gt;
+which fits the IFCs from the &lt;em&gt;ab initio&lt;/em&gt; calculation and
+calculates the phonon dispersion relation and phonon scattering time and
+finally thermal conductivity.&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="Solid State Physics" scheme="https://phononist.github.io/categories/Solid-State-Physics/"/>
+    
+    <category term="Ab Initio Calculation" scheme="https://phononist.github.io/categories/Solid-State-Physics/Ab-Initio-Calculation/"/>
+    
+    
+    <category term="Ab initio calculation" scheme="https://phononist.github.io/tags/Ab-initio-calculation/"/>
+    
+    <category term="Phonon" scheme="https://phononist.github.io/tags/Phonon/"/>
+    
+    <category term="Interatomic force constant" scheme="https://phononist.github.io/tags/Interatomic-force-constant/"/>
+    
+    <category term="Dispersion relation" scheme="https://phononist.github.io/tags/Dispersion-relation/"/>
+    
+    <category term="Relaxation time approximation" scheme="https://phononist.github.io/tags/Relaxation-time-approximation/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Fermi&#39;s golden rule</title>
+    <link href="https://phononist.github.io/2023/10/golden-rule/"/>
+    <id>https://phononist.github.io/2023/10/golden-rule/</id>
+    <published>2023-10-17T20:45:58.000Z</published>
+    <updated>2023-10-17T20:45:58.000Z</updated>
+    
+    
+    <summary type="html">We will discuss the Fermi&#39;s golden rule by perturbing a quantum system and calculate the first-order approximation of the transition rate. The golden rule is the basis of the derivation of the scattering rate, which is the key to understand the anharmonicity of the lattice vibration...</summary>
+    
+    
+    
+    <category term="Quantum Physics" scheme="https://phononist.github.io/categories/Quantum-Physics/"/>
+    
+    
+    <category term="Fermi&#39;s golden rule" scheme="https://phononist.github.io/tags/Fermi-s-golden-rule/"/>
+    
+    <category term="Quantum physics" scheme="https://phononist.github.io/tags/Quantum-physics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Derive phonon scattering rate from anharmonic potential</title>
+    <link href="https://phononist.github.io/2023/10/anharmonicity/"/>
+    <id>https://phononist.github.io/2023/10/anharmonicity/</id>
+    <published>2023-10-14T07:18:27.000Z</published>
+    <updated>2023-10-17T05:08:54.000Z</updated>
+    
+    
+    <summary type="html">Like what we did in the previous post, we would like to do the same thing to the crystal, but in a quantum way, and also including the anharmonic potential, i.e. the third-order term in the Taylor expansion of the interatomic potential energy.</summary>
+    
+    
+    
+    <category term="Solid State Physics" scheme="https://phononist.github.io/categories/Solid-State-Physics/"/>
+    
+    
+    <category term="Phonon" scheme="https://phononist.github.io/tags/Phonon/"/>
+    
+    <category term="Scattering" scheme="https://phononist.github.io/tags/Scattering/"/>
+    
+    <category term="Interatomic force constant" scheme="https://phononist.github.io/tags/Interatomic-force-constant/"/>
+    
+    <category term="Fermi&#39;s golden rule" scheme="https://phononist.github.io/tags/Fermi-s-golden-rule/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Solve phonon dispersion relation by the classical approach</title>
+    <link href="https://phononist.github.io/2023/10/phonon-dispersion/"/>
+    <id>https://phononist.github.io/2023/10/phonon-dispersion/</id>
+    <published>2023-10-12T07:05:00.000Z</published>
+    <updated>2023-10-12T07:05:00.000Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;Consider a crystal in which unit cells are labeled by &lt;span
+class=&quot;math inline&quot;&gt;&#92;(&#92;boldsymbol{l}&#92;)&lt;/span&gt;, and atoms in each cell
+are labeled by &lt;span class=&quot;math inline&quot;&gt;&#92;(&#92;boldsymbol{b}&#92;)&lt;/span&gt;. The
+total energy of the system, noted by &lt;span
+class=&quot;math inline&quot;&gt;&#92;(&#92;mathcal{V}&#92;)&lt;/span&gt;, can be expanded using
+Taylor&#39;s expansion (greek letters mean direction): &lt;span
+class=&quot;math display&quot;&gt;&#92;[
+&#92;begin{aligned}
+    &#92;mathcal{V} = &amp;amp; &#92;mathcal{V}_0 +
+&#92;underbrace{&#92;sum_{&#92;boldsymbol{l},&#92;boldsymbol{b}}&#92;sum_{&#92;alpha}
+&#92;Phi_{&#92;alpha}(&#92;boldsymbol{l}&#92;boldsymbol{b})
+u_{&#92;alpha}(&#92;boldsymbol{l}&#92;boldsymbol{b})}_{&#92;mathcal{V}_1} +
+&#92;underbrace{&#92;frac{1}{2}&#92;sum_{&#92;boldsymbol{l},&#92;boldsymbol{b},&#92;boldsymbol{l}&amp;#39;,&#92;boldsymbol{b}&amp;#39;}&#92;sum_{&#92;alpha,&#92;beta}
+&#92;Phi_{&#92;alpha,&#92;beta}(&#92;boldsymbol{l}&#92;boldsymbol{b};&#92;boldsymbol{l}&amp;#39;&#92;boldsymbol{b}&amp;#39;)u_{&#92;alpha}(&#92;boldsymbol{l}&#92;boldsymbol{b})u_{&#92;beta}(&#92;boldsymbol{l}&amp;#39;&#92;boldsymbol{b}&amp;#39;)}_{&#92;mathcal{V}_2}
++ &#92;cdots&#92;&#92;
+    &amp;amp; &#92;quad +
+&#92;frac{1}{n!}&#92;sum_{&#92;boldsymbol{l}_1,&#92;boldsymbol{b}_1,&#92;boldsymbol{l}_2,&#92;boldsymbol{b}_2,&#92;cdots,&#92;boldsymbol{l}_n,&#92;boldsymbol{b}_n}&#92;sum_{&#92;alpha_1,&#92;alpha_2,&#92;cdots,&#92;alpha_n}&#92;Phi_{&#92;alpha_1,&#92;alpha_2,&#92;cdots,&#92;alpha_n}(&#92;boldsymbol{l}_1,&#92;boldsymbol{b}_1;&#92;boldsymbol{l}_2,&#92;boldsymbol{b}_2;&#92;cdots;&#92;boldsymbol{l}_n,&#92;boldsymbol{b}_n)u_{&#92;alpha_1}(&#92;boldsymbol{l}_1,&#92;boldsymbol{b}_1)&#92;cdots
+u_{&#92;alpha_n}(&#92;boldsymbol{l}_n &#92;boldsymbol{b}_n)
+&#92;end{aligned}
+&#92;]&lt;/span&gt; Where we note the nth order interatomic force constants (IFCs)
+using &lt;span class=&quot;math inline&quot;&gt;&#92;(&#92;Phi&#92;)&lt;/span&gt;, and we note &lt;span
+class=&quot;math inline&quot;&gt;&#92;(u_{&#92;alpha}(&#92;boldsymbol{l}&#92;boldsymbol{b})&#92;)&lt;/span&gt;
+represent the spatial deviation of atom &lt;span
+class=&quot;math inline&quot;&gt;&#92;(&#92;boldsymbol{b}&#92;)&lt;/span&gt; in cell &lt;span
+class=&quot;math inline&quot;&gt;&#92;(&#92;boldsymbol{l}&#92;)&lt;/span&gt; along &lt;span
+class=&quot;math inline&quot;&gt;&#92;(&#92;alpha&#92;)&lt;/span&gt; direction.</summary>
+    
+    
+    
+    <category term="Solid State Physics" scheme="https://phononist.github.io/categories/Solid-State-Physics/"/>
+    
+    
+    <category term="Phonon" scheme="https://phononist.github.io/tags/Phonon/"/>
+    
+    <category term="Interatomic force constant" scheme="https://phononist.github.io/tags/Interatomic-force-constant/"/>
+    
+    <category term="Dispersion relation" scheme="https://phononist.github.io/tags/Dispersion-relation/"/>
+    
+    <category term="Dynamical matrix" scheme="https://phononist.github.io/tags/Dynamical-matrix/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="https://phononist.github.io/2023/10/hello-world/"/>
+    <id>https://phononist.github.io/2023/10/hello-world/</id>
+    <published>2023-10-11T04:14:01.813Z</published>
+    <updated>2023-10-11T04:14:01.813Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very
+first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for
+more info. If you get any problems when using Hexo, you can find the
+answer in &lt;a
+href=&quot;https://hexo.io/docs/troubleshooting.html&quot;&gt;troubleshooting&lt;/a&gt; or
+you can ask me on &lt;a
+href=&quot;https://github.com/hexojs/hexo/issues&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Hexo" scheme="https://phononist.github.io/categories/Hexo/"/>
+    
+    
+    <category term="Hexo" scheme="https://phononist.github.io/tags/Hexo/"/>
+    
+    <category term="Blog" scheme="https://phononist.github.io/tags/Blog/"/>
+    
+    <category term="Test" scheme="https://phononist.github.io/tags/Test/"/>
+    
+  </entry>
+  
+</feed>
