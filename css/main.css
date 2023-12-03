@@ -3013,6 +3013,10 @@ header.header {
 }
 .block-dark-only {
   display: none;
+  opacity: 1;
+}
+.block-dark-only:hover {
+  opacity: 1;
 }
 @media (prefers-color-scheme: dark) {
   .block-dark-only {

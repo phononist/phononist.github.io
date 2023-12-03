@@ -245,6 +245,352 @@ href="https://doi.org/10.1063/1.4710993">10.1063/1.4710993</a>.</li>
       </tags>
   </entry>
   <entry>
+    <title>Ab initio determination of thermal conductivity of Silicon</title>
+    <url>/2023/10/ab-initio/</url>
+    <content><![CDATA[<h1 id="overview">Overview</h1>
+<p>The <em>ab inito</em> calculation of thermal conductivity is very
+complex and needs several softwares to work together. The basic idea is
+to calculate the interatomic force constants (IFCs) for both the
+harmonic and anharmonic terms, and then use the IFCs to calculate the
+phonon dispersion relation and phonon scattering time using knowledges
+that are summarized in the previous posts about <a
+href="/2023/10/anharmonicity">anharmonicity</a> and <a
+href="/2023/10/phonon-dispersion">phonon dispersion</a>.</p>
+<h2 id="workflow">Workflow</h2>
+<p>Overall, we use the following open-source softwares:</p>
+<ul>
+<li><a href="https://phonopy.github.io/phonopy/">phonopy</a> that helps
+to generate the supercell we want.</li>
+<li><a href="https://www.quantum-espresso.org/">Quantum Espresso</a>
+that carries out the <em>ab initio</em> calculation of electronic
+structures.</li>
+<li><a
+href="https://alamode.readthedocs.io/en/latest/intro.html">alamode</a>
+which fits the IFCs from the <em>ab initio</em> calculation and
+calculates the phonon dispersion relation and phonon scattering time and
+finally thermal conductivity.</li>
+</ul>
+<span id="more"></span>
+<p>And the whole process would be like this:</p>
+<pre><code class="highlight mermaid">graph TD
+    A[&quot;Construct unit cell&quot;] -- Quantum Espresso --&gt; B[&quot;Test convergence&quot;]
+    A -- Quantum Espresso --&gt; B2[&quot;Solve lattice constant for zero pressure&quot;]
+    A -- phonopy --&gt; C[&quot;Construct supercell&quot;]
+    C -- alamode/alm/suggest --&gt; D[&quot;Figure out displace patterns&quot;]
+    D -- Quantum Espresso --&gt; E[&quot;Calculate forces for each pattern&quot;]
+    B -- ecutwfc, K_POINTS, conv_thr, etc. --&gt; E
+    B2 -- a --&gt; E
+    E -- alamode/alm/optimize --&gt; F[&quot;Fit IFCs&quot;]
+    F -- alamode/anphon/phonons --&gt; H[&quot;Calculate phonon dispersion&quot;]
+    F -- alamode/anphon/RTA --&gt; G[&quot;Calculate thermal conductivity&quot;]</code></pre>
+<h2 id="silicon-as-an-example">Silicon as an example</h2>
+<p>In this post, we will use Silicon as an example to show how to
+proceed the whole workflow, as Silicon crystal is simple and well
+studied.</p>
+<p>Monocrystalline silicon, with diamond structure, is a face centered
+cubic (fcc) lattice with two atoms in the unit cell. The lattice
+constant is <span class="math inline">\(a=5.43\,\mathrm{Å}\)</span>, or
+<span class="math inline">\(10.26\,\mathrm{Bohr}\)</span> (which is the
+edge length of the cube shown in the following figure), and the two
+atoms are located at <span class="math inline">\((0,0,0)\)</span> and
+<span class="math inline">\((0.25,0.25,0.25)\)</span> in the unit
+cell.</p>
+<img src="/images/2023/ab-initio/Silicon-unit-cell-3D-balls.png" class="" width="300" title="Silicon unit cell">
+<h1 id="construct-unit-cell">Construct unit cell</h1>
+<p>The very first step is to construct a unit cell of Silicon by hand.
+Using the information above, we can create a Quantum Espresso input file
+<code>si.pw.in</code> with the following content for calculating the
+electronic structure as well as the forces:</p>
+<figure class="highlight bash"><figcaption><span>Quantum Espresso Baseline Input: si.pw.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;CONTROL</span><br><span class="line">    calculation = <span class="string">&#x27;scf&#x27;</span></span><br><span class="line">    prefix = <span class="string">&#x27;si&#x27;</span></span><br><span class="line">    pseudo_dir = <span class="string">&#x27;./pseudo/&#x27;</span></span><br><span class="line">    outdir = <span class="string">&#x27;./tmp/&#x27;</span></span><br><span class="line">    disk_io = <span class="string">&#x27;none&#x27;</span></span><br><span class="line">    verbosity = <span class="string">&#x27;high&#x27;</span></span><br><span class="line">    tprnfor = .<span class="literal">true</span>.</span><br><span class="line">    tstress = .<span class="literal">true</span>.</span><br><span class="line">/</span><br><span class="line">&amp;SYSTEM</span><br><span class="line">    ibrav = 0</span><br><span class="line">    nat = 8</span><br><span class="line">    ntyp = 1</span><br><span class="line">    ecutwfc = 40</span><br><span class="line">/</span><br><span class="line">&amp;ELECTRONS</span><br><span class="line">    conv_thr        = 1.0d-11</span><br><span class="line">    mixing_beta     = 0.7</span><br><span class="line">/</span><br><span class="line">CELL_PARAMETERS bohr</span><br><span class="line">    10.26   0.0     0.0</span><br><span class="line">    0.0     10.26   0.0</span><br><span class="line">    0.0     0.0     10.26</span><br><span class="line">ATOMIC_SPECIES</span><br><span class="line">    Si  28.0855  Si.pz-vbc.UPF</span><br><span class="line">ATOMIC_POSITIONS crystal</span><br><span class="line">    Si 0.000000000 0.000000000 0.000000000</span><br><span class="line">    Si 0.000000000 0.500000000 0.500000000</span><br><span class="line">    Si 0.500000000 0.000000000 0.500000000</span><br><span class="line">    Si 0.500000000 0.500000000 0.000000000</span><br><span class="line">    Si 0.250000000 0.250000000 0.250000000</span><br><span class="line">    Si 0.250000000 0.750000000 0.750000000</span><br><span class="line">    Si 0.750000000 0.250000000 0.750000000</span><br><span class="line">    Si 0.750000000 0.750000000 0.250000000</span><br><span class="line">K_POINTS automatic</span><br><span class="line">    4 4 4 1 1 1</span><br></pre></td></tr></table></figure>
+<p>Specifications of those parameters can be found in the <a
+href="https://www.quantum-espresso.org/Doc/INPUT_PW.html"><code>pw.x</code>
+manual of Quantum Espresso</a>. It is worth mentioning that we let
+<code>ibrav = 0</code> (free) rather than <code>ibrav = 2</code> (fcc)
+because we want to further generate supercells using
+<code>phonopy</code> later, and <code>phonopy</code> only supports the
+case of <code>ibrav = 0</code>. The pseudo-potential file
+<code>Si.pz-vbc.UPF</code> can be downloaded from <a
+href="https://pseudopotentials.quantum-espresso.org/legacy_tables">Quantum
+Espresso website</a>, and we take this one as it is recommended by a
+senior researcher in our group. In addition, the 8 atoms in the unit
+cell are inputed by hand, taking the nearest 7 neighbors of the <span
+class="math inline">\((0,0,0)\)</span> atom.</p>
+<p>Also to note that, the parameters <code>tprnfor</code> and
+<code>tstress</code> are set to be <code>.true.</code> so that the
+forces and stresses can be printed out in the output file, which is
+crucial for the calculation of IFCs as well as the preliminary test of
+convergence and lattice constant.</p>
+<p>We can surely run a calculation by executing the following command,
+generating the output file <code>si.pw.out</code>:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Run on a single core</span></span><br><span class="line">pw.x &lt; si.pw.in &gt; si.pw.out</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run on 16 cores</span></span><br><span class="line">mpiexec -n 16 pw.x &lt; si.pw.in &gt; si.pw.out</span><br></pre></td></tr></table></figure>
+<p>For users that use clusters with job scheduler, it is important and
+recommended to evaluate the memory usage of the calculation, and it can
+be done by simply running the above command for several seconds, and
+then click <code>Ctrl+C</code> to terminate the calculation. In the file
+<code>si.pw.out</code>, an estimated memory usage is indicated by some
+lines like this:</p>
+<figure class="highlight bash"><figcaption><span>si.pw.out</span></figcaption><table><tr><td class="code"><pre><span class="line">Estimated total dynamical RAM &gt;      29.03 GB</span><br></pre></td></tr></table></figure>
+<h1 id="preliminary-tests-using-quantum-espresso">Preliminary tests
+using Quantum Espresso</h1>
+<h2 id="convergence-test">Convergence test</h2>
+<p>The above baseline settings of Silicon conventional cell are actually
+easy for Quantum Espresso to solve, and it takes about 1 minute to
+finish the calculation on a single core. However, it is not always the
+case, as we will solve very large supercell later. Therefore, now it is
+the time to take advantage of the very fast speed of the baseline
+calculation to test the convergence for the crucial parameters such
+as:</p>
+<ul>
+<li><code>ecutwfc</code>: the plane wave cutoff kinetic energy (in Ry).
+We change it from <span class="math inline">\(30\,\mathrm{Ry}\)</span>
+to <span class="math inline">\(150\,\mathrm{Ry}\)</span>.</li>
+<li><code>K_POINTS</code>: the number of <span
+class="math inline">\(k\)</span> points in the Brillouin zone (in each
+direction), we choose it from <span class="math inline">\(4\times
+4\times 4\)</span> to <span class="math inline">\(20\times 20\times
+20\)</span> (all with offsets so that it would be more accurate).</li>
+<li><code>conv_thr</code>: the convergence threshold for the
+self-consistent field (SCF) calculation, we change it from <span
+class="math inline">\(1\times 10^{-7}\)</span> to <span
+class="math inline">\(1\times 10^{-16}\)</span>.</li>
+</ul>
+<p>Keep in mind that, we care more about the convergence of the forces
+rather than the total energy, as the forces are used to calculate the
+IFCs later. Therefore, to make the forces exist, we have to manually
+perturb the system a bit, say <span class="math inline">\(0.001\)</span>
+crystal unit (which is about <span class="math inline">\(0.01\)</span>
+Bohr), for the first Silicon atom in the cell, by modifying the
+<code>ATOMIC_POSITIONS</code> block in <code>si.pw.in</code>:</p>
+<figure class="highlight diff"><figcaption><span>si.pw.in</span></figcaption><table><tr><td class="code"><pre><span class="line">ATOMIC_POSITIONS crystal</span><br><span class="line"><span class="addition">+    Si 0.001000000 0.000000000 0.000000000</span></span><br><span class="line"><span class="deletion">-    Si 0.000000000 0.000000000 0.000000000</span></span><br></pre></td></tr></table></figure>
+<p>To automatically perform the calculation, what I did is to write a
+bash script to perform calculation from different configurations, so
+that we can be free from the boring and repetitive work.</p>
+<figure class="highlight bash"><figcaption><span>conv_test.sh</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">### k conv test</span></span><br><span class="line"><span class="built_in">cp</span> si.pw.in si.pw.k.in</span><br><span class="line"><span class="keyword">for</span> k_point <span class="keyword">in</span> &#123;4..20&#125;; <span class="keyword">do</span></span><br><span class="line">    sed -i <span class="string">&quot;/K_POINTS/&#123;n;s/[0-9]\+ [0-9]\+ [0-9]\+ [0-9]\+ [0-9]\+ [0-9]\+/<span class="variable">$k_point</span> <span class="variable">$k_point</span> <span class="variable">$k_point</span> 1 1 1/&#125;&quot;</span> si.pw.k.in</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;let k_point = <span class="variable">$k_point</span>, calculating...&quot;</span></span><br><span class="line">    mpiexec -np 16 pw.x &lt; si.pw.k.in &gt; ./out/si.pw.k.<span class="variable">$k_point</span>.out</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">rm</span> si.pw.k.in</span><br><span class="line"></span><br><span class="line"><span class="comment">## Cutoff conv test</span></span><br><span class="line"><span class="built_in">cp</span> si.pw.in si.pw.ecut.in</span><br><span class="line"><span class="keyword">for</span> ((cut = <span class="number">30</span>; cut &lt;= <span class="number">150</span>; cut += <span class="number">10</span>)); <span class="keyword">do</span></span><br><span class="line">    sed -i <span class="string">&quot;s/ecutwfc = [0-9]\+/ecutwfc = <span class="variable">$cut</span>/&quot;</span> si.pw.ecut.in</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;let ecutwfc = <span class="variable">$cut</span>, calculating...&quot;</span></span><br><span class="line">    mpiexec -np 16 pw.x &lt; si.pw.ecut.in &gt; ./out/si.pw.ecut.<span class="variable">$cut</span>.out</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">rm</span> si.pw.ecut.in</span><br><span class="line"></span><br><span class="line"><span class="comment">## conv_thr test</span></span><br><span class="line"><span class="built_in">cp</span> si.pw.in si.pw.thr.in</span><br><span class="line"><span class="keyword">for</span> ((thr = <span class="number">7</span>; thr &lt;= <span class="number">16</span>; thr += <span class="number">1</span>)); <span class="keyword">do</span></span><br><span class="line">    sed -i <span class="string">&quot;s/conv_thr        = 1.0d-[0-9]\+/conv_thr        = 1.0d-<span class="variable">$thr</span>/&quot;</span> si.pw.thr.in</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;let conv_thr = 1.0d-<span class="variable">$thr</span>, calculating...&quot;</span></span><br><span class="line">    mpiexec -np 16 pw.x &lt; si.pw.thr.in &gt; ./out/si.pw.thr.<span class="variable">$thr</span>.out</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">rm</span> si.pw.thr.in</span><br></pre></td></tr></table></figure>
+<p>We perform the convergence test, and plot the results below. We
+marked the zone in which the largest atom force is in a range within
+<span class="math inline">\(10^{-6}\,\mathrm{Ry/Bohr}\)</span> comparing
+to the converged result (forces are marked by purple lines). Also,
+variations of the total energy are marked by dark blue lines, and the
+dashed zone indicates the range within <span
+class="math inline">\(10^{-3}\,\mathrm{Ry}\)</span> comparing to the
+converged result.</p>
+<figure>
+<img src="/images/2023/ab-initio/convergence.png"
+alt="Convergence test" />
+<figcaption aria-hidden="true">Convergence test</figcaption>
+</figure>
+<p>It can be noticed that:</p>
+<ul>
+<li><code>ecutwfc=70</code> or larger is far enough for the
+calculation.</li>
+<li><code>K_POINTS</code> setting as <code>8 8 8 1 1 1</code> is enough
+for the calculation of a conventional cell. For supercells, we may
+reduce it to <code>4 4 4 1 1 1</code> (<span
+class="math inline">\(2\times 2\times 2\)</span> supercell) or
+<code>3 3 3 1 1 1</code> (<span class="math inline">\(3\times 3 \times
+3\)</span> supercell), to make sure that the density of <span
+class="math inline">\(k\)</span> points remains the same or becomes even
+larger.</li>
+<li><code>conv_thr=1.0d-11</code> is way enough.</li>
+</ul>
+<h2 id="lattice-constant">Lattice constant</h2>
+<p>The lattice constant <span
+class="math inline">\(a=10.26\,\mathrm{Bohr}\)</span> that we set
+previously, may not be applicable for our problem, as it is a rough
+value, and it may not be consistent with the zero-pressure condition. In
+fact, the author first set <span
+class="math inline">\(a=10.26\,\mathrm{Bohr}\)</span> and carried out
+all the remaining calculations, and then found that the thermal
+conductivity at room temperature is about <span
+class="math inline">\(88\,\mathrm{W/mK}\)</span>, rather than <span
+class="math inline">\(\sim 140\,\mathrm{W/mK}\)</span> that are reported
+by various experiments. I then realized that the stress is about <span
+class="math inline">\(-14.08\,\mathrm{GPa}\)</span>, meaning that a very
+strong force is applied to strentch the solid, leading to the result
+that interatomic force is weeker, and thus the thermal conductivity is
+smaller.</p>
+<p>To obtain a more accurate lattice constant to make sure that the
+zero-pressure condition is satisfied, we write a python script to
+perform a simple binary search.</p>
+<figure class="highlight python"><figcaption><span>lattice_constant.py</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read_stress</span>(<span class="params">out_path</span>):</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(out_path, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        lines = f.readlines()</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;total   stress&#x27;</span> <span class="keyword">in</span> line:</span><br><span class="line">            stress = line.split()[-<span class="number">1</span>]</span><br><span class="line">            stress = <span class="built_in">float</span>(stress)</span><br><span class="line">            <span class="keyword">return</span> stress</span><br><span class="line">        </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">change_lattice_constant</span>(<span class="params">a, in_path</span>):</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(in_path, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        lines = f.readlines()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(lines)):</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;CELL_PARAMETERS&#x27;</span> <span class="keyword">in</span> lines[i]:</span><br><span class="line">            lines[i+<span class="number">1</span>] = <span class="string">&#x27;&#123;0&#125;   0.0     0.0\n&#x27;</span>.<span class="built_in">format</span>(a)</span><br><span class="line">            lines[i+<span class="number">2</span>] = <span class="string">&#x27;0.0     &#123;0&#125;   0.0\n&#x27;</span>.<span class="built_in">format</span>(a)</span><br><span class="line">            lines[i+<span class="number">3</span>] = <span class="string">&#x27;0.0     0.0     &#123;0&#125;\n&#x27;</span>.<span class="built_in">format</span>(a)</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(in_path, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.writelines(lines)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run_espresso</span>(<span class="params">in_path, out_path, np=<span class="number">8</span></span>):</span><br><span class="line">    os.system(<span class="string">&#x27;mpiexec -np &#123;0&#125; pw.x &lt; &#123;1&#125; &gt; &#123;2&#125;&#x27;</span>.<span class="built_in">format</span>(np, in_path, out_path))</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    a_left = <span class="number">10.00</span></span><br><span class="line">    a_right = <span class="number">10.50</span></span><br><span class="line"></span><br><span class="line">    in_path = <span class="string">&#x27;si.stress.in&#x27;</span></span><br><span class="line">    out_path = <span class="string">&#x27;si.stress.out&#x27;</span></span><br><span class="line"></span><br><span class="line">    change_lattice_constant(a_left, in_path)</span><br><span class="line">    run_espresso(in_path, out_path)</span><br><span class="line">    stress_left = read_stress(out_path)</span><br><span class="line"></span><br><span class="line">    change_lattice_constant(a_right, in_path)</span><br><span class="line">    run_espresso(in_path, out_path)</span><br><span class="line">    stress_right = read_stress(out_path)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;stress_left = &#123;0&#125; GPa&#x27;</span>.<span class="built_in">format</span>(stress_left))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;stress_right = &#123;0&#125; GPa&#x27;</span>.<span class="built_in">format</span>(stress_right))</span><br><span class="line"></span><br><span class="line">    threshold_lattice = <span class="number">1e-10</span></span><br><span class="line">    threshold_pressure = <span class="number">1e-5</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="built_in">abs</span>(a_left - a_right) &gt; threshold_lattice <span class="keyword">and</span> <span class="built_in">abs</span>(stress_left - stress_right) &gt; threshold_pressure:</span><br><span class="line">        a_middle = (a_left + a_right) / <span class="number">2</span></span><br><span class="line">        change_lattice_constant(a_middle, in_path)</span><br><span class="line">        run_espresso(in_path, out_path)</span><br><span class="line">        stress_middle = read_stress(out_path)</span><br><span class="line">        <span class="keyword">if</span> stress_left * stress_right &gt; <span class="number">0</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Error: stress_left * stress_right &gt; 0&#x27;</span>)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> stress_middle * stress_left &lt; <span class="number">0</span>:</span><br><span class="line">            a_right = a_middle</span><br><span class="line">            stress_right = stress_middle</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            a_left = a_middle</span><br><span class="line">            stress_left = stress_middle</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;a_left = &#123;0&#125; Bohr, a_right = &#123;1&#125; Bohr, stress_middle = &#123;2&#125; GPa&#x27;</span>.<span class="built_in">format</span>(a_left, a_right, stress_middle))</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;a = &#123;0&#125; Bohr&#x27;</span>.<span class="built_in">format</span>(a_middle))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;stress = &#123;0&#125; GPa&#x27;</span>.<span class="built_in">format</span>(stress_middle))</span><br></pre></td></tr></table></figure>
+<p>Remember, before running the script, you have to copy the
+<code>si.pw.in</code> to <code>si.stress.in</code>, and make sure that
+the <code>ATOMIC_POSITIONS</code> block is changed back to the original
+value without any perturbation. Also, here we'd better consistent values
+of <code>ecutwfc</code>, <code>K_POINTS</code>, and
+<code>conv_thr</code> with the further calculations. Here we just take
+<code>70</code>, <code>8 8 8 1 1 1</code>, and <code>1.0d-11</code>,
+respectively.</p>
+<p>Anyway, the script will yield the result that the lattice constant is
+<code>10.20753662109375 Bohr</code>, and we just take it as the new
+lattice constant.</p>
+<h1 id="construct-supercell-and-displace-patterns">Construct supercell
+and displace patterns</h1>
+<h2 id="generate-supercell-using-phonopy">Generate supercell using
+<code>phonopy</code></h2>
+<p>It is already quite boring to write the baseline input file for a
+cell of 8 atoms, and it would be impoosible to imagine that we have to
+write the input file for a cell of 64 atoms (<span
+class="math inline">\(2^3\times 8\)</span>), or even 216 atoms (<span
+class="math inline">\(3^3\times 8\)</span>). Fortunately,
+<code>phonopy</code> provides a very convenient way to generate
+supercells by one line of command. With it installed, simply run the
+following command:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">phonopy --qe -d --dim=<span class="string">&quot;2 2 2&quot;</span> -c si.pw.in</span><br></pre></td></tr></table></figure>
+<p>Once again, don't forget to check if you changed
+<code>si.pw.in</code> to the unperturbed settings. Also, the
+<code>--dim</code> option can be whatever you want. For silicon,
+<code>"2 2 2"</code> (Si222) is pretty good, but Si333 will be better if
+you have the resources and time to do the calculations. Copy and paste
+the contents of generated files into a new file <code>si222.pw.in</code>
+and modify <code>prefix</code>, <code>nat</code>,
+<code>CELL_PARAMETERS</code> and <code>K_POINTS</code>, like the
+following:</p>
+<figure class="highlight bash"><figcaption><span>si222.pw.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;CONTROL</span><br><span class="line">    calculation = <span class="string">&#x27;scf&#x27;</span></span><br><span class="line">    prefix = <span class="string">&#x27;si222&#x27;</span></span><br><span class="line">    pseudo_dir = <span class="string">&#x27;./pseudo/&#x27;</span></span><br><span class="line">    outdir = <span class="string">&#x27;./tmp/&#x27;</span></span><br><span class="line">    verbosity = <span class="string">&#x27;high&#x27;</span></span><br><span class="line">    tprnfor = .<span class="literal">true</span>.</span><br><span class="line">    tstress = .<span class="literal">true</span>.</span><br><span class="line">    disk_io = <span class="string">&#x27;none&#x27;</span></span><br><span class="line">/</span><br><span class="line">&amp;SYSTEM</span><br><span class="line">    ibrav = 0</span><br><span class="line">    nat = 64</span><br><span class="line">    ntyp = 1</span><br><span class="line">    ecutwfc = 70</span><br><span class="line">/</span><br><span class="line">&amp;ELECTRONS</span><br><span class="line">    conv_thr        = 1.0d-11</span><br><span class="line">    mixing_beta     = 0.7</span><br><span class="line">/</span><br><span class="line">CELL_PARAMETERS bohr</span><br><span class="line">   20.4150732421875    0.0000000000000    0.0000000000000</span><br><span class="line">    0.0000000000000   20.4150732421875    0.0000000000000</span><br><span class="line">    0.0000000000000    0.0000000000000   20.4150732421875</span><br><span class="line">ATOMIC_SPECIES</span><br><span class="line">    Si  28.0855  Si.pz-vbc.UPF</span><br><span class="line">ATOMIC_POSITIONS crystal</span><br><span class="line">    Si   0.0000000000000000  0.0000000000000000  0.0000000000000000</span><br><span class="line">    Si   0.5000000000000000  0.0000000000000000  0.0000000000000000</span><br><span class="line">    Si   0.0000000000000000  0.5000000000000000  0.0000000000000000</span><br><span class="line">    Si   0.5000000000000000  0.5000000000000000  0.0000000000000000</span><br><span class="line">    Si   0.0000000000000000  0.0000000000000000  0.5000000000000000</span><br><span class="line">    Si   0.5000000000000000  0.0000000000000000  0.5000000000000000</span><br><span class="line">    Si   0.0000000000000000  0.5000000000000000  0.5000000000000000</span><br><span class="line">    Si   0.5000000000000000  0.5000000000000000  0.5000000000000000</span><br><span class="line">    Si   0.0000000000000000  0.2500000000000000  0.2500000000000000</span><br><span class="line">    Si   0.5000000000000000  0.2500000000000000  0.2500000000000000</span><br><span class="line">    Si   0.0000000000000000  0.7500000000000000  0.2500000000000000</span><br><span class="line">    Si   0.5000000000000000  0.7500000000000000  0.2500000000000000</span><br><span class="line">    Si   0.0000000000000000  0.2500000000000000  0.7500000000000000</span><br><span class="line">    Si   0.5000000000000000  0.2500000000000000  0.7500000000000000</span><br><span class="line">    Si   0.0000000000000000  0.7500000000000000  0.7500000000000000</span><br><span class="line">    Si   0.5000000000000000  0.7500000000000000  0.7500000000000000</span><br><span class="line">    Si   0.2500000000000000  0.0000000000000000  0.2500000000000000</span><br><span class="line">    Si   0.7500000000000000  0.0000000000000000  0.2500000000000000</span><br><span class="line">    Si   0.2500000000000000  0.5000000000000000  0.2500000000000000</span><br><span class="line">    Si   0.7500000000000000  0.5000000000000000  0.2500000000000000</span><br><span class="line">    Si   0.2500000000000000  0.0000000000000000  0.7500000000000000</span><br><span class="line">    Si   0.7500000000000000  0.0000000000000000  0.7500000000000000</span><br><span class="line">    Si   0.2500000000000000  0.5000000000000000  0.7500000000000000</span><br><span class="line">    Si   0.7500000000000000  0.5000000000000000  0.7500000000000000</span><br><span class="line">    Si   0.2500000000000000  0.2500000000000000  0.0000000000000000</span><br><span class="line">    Si   0.7500000000000000  0.2500000000000000  0.0000000000000000</span><br><span class="line">    Si   0.2500000000000000  0.7500000000000000  0.0000000000000000</span><br><span class="line">    Si   0.7500000000000000  0.7500000000000000  0.0000000000000000</span><br><span class="line">    Si   0.2500000000000000  0.2500000000000000  0.5000000000000000</span><br><span class="line">    Si   0.7500000000000000  0.2500000000000000  0.5000000000000000</span><br><span class="line">    Si   0.2500000000000000  0.7500000000000000  0.5000000000000000</span><br><span class="line">    Si   0.7500000000000000  0.7500000000000000  0.5000000000000000</span><br><span class="line">    Si   0.1250000000000000  0.1250000000000000  0.1250000000000000</span><br><span class="line">    Si   0.6250000000000000  0.1250000000000000  0.1250000000000000</span><br><span class="line">    Si   0.1250000000000000  0.6250000000000000  0.1250000000000000</span><br><span class="line">    Si   0.6250000000000000  0.6250000000000000  0.1250000000000000</span><br><span class="line">    Si   0.1250000000000000  0.1250000000000000  0.6250000000000000</span><br><span class="line">    Si   0.6250000000000000  0.1250000000000000  0.6250000000000000</span><br><span class="line">    Si   0.1250000000000000  0.6250000000000000  0.6250000000000000</span><br><span class="line">    Si   0.6250000000000000  0.6250000000000000  0.6250000000000000</span><br><span class="line">    Si   0.1250000000000000  0.3750000000000000  0.3750000000000000</span><br><span class="line">    Si   0.6250000000000000  0.3750000000000000  0.3750000000000000</span><br><span class="line">    Si   0.1250000000000000  0.8750000000000000  0.3750000000000000</span><br><span class="line">    Si   0.6250000000000000  0.8750000000000000  0.3750000000000000</span><br><span class="line">    Si   0.1250000000000000  0.3750000000000000  0.8750000000000000</span><br><span class="line">    Si   0.6250000000000000  0.3750000000000000  0.8750000000000000</span><br><span class="line">    Si   0.1250000000000000  0.8750000000000000  0.8750000000000000</span><br><span class="line">    Si   0.6250000000000000  0.8750000000000000  0.8750000000000000</span><br><span class="line">    Si   0.3750000000000000  0.1250000000000000  0.3750000000000000</span><br><span class="line">    Si   0.8750000000000000  0.1250000000000000  0.3750000000000000</span><br><span class="line">    Si   0.3750000000000000  0.6250000000000000  0.3750000000000000</span><br><span class="line">    Si   0.8750000000000000  0.6250000000000000  0.3750000000000000</span><br><span class="line">    Si   0.3750000000000000  0.1250000000000000  0.8750000000000000</span><br><span class="line">    Si   0.8750000000000000  0.1250000000000000  0.8750000000000000</span><br><span class="line">    Si   0.3750000000000000  0.6250000000000000  0.8750000000000000</span><br><span class="line">    Si   0.8750000000000000  0.6250000000000000  0.8750000000000000</span><br><span class="line">    Si   0.3750000000000000  0.3750000000000000  0.1250000000000000</span><br><span class="line">    Si   0.8750000000000000  0.3750000000000000  0.1250000000000000</span><br><span class="line">    Si   0.3750000000000000  0.8750000000000000  0.1250000000000000</span><br><span class="line">    Si   0.8750000000000000  0.8750000000000000  0.1250000000000000</span><br><span class="line">    Si   0.3750000000000000  0.3750000000000000  0.6250000000000000</span><br><span class="line">    Si   0.8750000000000000  0.3750000000000000  0.6250000000000000</span><br><span class="line">    Si   0.3750000000000000  0.8750000000000000  0.6250000000000000</span><br><span class="line">    Si   0.8750000000000000  0.8750000000000000  0.6250000000000000</span><br><span class="line">K_POINTS automatic</span><br><span class="line">    4 4 4 1 1 1</span><br></pre></td></tr></table></figure>
+<h2 id="obtain-displace-patterns">Obtain displace patterns</h2>
+<p>The next step is to obtain the displace patterns for the supercell.
+Create a new file <code>si222.alm.in</code> that will be used by
+<code>alamode</code> to generate the patterns:</p>
+<figure class="highlight bash"><figcaption><span>si222.alm.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;general</span><br><span class="line">  PREFIX = si222</span><br><span class="line">  MODE = suggest</span><br><span class="line">  NAT = 64; NKD = 1</span><br><span class="line">  KD = Si</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;interaction</span><br><span class="line">  NORDER = 2  <span class="comment"># 1: harmonic, 2: cubic, ..</span></span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;cell</span><br><span class="line">  20.4150732421875 <span class="comment"># factor in Bohr unit</span></span><br><span class="line">  1.0 0.0 0.0 <span class="comment"># a1</span></span><br><span class="line">  0.0 1.0 0.0 <span class="comment"># a2</span></span><br><span class="line">  0.0 0.0 1.0 <span class="comment"># a3</span></span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;cutoff </span><br><span class="line">  Si-Si None 10.0</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;position</span><br><span class="line">  1  0.0000000000000000  0.0000000000000000  0.0000000000000000</span><br><span class="line">  1  0.5000000000000000  0.0000000000000000  0.0000000000000000</span><br><span class="line">  1  0.0000000000000000  0.5000000000000000  0.0000000000000000</span><br><span class="line">  1  0.5000000000000000  0.5000000000000000  0.0000000000000000</span><br><span class="line">  1  0.0000000000000000  0.0000000000000000  0.5000000000000000</span><br><span class="line">  1  0.5000000000000000  0.0000000000000000  0.5000000000000000</span><br><span class="line">  1  0.0000000000000000  0.5000000000000000  0.5000000000000000</span><br><span class="line">  1  0.5000000000000000  0.5000000000000000  0.5000000000000000</span><br><span class="line">  1  0.0000000000000000  0.2500000000000000  0.2500000000000000</span><br><span class="line">  1  0.5000000000000000  0.2500000000000000  0.2500000000000000</span><br><span class="line">  1  0.0000000000000000  0.7500000000000000  0.2500000000000000</span><br><span class="line">  1  0.5000000000000000  0.7500000000000000  0.2500000000000000</span><br><span class="line">  1  0.0000000000000000  0.2500000000000000  0.7500000000000000</span><br><span class="line">  1  0.5000000000000000  0.2500000000000000  0.7500000000000000</span><br><span class="line">  1  0.0000000000000000  0.7500000000000000  0.7500000000000000</span><br><span class="line">  1  0.5000000000000000  0.7500000000000000  0.7500000000000000</span><br><span class="line">  1  0.2500000000000000  0.0000000000000000  0.2500000000000000</span><br><span class="line">  1  0.7500000000000000  0.0000000000000000  0.2500000000000000</span><br><span class="line">  1  0.2500000000000000  0.5000000000000000  0.2500000000000000</span><br><span class="line">  1  0.7500000000000000  0.5000000000000000  0.2500000000000000</span><br><span class="line">  1  0.2500000000000000  0.0000000000000000  0.7500000000000000</span><br><span class="line">  1  0.7500000000000000  0.0000000000000000  0.7500000000000000</span><br><span class="line">  1  0.2500000000000000  0.5000000000000000  0.7500000000000000</span><br><span class="line">  1  0.7500000000000000  0.5000000000000000  0.7500000000000000</span><br><span class="line">  1  0.2500000000000000  0.2500000000000000  0.0000000000000000</span><br><span class="line">  1  0.7500000000000000  0.2500000000000000  0.0000000000000000</span><br><span class="line">  1  0.2500000000000000  0.7500000000000000  0.0000000000000000</span><br><span class="line">  1  0.7500000000000000  0.7500000000000000  0.0000000000000000</span><br><span class="line">  1  0.2500000000000000  0.2500000000000000  0.5000000000000000</span><br><span class="line">  1  0.7500000000000000  0.2500000000000000  0.5000000000000000</span><br><span class="line">  1  0.2500000000000000  0.7500000000000000  0.5000000000000000</span><br><span class="line">  1  0.7500000000000000  0.7500000000000000  0.5000000000000000</span><br><span class="line">  1  0.1250000000000000  0.1250000000000000  0.1250000000000000</span><br><span class="line">  1  0.6250000000000000  0.1250000000000000  0.1250000000000000</span><br><span class="line">  1  0.1250000000000000  0.6250000000000000  0.1250000000000000</span><br><span class="line">  1  0.6250000000000000  0.6250000000000000  0.1250000000000000</span><br><span class="line">  1  0.1250000000000000  0.1250000000000000  0.6250000000000000</span><br><span class="line">  1  0.6250000000000000  0.1250000000000000  0.6250000000000000</span><br><span class="line">  1  0.1250000000000000  0.6250000000000000  0.6250000000000000</span><br><span class="line">  1  0.6250000000000000  0.6250000000000000  0.6250000000000000</span><br><span class="line">  1  0.1250000000000000  0.3750000000000000  0.3750000000000000</span><br><span class="line">  1  0.6250000000000000  0.3750000000000000  0.3750000000000000</span><br><span class="line">  1  0.1250000000000000  0.8750000000000000  0.3750000000000000</span><br><span class="line">  1  0.6250000000000000  0.8750000000000000  0.3750000000000000</span><br><span class="line">  1  0.1250000000000000  0.3750000000000000  0.8750000000000000</span><br><span class="line">  1  0.6250000000000000  0.3750000000000000  0.8750000000000000</span><br><span class="line">  1  0.1250000000000000  0.8750000000000000  0.8750000000000000</span><br><span class="line">  1  0.6250000000000000  0.8750000000000000  0.8750000000000000</span><br><span class="line">  1  0.3750000000000000  0.1250000000000000  0.3750000000000000</span><br><span class="line">  1  0.8750000000000000  0.1250000000000000  0.3750000000000000</span><br><span class="line">  1  0.3750000000000000  0.6250000000000000  0.3750000000000000</span><br><span class="line">  1  0.8750000000000000  0.6250000000000000  0.3750000000000000</span><br><span class="line">  1  0.3750000000000000  0.1250000000000000  0.8750000000000000</span><br><span class="line">  1  0.8750000000000000  0.1250000000000000  0.8750000000000000</span><br><span class="line">  1  0.3750000000000000  0.6250000000000000  0.8750000000000000</span><br><span class="line">  1  0.8750000000000000  0.6250000000000000  0.8750000000000000</span><br><span class="line">  1  0.3750000000000000  0.3750000000000000  0.1250000000000000</span><br><span class="line">  1  0.8750000000000000  0.3750000000000000  0.1250000000000000</span><br><span class="line">  1  0.3750000000000000  0.8750000000000000  0.1250000000000000</span><br><span class="line">  1  0.8750000000000000  0.8750000000000000  0.1250000000000000</span><br><span class="line">  1  0.3750000000000000  0.3750000000000000  0.6250000000000000</span><br><span class="line">  1  0.8750000000000000  0.3750000000000000  0.6250000000000000</span><br><span class="line">  1  0.3750000000000000  0.8750000000000000  0.6250000000000000</span><br><span class="line">  1  0.8750000000000000  0.8750000000000000  0.6250000000000000</span><br></pre></td></tr></table></figure>
+<p>Here, the mode <code>suggest</code> means that we ask
+<code>alamode</code> to generate patterns. And we set the cutoff
+parameters empirically. After this, execute the following command:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">alm si222.alm.in &gt; si222.alm.log</span><br></pre></td></tr></table></figure>
+<p>The harmonic and anharmonic patterns will be saved as files
+<code>si222.pattern_HARMONIC</code> and
+<code>si222.pattern_ANHARM3</code>, respectively. With the anharmonic
+patterns (16 patterns inside the file), we perturb again the input file
+of Quantum Espresso, but this time automatically by using the
+<code>displace.py</code> script provided by <code>alamode</code> in its
+<code>tools</code> directory.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python displace.py --QE=si222.pw.in --mag=0.01 -pf si222.pattern_ANHARM3</span><br></pre></td></tr></table></figure>
+<p>The <code>--mag</code> option specifies the magnitude, and the
+<code>-pf</code> option specifies the pattern file. For Si222 (and also
+Si333), 16 new input files named from <code>disp01.pw.in</code> to
+<code>disp16.pw.in</code> will be generated.</p>
+<h1 id="calculate-forces-using-pw.x">Calculate forces using
+<code>pw.x</code></h1>
+<p>Just perform the calculations of all the input files generated by
+<code>displace.py</code>! To be a bit lazy, I submit all the jobs using
+a bash script that run through all the input files and submit them to
+the queue system of the cluster in my university. It is something like
+this:</p>
+<figure class="highlight bash"><figcaption><span>_si.disp.submit.sh</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> ((i=<span class="number">1</span>;i&lt;=<span class="number">16</span>;i++))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    num=`<span class="built_in">echo</span> <span class="variable">$i</span> | awk <span class="string">&#x27;&#123;printf(&quot;%02d&quot;,$1)&#125;&#x27;</span>`</span><br><span class="line">    <span class="built_in">cp</span> _si.disp.sh _si.disp<span class="variable">$&#123;num&#125;</span>.sh</span><br><span class="line">    <span class="comment"># match patterns like &quot;input=disp.pw*.in&quot;, &quot;output=disp.pw*.out&quot;, change to &quot;input=disp.pw.01.in&quot;, &quot;output=disp.pw.01.out&quot;</span></span><br><span class="line">    sed -i <span class="string">&quot;s/input=disp.pw.in/input=disp<span class="variable">$&#123;num&#125;</span>.pw.in/g&quot;</span> _si.disp<span class="variable">$&#123;num&#125;</span>.sh</span><br><span class="line">    sed -i <span class="string">&quot;s/output=disp.pw.out/output=disp<span class="variable">$&#123;num&#125;</span>.pw.out/g&quot;</span> _si.disp<span class="variable">$&#123;num&#125;</span>.sh</span><br><span class="line">    qsub _si.disp<span class="variable">$&#123;num&#125;</span>.sh</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>which manipulates a submission script <code>_si.disp.sh</code>:</p>
+<div class="note danger"><p>The following script is just an example, and is only suitable for the
+cluster of my university. You have to modify it according to your own
+cluster. Or you can simply run the calculations on your own computer
+manually...</p>
+</div>
+<figure class="highlight bash"><figcaption><span>_si.disp.sh</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">#### submit_job.sh START ####</span></span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"><span class="comment">#$ -cwd</span></span><br><span class="line"><span class="comment"># error = Merged with joblog</span></span><br><span class="line"><span class="comment">#$ -o joblog.$JOB_ID</span></span><br><span class="line"><span class="comment">#$ -j y</span></span><br><span class="line"><span class="comment">## Edit the line below as needed:</span></span><br><span class="line"><span class="comment">#$ -l h_rt=24:00:00,h_data=3G</span></span><br><span class="line"><span class="comment">## Modify the parallel environment</span></span><br><span class="line"><span class="comment">## and the number of cores as needed:</span></span><br><span class="line"><span class="comment">#$ -pe shared 16</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># echo job info on joblog:</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Job <span class="variable">$JOB_ID</span> started on:   &quot;</span> `hostname -s`</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Job <span class="variable">$JOB_ID</span> started on:   &quot;</span> `<span class="built_in">date</span> `</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot; &quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># load the job environment:</span></span><br><span class="line">. /u/local/Modules/default/init/modules.sh</span><br><span class="line"></span><br><span class="line"><span class="comment">## Edit the line below as needed:</span></span><br><span class="line">module load intel/2020.4</span><br><span class="line">module load gcc/10.2.0</span><br><span class="line">module load espresso/6.7.0</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Current Packages:&quot;</span></span><br><span class="line"></span><br><span class="line">module list</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot; &quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Start running...&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## substitute the command to run your code</span></span><br><span class="line"><span class="comment">## in the two lines below:</span></span><br><span class="line"><span class="built_in">cd</span> /PATH/TO/THE/WORKING/DIRECTORY/</span><br><span class="line"></span><br><span class="line">input=disp.pw.in</span><br><span class="line">output=disp.pw.out</span><br><span class="line"></span><br><span class="line">mpirun -np 16 pw.x &lt; <span class="variable">$&#123;input&#125;</span> &gt; <span class="variable">$&#123;output&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># try to determine if there is &quot;JOB DONE&quot; in the output file, if not, echo a warning message</span></span><br><span class="line"><span class="keyword">if</span> grep -q <span class="string">&quot;JOB DONE&quot;</span> <span class="variable">$&#123;output&#125;</span>; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;PW finished successfully&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Job <span class="variable">$JOB_ID</span> for <span class="variable">$input</span> ended succesffully&quot;</span> &gt;&gt; __submit_job.<span class="built_in">log</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;PW may not finished successfully&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Job <span class="variable">$JOB_ID</span> for <span class="variable">$input</span> FAILED!&quot;</span> &gt;&gt; __submit_job.<span class="built_in">log</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># echo job info on joblog:</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Job <span class="variable">$JOB_ID</span> ended on:   &quot;</span> `hostname -s`</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Job <span class="variable">$JOB_ID</span> ended on:   &quot;</span> `<span class="built_in">date</span> `</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot; &quot;</span></span><br><span class="line"><span class="comment">#### submit_job.sh STOP ####</span></span><br></pre></td></tr></table></figure>
+<p>When all the calculations are finished, we extract the forces from
+the output files by using the <code>extract.py</code> script that is
+also provided by <code>alamode</code>:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python extract.py --QE=si222.pw.in ./disp*.pw.out &gt; si222.DFSET_ANHARM3</span><br></pre></td></tr></table></figure>
+<h1 id="fit-ifcs-by-using-alm">Fit IFCs by using <code>alm</code></h1>
+<p>Make a copy of the <code>alm</code> input file
+<code>si222.alm.in</code>, name it as
+<code>si222.alm.optimize.in</code>, change the following settings:</p>
+<figure class="highlight diff"><figcaption><span>si222.alm.optimize.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;general</span><br><span class="line">...</span><br><span class="line"><span class="deletion">-  MODE = suggest</span></span><br><span class="line"><span class="addition">+  MODE = optimize</span></span><br><span class="line">...</span><br><span class="line">/</span><br><span class="line"><span class="addition">+&amp;optimize</span></span><br><span class="line"><span class="addition">+  DFSET = si222.DFSET_ANHARM3</span></span><br><span class="line"><span class="addition">+/</span></span><br></pre></td></tr></table></figure>
+<p>Then perfom the fitting:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">alm si222.alm.optimize.in &gt; si222.alm.optimize.log</span><br></pre></td></tr></table></figure>
+<p>This will generate <code>si222.xml</code>, <code>si222.fcs</code>
+that are the fitted IFCs, and <code>si222.alm.optimize.log</code> that
+is the log file of the fitting process.</p>
+<h1 id="phonon-dispersion-relation-and-density-of-states">Phonon
+dispersion relation and density of states</h1>
+<p>First create a new input file for <code>anphon</code>, which is one
+of the packages of <code>alamode</code>:</p>
+<figure class="highlight bash"><figcaption><span>si222.phonon.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;general</span><br><span class="line">  PREFIX = si222</span><br><span class="line">  MODE   = phonons</span><br><span class="line">  FCSXML = si222.xml</span><br><span class="line"></span><br><span class="line">  NKD = 1; KD = Si</span><br><span class="line">  MASS = 28.0855</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;cell</span><br><span class="line">  10.20753662109375</span><br><span class="line">  0.0 0.5 0.5</span><br><span class="line">  0.5 0.0 0.5</span><br><span class="line">  0.5 0.5 0.0</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;kpoint</span><br><span class="line">  1  <span class="comment"># KPMODE = 1: line mode</span></span><br><span class="line">  G 0.0 0.0 0.0 X 0.5 0.5 0.0 51</span><br><span class="line">  X 0.5 0.5 1.0 G 0.0 0.0 0.0 51</span><br><span class="line">  G 0.0 0.0 0.0 L 0.5 0.5 0.5 51</span><br><span class="line">/</span><br></pre></td></tr></table></figure>
+<p>It is worth noting that the <code>kpoint</code> field is selected to
+be the line mode, meaning that anphon will calculate phonon dispersion
+relation along the lines that are specified.</p>
+<p>Perform the calculation by:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">anphon si222.phonon.in &gt; si222.phonon.log</span><br></pre></td></tr></table></figure>
+<p>Using another script <code>plotband.py</code> provided by
+<code>alamode</code>, the phonon band structure can be quickly
+plotted:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python plotband.py si222.bands</span><br></pre></td></tr></table></figure>
+<img src="/images/2023/ab-initio/band.png" class="" width="500" title="Phonon band structure">
+<p>As for the density of states, just change the <code>kpoint</code>
+field to:</p>
+<figure class="highlight diff"><figcaption><span>si222.phonon.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;kpoint</span><br><span class="line"><span class="deletion">-  1  # KPMODE = 1: line mode</span></span><br><span class="line"><span class="deletion">-  G 0.0 0.0 0.0 X 0.5 0.5 0.0 51</span></span><br><span class="line"><span class="deletion">-  X 0.5 0.5 1.0 G 0.0 0.0 0.0 51</span></span><br><span class="line"><span class="deletion">-  G 0.0 0.0 0.0 L 0.5 0.5 0.5 51</span></span><br><span class="line"><span class="addition">+  2</span></span><br><span class="line"><span class="addition">+  20 20 20</span></span><br><span class="line">/</span><br></pre></td></tr></table></figure>
+<p>perform the same command again, <code>anphon</code> will create
+<code>si222.dos</code> and <code>si.thermo</code> that are the density
+of states and the thermodynamic properties. To see the DoS, just use
+<code>plotdos.py</code>, with the following command:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python plotdos.py --emax 550 --nokey si222.dos</span><br></pre></td></tr></table></figure>
+<img src="/images/2023/ab-initio/dos.png" class="" width="500" title="Density of states">
+<h1 id="calculate-thermal-conductivity">Calculate thermal
+conductivity</h1>
+<p>Now it is time to calculate the thermal conductivity. We still use
+<code>anphon</code>, and let's create a config file
+<code>si222.RTA.in</code> similar to the one of phonon dispersion
+relation:</p>
+<figure class="highlight bash"><figcaption><span>si222.RTA.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;general</span><br><span class="line">  PREFIX = si222</span><br><span class="line">  MODE   = RTA</span><br><span class="line">  FCSXML = si222.xml</span><br><span class="line"></span><br><span class="line">  NKD = 1; KD = Si</span><br><span class="line">  MASS = 28.0855</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;cell</span><br><span class="line">  10.20753662109375</span><br><span class="line">  0.0 0.5 0.5</span><br><span class="line">  0.5 0.0 0.5</span><br><span class="line">  0.5 0.5 0.0</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;kpoint</span><br><span class="line">  2</span><br><span class="line">  20 20 20</span><br><span class="line">/</span><br></pre></td></tr></table></figure>
+<p>where <code>mode=RTA</code> means that we are going to use
+relaxation-time approximation (RTA) to calculate the thermal
+conductivity. The <code>FCSXML</code> option specifies the IFCs file
+that we just obtained. The <code>cell</code> block, as you can see,
+specifies a primitive cell of Silicon monocrystalline, and it is surely
+different than the supercell that we used above. The <code>kpoint</code>
+block specifies the number of wavevectors in each direction of the
+reciprocal space, and it can be set to quite large comparing with that
+of the supercell.</p>
+<p>Perform the calculation by:</p>
+<div class="note primary"><p>Although the official documentation of <code>alamode</code> claims
+that <code>anphon</code> does support MPI, the parallel execution was
+not working on both my computer (M1 Max Macbook Pro) and on the cluster
+of my university (Intel x86). Luckily, it is not that slow to run on a
+single core. Just be patient for a while.</p>
+</div>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">anphon si222.RTA.<span class="keyword">in</span> &gt; si222.RTA.<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+<p>will give the thermal conductivity up to 1000 K, stored in
+<code>si222.kl</code>, and all other information is stored in
+<code>si222.result</code>. Here we plot the thermal conductivity, and
+compare it with the data in literature, shown below:</p>
+<img src="/images/2023/ab-initio/thermal_conductivity.png" class="" width="500" title="Thermal conductivity">
+<p>If we redo all the stuff above for Si333, a nearly same result will
+be obtained, and we plot the data from 250 K to 450 K, it is shown that
+the difference between the calculated data for Si222 and Si333 is within
+4.22 W/mK, and is about 2.5% of the value of Si222.</p>
+<img src="/images/2023/ab-initio/thermal_conductivity_333.png" class="" width="500" title="Thermal conductivity comparing Si222 and Si333">
+<p>It is so amazing that the calculated thermal conductivity is just in
+very good agreement with the experimental data. This is the power of
+physics, that we can absoultely calculate anything in the <em>ab
+initio</em> way, and they just do the job!</p>
+<h1 id="references">References</h1>
+<ol type="1">
+<li><a
+href="https://alamode.readthedocs.io/en/latest/index.html">alamode
+documentation</a></li>
+<li><a href="https://www.quantum-espresso.org/">Quantum
+Espresso</a></li>
+<li><a href="https://phonopy.github.io/phonopy/">phonopy
+documentation</a></li>
+<li><a
+href="https://icme.hpc.msstate.edu/mediawiki/index.php/How_to_make_Supercell_for_Quantum_ESPRESSO.html">How
+to make Supercell for Quantum ESPRESSO</a></li>
+<li><a
+href="https://journals.aps.org/pr/abstract/10.1103/PhysRev.130.1743">H.
+R. Shanks, P. D. Maycock, P. H. Sidles, and G. C. Danielson. Thermal
+Conductivity of Silicon from 300 to 1400°K. <em>Phys. Rev.</em> 130,
+1743 – Published 1 June 1963</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>Solid State Physics</category>
+        <category>Ab Initio Calculation</category>
+      </categories>
+      <tags>
+        <tag>Ab initio calculation</tag>
+        <tag>Phonon</tag>
+        <tag>Interatomic force constant</tag>
+        <tag>Dispersion relation</tag>
+        <tag>Relaxation time approximation</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Derive phonon scattering rate from anharmonic potential</title>
     <url>/2023/10/anharmonicity/</url>
     <content><![CDATA[<h1 id="hamiltonian-of-a-crystal">Hamiltonian of a crystal</h1>
@@ -1031,8 +1377,8 @@ Bulk, Disordered, and Nanostructured Materials</em> (MIT 2011).</li>
       </categories>
       <tags>
         <tag>Phonon</tag>
-        <tag>Scattering</tag>
         <tag>Interatomic force constant</tag>
+        <tag>Scattering</tag>
         <tag>Fermi&#39;s golden rule</tag>
       </tags>
   </entry>
@@ -1186,349 +1532,40 @@ Introduction</em>).</li>
       </tags>
   </entry>
   <entry>
-    <title>Ab initio determination of thermal conductivity of Silicon</title>
-    <url>/2023/10/ab-initio/</url>
-    <content><![CDATA[<h1 id="overview">Overview</h1>
-<p>The <em>ab inito</em> calculation of thermal conductivity is very
-complex and needs several softwares to work together. The basic idea is
-to calculate the interatomic force constants (IFCs) for both the
-harmonic and anharmonic terms, and then use the IFCs to calculate the
-phonon dispersion relation and phonon scattering time using knowledges
-that are summarized in the previous posts about <a
-href="/2023/10/anharmonicity">anharmonicity</a> and <a
-href="/2023/10/phonon-dispersion">phonon dispersion</a>.</p>
-<h2 id="workflow">Workflow</h2>
-<p>Overall, we use the following open-source softwares:</p>
-<ul>
-<li><a href="https://phonopy.github.io/phonopy/">phonopy</a> that helps
-to generate the supercell we want.</li>
-<li><a href="https://www.quantum-espresso.org/">Quantum Espresso</a>
-that carries out the <em>ab initio</em> calculation of electronic
-structures.</li>
-<li><a
-href="https://alamode.readthedocs.io/en/latest/intro.html">alamode</a>
-which fits the IFCs from the <em>ab initio</em> calculation and
-calculates the phonon dispersion relation and phonon scattering time and
-finally thermal conductivity.</li>
-</ul>
+    <title>Hello World</title>
+    <url>/2023/10/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very
+first post. Check <a href="https://hexo.io/docs/">documentation</a> for
+more info. If you get any problems when using Hexo, you can find the
+answer in <a
+href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or
+you can ask me on <a
+href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
 <span id="more"></span>
-<p>And the whole process would be like this:</p>
-<pre><code class="highlight mermaid">graph TD
-    A[&quot;Construct unit cell&quot;] -- Quantum Espresso --&gt; B[&quot;Test convergence&quot;]
-    A -- Quantum Espresso --&gt; B2[&quot;Solve lattice constant for zero pressure&quot;]
-    A -- phonopy --&gt; C[&quot;Construct supercell&quot;]
-    C -- alamode/alm/suggest --&gt; D[&quot;Figure out displace patterns&quot;]
-    D -- Quantum Espresso --&gt; E[&quot;Calculate forces for each pattern&quot;]
-    B -- ecutwfc, K_POINTS, conv_thr, etc. --&gt; E
-    B2 -- a --&gt; E
-    E -- alamode/alm/optimize --&gt; F[&quot;Fit IFCs&quot;]
-    F -- alamode/anphon/phonons --&gt; H[&quot;Calculate phonon dispersion&quot;]
-    F -- alamode/anphon/RTA --&gt; G[&quot;Calculate thermal conductivity&quot;]</code></pre>
-<h2 id="silicon-as-an-example">Silicon as an example</h2>
-<p>In this post, we will use Silicon as an example to show how to
-proceed the whole workflow, as Silicon crystal is simple and well
-studied.</p>
-<p>Monocrystalline silicon, with diamond structure, is a face centered
-cubic (fcc) lattice with two atoms in the unit cell. The lattice
-constant is <span class="math inline">\(a=5.43\,\mathrm{Å}\)</span>, or
-<span class="math inline">\(10.26\,\mathrm{Bohr}\)</span> (which is the
-edge length of the cube shown in the following figure), and the two
-atoms are located at <span class="math inline">\((0,0,0)\)</span> and
-<span class="math inline">\((0.25,0.25,0.25)\)</span> in the unit
-cell.</p>
-<img src="/images/2023/ab-initio/Silicon-unit-cell-3D-balls.png" class="" width="300" title="Silicon unit cell">
-<h1 id="construct-unit-cell">Construct unit cell</h1>
-<p>The very first step is to construct a unit cell of Silicon by hand.
-Using the information above, we can create a Quantum Espresso input file
-<code>si.pw.in</code> with the following content for calculating the
-electronic structure as well as the forces:</p>
-<figure class="highlight bash"><figcaption><span>Quantum Espresso Baseline Input: si.pw.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;CONTROL</span><br><span class="line">    calculation = <span class="string">&#x27;scf&#x27;</span></span><br><span class="line">    prefix = <span class="string">&#x27;si&#x27;</span></span><br><span class="line">    pseudo_dir = <span class="string">&#x27;./pseudo/&#x27;</span></span><br><span class="line">    outdir = <span class="string">&#x27;./tmp/&#x27;</span></span><br><span class="line">    disk_io = <span class="string">&#x27;none&#x27;</span></span><br><span class="line">    verbosity = <span class="string">&#x27;high&#x27;</span></span><br><span class="line">    tprnfor = .<span class="literal">true</span>.</span><br><span class="line">    tstress = .<span class="literal">true</span>.</span><br><span class="line">/</span><br><span class="line">&amp;SYSTEM</span><br><span class="line">    ibrav = 0</span><br><span class="line">    nat = 8</span><br><span class="line">    ntyp = 1</span><br><span class="line">    ecutwfc = 40</span><br><span class="line">/</span><br><span class="line">&amp;ELECTRONS</span><br><span class="line">    conv_thr        = 1.0d-11</span><br><span class="line">    mixing_beta     = 0.7</span><br><span class="line">/</span><br><span class="line">CELL_PARAMETERS bohr</span><br><span class="line">    10.26   0.0     0.0</span><br><span class="line">    0.0     10.26   0.0</span><br><span class="line">    0.0     0.0     10.26</span><br><span class="line">ATOMIC_SPECIES</span><br><span class="line">    Si  28.0855  Si.pz-vbc.UPF</span><br><span class="line">ATOMIC_POSITIONS crystal</span><br><span class="line">    Si 0.000000000 0.000000000 0.000000000</span><br><span class="line">    Si 0.000000000 0.500000000 0.500000000</span><br><span class="line">    Si 0.500000000 0.000000000 0.500000000</span><br><span class="line">    Si 0.500000000 0.500000000 0.000000000</span><br><span class="line">    Si 0.250000000 0.250000000 0.250000000</span><br><span class="line">    Si 0.250000000 0.750000000 0.750000000</span><br><span class="line">    Si 0.750000000 0.250000000 0.750000000</span><br><span class="line">    Si 0.750000000 0.750000000 0.250000000</span><br><span class="line">K_POINTS automatic</span><br><span class="line">    4 4 4 1 1 1</span><br></pre></td></tr></table></figure>
-<p>Specifications of those parameters can be found in the <a
-href="https://www.quantum-espresso.org/Doc/INPUT_PW.html"><code>pw.x</code>
-manual of Quantum Espresso</a>. It is worth mentioning that we let
-<code>ibrav = 0</code> (free) rather than <code>ibrav = 2</code> (fcc)
-because we want to further generate supercells using
-<code>phonopy</code> later, and <code>phonopy</code> only supports the
-case of <code>ibrav = 0</code>. The pseudo-potential file
-<code>Si.pz-vbc.UPF</code> can be downloaded from <a
-href="https://pseudopotentials.quantum-espresso.org/legacy_tables">Quantum
-Espresso website</a>, and we take this one as it is recommended by a
-senior researcher in our group. In addition, the 8 atoms in the unit
-cell are inputed by hand, taking the nearest 7 neighbors of the <span
-class="math inline">\((0,0,0)\)</span> atom.</p>
-<p>Also to note that, the parameters <code>tprnfor</code> and
-<code>tstress</code> are set to be <code>.true.</code> so that the
-forces and stresses can be printed out in the output file, which is
-crucial for the calculation of IFCs as well as the preliminary test of
-convergence and lattice constant.</p>
-<p>We can surely run a calculation by executing the following command,
-generating the output file <code>si.pw.out</code>:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Run on a single core</span></span><br><span class="line">pw.x &lt; si.pw.in &gt; si.pw.out</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run on 16 cores</span></span><br><span class="line">mpiexec -n 16 pw.x &lt; si.pw.in &gt; si.pw.out</span><br></pre></td></tr></table></figure>
-<p>For users that use clusters with job scheduler, it is important and
-recommended to evaluate the memory usage of the calculation, and it can
-be done by simply running the above command for several seconds, and
-then click <code>Ctrl+C</code> to terminate the calculation. In the file
-<code>si.pw.out</code>, an estimated memory usage is indicated by some
-lines like this:</p>
-<figure class="highlight bash"><figcaption><span>si.pw.out</span></figcaption><table><tr><td class="code"><pre><span class="line">Estimated total dynamical RAM &gt;      29.03 GB</span><br></pre></td></tr></table></figure>
-<h1 id="preliminary-tests-using-quantum-espresso">Preliminary tests
-using Quantum Espresso</h1>
-<h2 id="convergence-test">Convergence test</h2>
-<p>The above baseline settings of Silicon conventional cell are actually
-easy for Quantum Espresso to solve, and it takes about 1 minute to
-finish the calculation on a single core. However, it is not always the
-case, as we will solve very large supercell later. Therefore, now it is
-the time to take advantage of the very fast speed of the baseline
-calculation to test the convergence for the crucial parameters such
-as:</p>
-<ul>
-<li><code>ecutwfc</code>: the plane wave cutoff kinetic energy (in Ry).
-We change it from <span class="math inline">\(30\,\mathrm{Ry}\)</span>
-to <span class="math inline">\(150\,\mathrm{Ry}\)</span>.</li>
-<li><code>K_POINTS</code>: the number of <span
-class="math inline">\(k\)</span> points in the Brillouin zone (in each
-direction), we choose it from <span class="math inline">\(4\times
-4\times 4\)</span> to <span class="math inline">\(20\times 20\times
-20\)</span> (all with offsets so that it would be more accurate).</li>
-<li><code>conv_thr</code>: the convergence threshold for the
-self-consistent field (SCF) calculation, we change it from <span
-class="math inline">\(1\times 10^{-7}\)</span> to <span
-class="math inline">\(1\times 10^{-16}\)</span>.</li>
-</ul>
-<p>Keep in mind that, we care more about the convergence of the forces
-rather than the total energy, as the forces are used to calculate the
-IFCs later. Therefore, to make the forces exist, we have to manually
-perturb the system a bit, say <span class="math inline">\(0.001\)</span>
-crystal unit (which is about <span class="math inline">\(0.01\)</span>
-Bohr), for the first Silicon atom in the cell, by modifying the
-<code>ATOMIC_POSITIONS</code> block in <code>si.pw.in</code>:</p>
-<figure class="highlight diff"><figcaption><span>si.pw.in</span></figcaption><table><tr><td class="code"><pre><span class="line">ATOMIC_POSITIONS crystal</span><br><span class="line"><span class="addition">+    Si 0.001000000 0.000000000 0.000000000</span></span><br><span class="line"><span class="deletion">-    Si 0.000000000 0.000000000 0.000000000</span></span><br></pre></td></tr></table></figure>
-<p>To automatically perform the calculation, what I did is to write a
-bash script to perform calculation from different configurations, so
-that we can be free from the boring and repetitive work.</p>
-<figure class="highlight bash"><figcaption><span>conv_test.sh</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">### k conv test</span></span><br><span class="line"><span class="built_in">cp</span> si.pw.in si.pw.k.in</span><br><span class="line"><span class="keyword">for</span> k_point <span class="keyword">in</span> &#123;4..20&#125;; <span class="keyword">do</span></span><br><span class="line">    sed -i <span class="string">&quot;/K_POINTS/&#123;n;s/[0-9]\+ [0-9]\+ [0-9]\+ [0-9]\+ [0-9]\+ [0-9]\+/<span class="variable">$k_point</span> <span class="variable">$k_point</span> <span class="variable">$k_point</span> 1 1 1/&#125;&quot;</span> si.pw.k.in</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;let k_point = <span class="variable">$k_point</span>, calculating...&quot;</span></span><br><span class="line">    mpiexec -np 16 pw.x &lt; si.pw.k.in &gt; ./out/si.pw.k.<span class="variable">$k_point</span>.out</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">rm</span> si.pw.k.in</span><br><span class="line"></span><br><span class="line"><span class="comment">## Cutoff conv test</span></span><br><span class="line"><span class="built_in">cp</span> si.pw.in si.pw.ecut.in</span><br><span class="line"><span class="keyword">for</span> ((cut = <span class="number">30</span>; cut &lt;= <span class="number">150</span>; cut += <span class="number">10</span>)); <span class="keyword">do</span></span><br><span class="line">    sed -i <span class="string">&quot;s/ecutwfc = [0-9]\+/ecutwfc = <span class="variable">$cut</span>/&quot;</span> si.pw.ecut.in</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;let ecutwfc = <span class="variable">$cut</span>, calculating...&quot;</span></span><br><span class="line">    mpiexec -np 16 pw.x &lt; si.pw.ecut.in &gt; ./out/si.pw.ecut.<span class="variable">$cut</span>.out</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">rm</span> si.pw.ecut.in</span><br><span class="line"></span><br><span class="line"><span class="comment">## conv_thr test</span></span><br><span class="line"><span class="built_in">cp</span> si.pw.in si.pw.thr.in</span><br><span class="line"><span class="keyword">for</span> ((thr = <span class="number">7</span>; thr &lt;= <span class="number">16</span>; thr += <span class="number">1</span>)); <span class="keyword">do</span></span><br><span class="line">    sed -i <span class="string">&quot;s/conv_thr        = 1.0d-[0-9]\+/conv_thr        = 1.0d-<span class="variable">$thr</span>/&quot;</span> si.pw.thr.in</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;let conv_thr = 1.0d-<span class="variable">$thr</span>, calculating...&quot;</span></span><br><span class="line">    mpiexec -np 16 pw.x &lt; si.pw.thr.in &gt; ./out/si.pw.thr.<span class="variable">$thr</span>.out</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">rm</span> si.pw.thr.in</span><br></pre></td></tr></table></figure>
-<p>We perform the convergence test, and plot the results below. We
-marked the zone in which the largest atom force is in a range within
-<span class="math inline">\(10^{-6}\,\mathrm{Ry/Bohr}\)</span> comparing
-to the converged result (forces are marked by purple lines). Also,
-variations of the total energy are marked by dark blue lines, and the
-dashed zone indicates the range within <span
-class="math inline">\(10^{-3}\,\mathrm{Ry}\)</span> comparing to the
-converged result.</p>
-<figure>
-<img src="/images/2023/ab-initio/convergence.png"
-alt="Convergence test" />
-<figcaption aria-hidden="true">Convergence test</figcaption>
-</figure>
-<p>It can be noticed that:</p>
-<ul>
-<li><code>ecutwfc=70</code> or larger is far enough for the
-calculation.</li>
-<li><code>K_POINTS</code> setting as <code>8 8 8 1 1 1</code> is enough
-for the calculation of a conventional cell. For supercells, we may
-reduce it to <code>4 4 4 1 1 1</code> (<span
-class="math inline">\(2\times 2\times 2\)</span> supercell) or
-<code>3 3 3 1 1 1</code> (<span class="math inline">\(3\times 3 \times
-3\)</span> supercell), to make sure that the density of <span
-class="math inline">\(k\)</span> points remains the same or becomes even
-larger.</li>
-<li><code>conv_thr=1.0d-11</code> is way enough.</li>
-</ul>
-<h2 id="lattice-constant">Lattice constant</h2>
-<p>The lattice constant <span
-class="math inline">\(a=10.26\,\mathrm{Bohr}\)</span> that we set
-previously, may not be applicable for our problem, as it is a rough
-value, and it may not be consistent with the zero-pressure condition. In
-fact, the author first set <span
-class="math inline">\(a=10.26\,\mathrm{Bohr}\)</span> and carried out
-all the remaining calculations, and then found that the thermal
-conductivity at room temperature is about <span
-class="math inline">\(88\,\mathrm{W/mK}\)</span>, rather than <span
-class="math inline">\(\sim 140\,\mathrm{W/mK}\)</span> that are reported
-by various experiments. I then realized that the stress is about <span
-class="math inline">\(-14.08\,\mathrm{GPa}\)</span>, meaning that a very
-strong force is applied to strentch the solid, leading to the result
-that interatomic force is weeker, and thus the thermal conductivity is
-smaller.</p>
-<p>To obtain a more accurate lattice constant to make sure that the
-zero-pressure condition is satisfied, we write a python script to
-perform a simple binary search.</p>
-<figure class="highlight python"><figcaption><span>lattice_constant.py</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read_stress</span>(<span class="params">out_path</span>):</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(out_path, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        lines = f.readlines()</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;total   stress&#x27;</span> <span class="keyword">in</span> line:</span><br><span class="line">            stress = line.split()[-<span class="number">1</span>]</span><br><span class="line">            stress = <span class="built_in">float</span>(stress)</span><br><span class="line">            <span class="keyword">return</span> stress</span><br><span class="line">        </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">change_lattice_constant</span>(<span class="params">a, in_path</span>):</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(in_path, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        lines = f.readlines()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(lines)):</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;CELL_PARAMETERS&#x27;</span> <span class="keyword">in</span> lines[i]:</span><br><span class="line">            lines[i+<span class="number">1</span>] = <span class="string">&#x27;&#123;0&#125;   0.0     0.0\n&#x27;</span>.<span class="built_in">format</span>(a)</span><br><span class="line">            lines[i+<span class="number">2</span>] = <span class="string">&#x27;0.0     &#123;0&#125;   0.0\n&#x27;</span>.<span class="built_in">format</span>(a)</span><br><span class="line">            lines[i+<span class="number">3</span>] = <span class="string">&#x27;0.0     0.0     &#123;0&#125;\n&#x27;</span>.<span class="built_in">format</span>(a)</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(in_path, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.writelines(lines)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run_espresso</span>(<span class="params">in_path, out_path, np=<span class="number">8</span></span>):</span><br><span class="line">    os.system(<span class="string">&#x27;mpiexec -np &#123;0&#125; pw.x &lt; &#123;1&#125; &gt; &#123;2&#125;&#x27;</span>.<span class="built_in">format</span>(np, in_path, out_path))</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    a_left = <span class="number">10.00</span></span><br><span class="line">    a_right = <span class="number">10.50</span></span><br><span class="line"></span><br><span class="line">    in_path = <span class="string">&#x27;si.stress.in&#x27;</span></span><br><span class="line">    out_path = <span class="string">&#x27;si.stress.out&#x27;</span></span><br><span class="line"></span><br><span class="line">    change_lattice_constant(a_left, in_path)</span><br><span class="line">    run_espresso(in_path, out_path)</span><br><span class="line">    stress_left = read_stress(out_path)</span><br><span class="line"></span><br><span class="line">    change_lattice_constant(a_right, in_path)</span><br><span class="line">    run_espresso(in_path, out_path)</span><br><span class="line">    stress_right = read_stress(out_path)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;stress_left = &#123;0&#125; GPa&#x27;</span>.<span class="built_in">format</span>(stress_left))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;stress_right = &#123;0&#125; GPa&#x27;</span>.<span class="built_in">format</span>(stress_right))</span><br><span class="line"></span><br><span class="line">    threshold_lattice = <span class="number">1e-10</span></span><br><span class="line">    threshold_pressure = <span class="number">1e-5</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="built_in">abs</span>(a_left - a_right) &gt; threshold_lattice <span class="keyword">and</span> <span class="built_in">abs</span>(stress_left - stress_right) &gt; threshold_pressure:</span><br><span class="line">        a_middle = (a_left + a_right) / <span class="number">2</span></span><br><span class="line">        change_lattice_constant(a_middle, in_path)</span><br><span class="line">        run_espresso(in_path, out_path)</span><br><span class="line">        stress_middle = read_stress(out_path)</span><br><span class="line">        <span class="keyword">if</span> stress_left * stress_right &gt; <span class="number">0</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Error: stress_left * stress_right &gt; 0&#x27;</span>)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> stress_middle * stress_left &lt; <span class="number">0</span>:</span><br><span class="line">            a_right = a_middle</span><br><span class="line">            stress_right = stress_middle</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            a_left = a_middle</span><br><span class="line">            stress_left = stress_middle</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;a_left = &#123;0&#125; Bohr, a_right = &#123;1&#125; Bohr, stress_middle = &#123;2&#125; GPa&#x27;</span>.<span class="built_in">format</span>(a_left, a_right, stress_middle))</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;a = &#123;0&#125; Bohr&#x27;</span>.<span class="built_in">format</span>(a_middle))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;stress = &#123;0&#125; GPa&#x27;</span>.<span class="built_in">format</span>(stress_middle))</span><br></pre></td></tr></table></figure>
-<p>Remember, before running the script, you have to copy the
-<code>si.pw.in</code> to <code>si.stress.in</code>, and make sure that
-the <code>ATOMIC_POSITIONS</code> block is changed back to the original
-value without any perturbation. Also, here we'd better consistent values
-of <code>ecutwfc</code>, <code>K_POINTS</code>, and
-<code>conv_thr</code> with the further calculations. Here we just take
-<code>70</code>, <code>8 8 8 1 1 1</code>, and <code>1.0d-11</code>,
-respectively.</p>
-<p>Anyway, the script will yield the result that the lattice constant is
-<code>10.20753662109375 Bohr</code>, and we just take it as the new
-lattice constant.</p>
-<h1 id="construct-supercell-and-displace-patterns">Construct supercell
-and displace patterns</h1>
-<h2 id="generate-supercell-using-phonopy">Generate supercell using
-<code>phonopy</code></h2>
-<p>It is already quite boring to write the baseline input file for a
-cell of 8 atoms, and it would be impoosible to imagine that we have to
-write the input file for a cell of 64 atoms (<span
-class="math inline">\(2^3\times 8\)</span>), or even 216 atoms (<span
-class="math inline">\(3^3\times 8\)</span>). Fortunately,
-<code>phonopy</code> provides a very convenient way to generate
-supercells by one line of command. With it installed, simply run the
-following command:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">phonopy --qe -d --dim=<span class="string">&quot;2 2 2&quot;</span> -c si.pw.in</span><br></pre></td></tr></table></figure>
-<p>Once again, don't forget to check if you changed
-<code>si.pw.in</code> to the unperturbed settings. Also, the
-<code>--dim</code> option can be whatever you want. For silicon,
-<code>"2 2 2"</code> (Si222) is pretty good, but Si333 will be better if
-you have the resources and time to do the calculations. Copy and paste
-the contents of generated files into a new file <code>si222.pw.in</code>
-and modify <code>prefix</code>, <code>nat</code>,
-<code>CELL_PARAMETERS</code> and <code>K_POINTS</code>, like the
-following:</p>
-<figure class="highlight bash"><figcaption><span>si222.pw.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;CONTROL</span><br><span class="line">    calculation = <span class="string">&#x27;scf&#x27;</span></span><br><span class="line">    prefix = <span class="string">&#x27;si222&#x27;</span></span><br><span class="line">    pseudo_dir = <span class="string">&#x27;./pseudo/&#x27;</span></span><br><span class="line">    outdir = <span class="string">&#x27;./tmp/&#x27;</span></span><br><span class="line">    verbosity = <span class="string">&#x27;high&#x27;</span></span><br><span class="line">    tprnfor = .<span class="literal">true</span>.</span><br><span class="line">    tstress = .<span class="literal">true</span>.</span><br><span class="line">    disk_io = <span class="string">&#x27;none&#x27;</span></span><br><span class="line">/</span><br><span class="line">&amp;SYSTEM</span><br><span class="line">    ibrav = 0</span><br><span class="line">    nat = 64</span><br><span class="line">    ntyp = 1</span><br><span class="line">    ecutwfc = 70</span><br><span class="line">/</span><br><span class="line">&amp;ELECTRONS</span><br><span class="line">    conv_thr        = 1.0d-11</span><br><span class="line">    mixing_beta     = 0.7</span><br><span class="line">/</span><br><span class="line">CELL_PARAMETERS bohr</span><br><span class="line">   20.4150732421875    0.0000000000000    0.0000000000000</span><br><span class="line">    0.0000000000000   20.4150732421875    0.0000000000000</span><br><span class="line">    0.0000000000000    0.0000000000000   20.4150732421875</span><br><span class="line">ATOMIC_SPECIES</span><br><span class="line">    Si  28.0855  Si.pz-vbc.UPF</span><br><span class="line">ATOMIC_POSITIONS crystal</span><br><span class="line">    Si   0.0000000000000000  0.0000000000000000  0.0000000000000000</span><br><span class="line">    Si   0.5000000000000000  0.0000000000000000  0.0000000000000000</span><br><span class="line">    Si   0.0000000000000000  0.5000000000000000  0.0000000000000000</span><br><span class="line">    Si   0.5000000000000000  0.5000000000000000  0.0000000000000000</span><br><span class="line">    Si   0.0000000000000000  0.0000000000000000  0.5000000000000000</span><br><span class="line">    Si   0.5000000000000000  0.0000000000000000  0.5000000000000000</span><br><span class="line">    Si   0.0000000000000000  0.5000000000000000  0.5000000000000000</span><br><span class="line">    Si   0.5000000000000000  0.5000000000000000  0.5000000000000000</span><br><span class="line">    Si   0.0000000000000000  0.2500000000000000  0.2500000000000000</span><br><span class="line">    Si   0.5000000000000000  0.2500000000000000  0.2500000000000000</span><br><span class="line">    Si   0.0000000000000000  0.7500000000000000  0.2500000000000000</span><br><span class="line">    Si   0.5000000000000000  0.7500000000000000  0.2500000000000000</span><br><span class="line">    Si   0.0000000000000000  0.2500000000000000  0.7500000000000000</span><br><span class="line">    Si   0.5000000000000000  0.2500000000000000  0.7500000000000000</span><br><span class="line">    Si   0.0000000000000000  0.7500000000000000  0.7500000000000000</span><br><span class="line">    Si   0.5000000000000000  0.7500000000000000  0.7500000000000000</span><br><span class="line">    Si   0.2500000000000000  0.0000000000000000  0.2500000000000000</span><br><span class="line">    Si   0.7500000000000000  0.0000000000000000  0.2500000000000000</span><br><span class="line">    Si   0.2500000000000000  0.5000000000000000  0.2500000000000000</span><br><span class="line">    Si   0.7500000000000000  0.5000000000000000  0.2500000000000000</span><br><span class="line">    Si   0.2500000000000000  0.0000000000000000  0.7500000000000000</span><br><span class="line">    Si   0.7500000000000000  0.0000000000000000  0.7500000000000000</span><br><span class="line">    Si   0.2500000000000000  0.5000000000000000  0.7500000000000000</span><br><span class="line">    Si   0.7500000000000000  0.5000000000000000  0.7500000000000000</span><br><span class="line">    Si   0.2500000000000000  0.2500000000000000  0.0000000000000000</span><br><span class="line">    Si   0.7500000000000000  0.2500000000000000  0.0000000000000000</span><br><span class="line">    Si   0.2500000000000000  0.7500000000000000  0.0000000000000000</span><br><span class="line">    Si   0.7500000000000000  0.7500000000000000  0.0000000000000000</span><br><span class="line">    Si   0.2500000000000000  0.2500000000000000  0.5000000000000000</span><br><span class="line">    Si   0.7500000000000000  0.2500000000000000  0.5000000000000000</span><br><span class="line">    Si   0.2500000000000000  0.7500000000000000  0.5000000000000000</span><br><span class="line">    Si   0.7500000000000000  0.7500000000000000  0.5000000000000000</span><br><span class="line">    Si   0.1250000000000000  0.1250000000000000  0.1250000000000000</span><br><span class="line">    Si   0.6250000000000000  0.1250000000000000  0.1250000000000000</span><br><span class="line">    Si   0.1250000000000000  0.6250000000000000  0.1250000000000000</span><br><span class="line">    Si   0.6250000000000000  0.6250000000000000  0.1250000000000000</span><br><span class="line">    Si   0.1250000000000000  0.1250000000000000  0.6250000000000000</span><br><span class="line">    Si   0.6250000000000000  0.1250000000000000  0.6250000000000000</span><br><span class="line">    Si   0.1250000000000000  0.6250000000000000  0.6250000000000000</span><br><span class="line">    Si   0.6250000000000000  0.6250000000000000  0.6250000000000000</span><br><span class="line">    Si   0.1250000000000000  0.3750000000000000  0.3750000000000000</span><br><span class="line">    Si   0.6250000000000000  0.3750000000000000  0.3750000000000000</span><br><span class="line">    Si   0.1250000000000000  0.8750000000000000  0.3750000000000000</span><br><span class="line">    Si   0.6250000000000000  0.8750000000000000  0.3750000000000000</span><br><span class="line">    Si   0.1250000000000000  0.3750000000000000  0.8750000000000000</span><br><span class="line">    Si   0.6250000000000000  0.3750000000000000  0.8750000000000000</span><br><span class="line">    Si   0.1250000000000000  0.8750000000000000  0.8750000000000000</span><br><span class="line">    Si   0.6250000000000000  0.8750000000000000  0.8750000000000000</span><br><span class="line">    Si   0.3750000000000000  0.1250000000000000  0.3750000000000000</span><br><span class="line">    Si   0.8750000000000000  0.1250000000000000  0.3750000000000000</span><br><span class="line">    Si   0.3750000000000000  0.6250000000000000  0.3750000000000000</span><br><span class="line">    Si   0.8750000000000000  0.6250000000000000  0.3750000000000000</span><br><span class="line">    Si   0.3750000000000000  0.1250000000000000  0.8750000000000000</span><br><span class="line">    Si   0.8750000000000000  0.1250000000000000  0.8750000000000000</span><br><span class="line">    Si   0.3750000000000000  0.6250000000000000  0.8750000000000000</span><br><span class="line">    Si   0.8750000000000000  0.6250000000000000  0.8750000000000000</span><br><span class="line">    Si   0.3750000000000000  0.3750000000000000  0.1250000000000000</span><br><span class="line">    Si   0.8750000000000000  0.3750000000000000  0.1250000000000000</span><br><span class="line">    Si   0.3750000000000000  0.8750000000000000  0.1250000000000000</span><br><span class="line">    Si   0.8750000000000000  0.8750000000000000  0.1250000000000000</span><br><span class="line">    Si   0.3750000000000000  0.3750000000000000  0.6250000000000000</span><br><span class="line">    Si   0.8750000000000000  0.3750000000000000  0.6250000000000000</span><br><span class="line">    Si   0.3750000000000000  0.8750000000000000  0.6250000000000000</span><br><span class="line">    Si   0.8750000000000000  0.8750000000000000  0.6250000000000000</span><br><span class="line">K_POINTS automatic</span><br><span class="line">    4 4 4 1 1 1</span><br></pre></td></tr></table></figure>
-<h2 id="obtain-displace-patterns">Obtain displace patterns</h2>
-<p>The next step is to obtain the displace patterns for the supercell.
-Create a new file <code>si222.alm.in</code> that will be used by
-<code>alamode</code> to generate the patterns:</p>
-<figure class="highlight bash"><figcaption><span>si222.alm.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;general</span><br><span class="line">  PREFIX = si222</span><br><span class="line">  MODE = suggest</span><br><span class="line">  NAT = 64; NKD = 1</span><br><span class="line">  KD = Si</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;interaction</span><br><span class="line">  NORDER = 2  <span class="comment"># 1: harmonic, 2: cubic, ..</span></span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;cell</span><br><span class="line">  20.4150732421875 <span class="comment"># factor in Bohr unit</span></span><br><span class="line">  1.0 0.0 0.0 <span class="comment"># a1</span></span><br><span class="line">  0.0 1.0 0.0 <span class="comment"># a2</span></span><br><span class="line">  0.0 0.0 1.0 <span class="comment"># a3</span></span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;cutoff </span><br><span class="line">  Si-Si None 10.0</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;position</span><br><span class="line">  1  0.0000000000000000  0.0000000000000000  0.0000000000000000</span><br><span class="line">  1  0.5000000000000000  0.0000000000000000  0.0000000000000000</span><br><span class="line">  1  0.0000000000000000  0.5000000000000000  0.0000000000000000</span><br><span class="line">  1  0.5000000000000000  0.5000000000000000  0.0000000000000000</span><br><span class="line">  1  0.0000000000000000  0.0000000000000000  0.5000000000000000</span><br><span class="line">  1  0.5000000000000000  0.0000000000000000  0.5000000000000000</span><br><span class="line">  1  0.0000000000000000  0.5000000000000000  0.5000000000000000</span><br><span class="line">  1  0.5000000000000000  0.5000000000000000  0.5000000000000000</span><br><span class="line">  1  0.0000000000000000  0.2500000000000000  0.2500000000000000</span><br><span class="line">  1  0.5000000000000000  0.2500000000000000  0.2500000000000000</span><br><span class="line">  1  0.0000000000000000  0.7500000000000000  0.2500000000000000</span><br><span class="line">  1  0.5000000000000000  0.7500000000000000  0.2500000000000000</span><br><span class="line">  1  0.0000000000000000  0.2500000000000000  0.7500000000000000</span><br><span class="line">  1  0.5000000000000000  0.2500000000000000  0.7500000000000000</span><br><span class="line">  1  0.0000000000000000  0.7500000000000000  0.7500000000000000</span><br><span class="line">  1  0.5000000000000000  0.7500000000000000  0.7500000000000000</span><br><span class="line">  1  0.2500000000000000  0.0000000000000000  0.2500000000000000</span><br><span class="line">  1  0.7500000000000000  0.0000000000000000  0.2500000000000000</span><br><span class="line">  1  0.2500000000000000  0.5000000000000000  0.2500000000000000</span><br><span class="line">  1  0.7500000000000000  0.5000000000000000  0.2500000000000000</span><br><span class="line">  1  0.2500000000000000  0.0000000000000000  0.7500000000000000</span><br><span class="line">  1  0.7500000000000000  0.0000000000000000  0.7500000000000000</span><br><span class="line">  1  0.2500000000000000  0.5000000000000000  0.7500000000000000</span><br><span class="line">  1  0.7500000000000000  0.5000000000000000  0.7500000000000000</span><br><span class="line">  1  0.2500000000000000  0.2500000000000000  0.0000000000000000</span><br><span class="line">  1  0.7500000000000000  0.2500000000000000  0.0000000000000000</span><br><span class="line">  1  0.2500000000000000  0.7500000000000000  0.0000000000000000</span><br><span class="line">  1  0.7500000000000000  0.7500000000000000  0.0000000000000000</span><br><span class="line">  1  0.2500000000000000  0.2500000000000000  0.5000000000000000</span><br><span class="line">  1  0.7500000000000000  0.2500000000000000  0.5000000000000000</span><br><span class="line">  1  0.2500000000000000  0.7500000000000000  0.5000000000000000</span><br><span class="line">  1  0.7500000000000000  0.7500000000000000  0.5000000000000000</span><br><span class="line">  1  0.1250000000000000  0.1250000000000000  0.1250000000000000</span><br><span class="line">  1  0.6250000000000000  0.1250000000000000  0.1250000000000000</span><br><span class="line">  1  0.1250000000000000  0.6250000000000000  0.1250000000000000</span><br><span class="line">  1  0.6250000000000000  0.6250000000000000  0.1250000000000000</span><br><span class="line">  1  0.1250000000000000  0.1250000000000000  0.6250000000000000</span><br><span class="line">  1  0.6250000000000000  0.1250000000000000  0.6250000000000000</span><br><span class="line">  1  0.1250000000000000  0.6250000000000000  0.6250000000000000</span><br><span class="line">  1  0.6250000000000000  0.6250000000000000  0.6250000000000000</span><br><span class="line">  1  0.1250000000000000  0.3750000000000000  0.3750000000000000</span><br><span class="line">  1  0.6250000000000000  0.3750000000000000  0.3750000000000000</span><br><span class="line">  1  0.1250000000000000  0.8750000000000000  0.3750000000000000</span><br><span class="line">  1  0.6250000000000000  0.8750000000000000  0.3750000000000000</span><br><span class="line">  1  0.1250000000000000  0.3750000000000000  0.8750000000000000</span><br><span class="line">  1  0.6250000000000000  0.3750000000000000  0.8750000000000000</span><br><span class="line">  1  0.1250000000000000  0.8750000000000000  0.8750000000000000</span><br><span class="line">  1  0.6250000000000000  0.8750000000000000  0.8750000000000000</span><br><span class="line">  1  0.3750000000000000  0.1250000000000000  0.3750000000000000</span><br><span class="line">  1  0.8750000000000000  0.1250000000000000  0.3750000000000000</span><br><span class="line">  1  0.3750000000000000  0.6250000000000000  0.3750000000000000</span><br><span class="line">  1  0.8750000000000000  0.6250000000000000  0.3750000000000000</span><br><span class="line">  1  0.3750000000000000  0.1250000000000000  0.8750000000000000</span><br><span class="line">  1  0.8750000000000000  0.1250000000000000  0.8750000000000000</span><br><span class="line">  1  0.3750000000000000  0.6250000000000000  0.8750000000000000</span><br><span class="line">  1  0.8750000000000000  0.6250000000000000  0.8750000000000000</span><br><span class="line">  1  0.3750000000000000  0.3750000000000000  0.1250000000000000</span><br><span class="line">  1  0.8750000000000000  0.3750000000000000  0.1250000000000000</span><br><span class="line">  1  0.3750000000000000  0.8750000000000000  0.1250000000000000</span><br><span class="line">  1  0.8750000000000000  0.8750000000000000  0.1250000000000000</span><br><span class="line">  1  0.3750000000000000  0.3750000000000000  0.6250000000000000</span><br><span class="line">  1  0.8750000000000000  0.3750000000000000  0.6250000000000000</span><br><span class="line">  1  0.3750000000000000  0.8750000000000000  0.6250000000000000</span><br><span class="line">  1  0.8750000000000000  0.8750000000000000  0.6250000000000000</span><br></pre></td></tr></table></figure>
-<p>Here, the mode <code>suggest</code> means that we ask
-<code>alamode</code> to generate patterns. And we set the cutoff
-parameters empirically. After this, execute the following command:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">alm si222.alm.in &gt; si222.alm.log</span><br></pre></td></tr></table></figure>
-<p>The harmonic and anharmonic patterns will be saved as files
-<code>si222.pattern_HARMONIC</code> and
-<code>si222.pattern_ANHARM3</code>, respectively. With the anharmonic
-patterns (16 patterns inside the file), we perturb again the input file
-of Quantum Espresso, but this time automatically by using the
-<code>displace.py</code> script provided by <code>alamode</code> in its
-<code>tools</code> directory.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python displace.py --QE=si222.pw.in --mag=0.01 -pf si222.pattern_ANHARM3</span><br></pre></td></tr></table></figure>
-<p>The <code>--mag</code> option specifies the magnitude, and the
-<code>-pf</code> option specifies the pattern file. For Si222 (and also
-Si333), 16 new input files named from <code>disp01.pw.in</code> to
-<code>disp16.pw.in</code> will be generated.</p>
-<h1 id="calculate-forces-using-pw.x">Calculate forces using
-<code>pw.x</code></h1>
-<p>Just perform the calculations of all the input files generated by
-<code>displace.py</code>! To be a bit lazy, I submit all the jobs using
-a bash script that run through all the input files and submit them to
-the queue system of the cluster in my university. It is something like
-this:</p>
-<figure class="highlight bash"><figcaption><span>_si.disp.submit.sh</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> ((i=<span class="number">1</span>;i&lt;=<span class="number">16</span>;i++))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    num=`<span class="built_in">echo</span> <span class="variable">$i</span> | awk <span class="string">&#x27;&#123;printf(&quot;%02d&quot;,$1)&#125;&#x27;</span>`</span><br><span class="line">    <span class="built_in">cp</span> _si.disp.sh _si.disp<span class="variable">$&#123;num&#125;</span>.sh</span><br><span class="line">    <span class="comment"># match patterns like &quot;input=disp.pw*.in&quot;, &quot;output=disp.pw*.out&quot;, change to &quot;input=disp.pw.01.in&quot;, &quot;output=disp.pw.01.out&quot;</span></span><br><span class="line">    sed -i <span class="string">&quot;s/input=disp.pw.in/input=disp<span class="variable">$&#123;num&#125;</span>.pw.in/g&quot;</span> _si.disp<span class="variable">$&#123;num&#125;</span>.sh</span><br><span class="line">    sed -i <span class="string">&quot;s/output=disp.pw.out/output=disp<span class="variable">$&#123;num&#125;</span>.pw.out/g&quot;</span> _si.disp<span class="variable">$&#123;num&#125;</span>.sh</span><br><span class="line">    qsub _si.disp<span class="variable">$&#123;num&#125;</span>.sh</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-<p>which manipulates a submission script <code>_si.disp.sh</code>:</p>
-<div class="note danger"><p>The following script is just an example, and is only suitable for the
-cluster of my university. You have to modify it according to your own
-cluster. Or you can simply run the calculations on your own computer
-manually...</p>
-</div>
-<figure class="highlight bash"><figcaption><span>_si.disp.sh</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">#### submit_job.sh START ####</span></span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"><span class="comment">#$ -cwd</span></span><br><span class="line"><span class="comment"># error = Merged with joblog</span></span><br><span class="line"><span class="comment">#$ -o joblog.$JOB_ID</span></span><br><span class="line"><span class="comment">#$ -j y</span></span><br><span class="line"><span class="comment">## Edit the line below as needed:</span></span><br><span class="line"><span class="comment">#$ -l h_rt=24:00:00,h_data=3G</span></span><br><span class="line"><span class="comment">## Modify the parallel environment</span></span><br><span class="line"><span class="comment">## and the number of cores as needed:</span></span><br><span class="line"><span class="comment">#$ -pe shared 16</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># echo job info on joblog:</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Job <span class="variable">$JOB_ID</span> started on:   &quot;</span> `hostname -s`</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Job <span class="variable">$JOB_ID</span> started on:   &quot;</span> `<span class="built_in">date</span> `</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot; &quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># load the job environment:</span></span><br><span class="line">. /u/local/Modules/default/init/modules.sh</span><br><span class="line"></span><br><span class="line"><span class="comment">## Edit the line below as needed:</span></span><br><span class="line">module load intel/2020.4</span><br><span class="line">module load gcc/10.2.0</span><br><span class="line">module load espresso/6.7.0</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Current Packages:&quot;</span></span><br><span class="line"></span><br><span class="line">module list</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot; &quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Start running...&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## substitute the command to run your code</span></span><br><span class="line"><span class="comment">## in the two lines below:</span></span><br><span class="line"><span class="built_in">cd</span> /PATH/TO/THE/WORKING/DIRECTORY/</span><br><span class="line"></span><br><span class="line">input=disp.pw.in</span><br><span class="line">output=disp.pw.out</span><br><span class="line"></span><br><span class="line">mpirun -np 16 pw.x &lt; <span class="variable">$&#123;input&#125;</span> &gt; <span class="variable">$&#123;output&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># try to determine if there is &quot;JOB DONE&quot; in the output file, if not, echo a warning message</span></span><br><span class="line"><span class="keyword">if</span> grep -q <span class="string">&quot;JOB DONE&quot;</span> <span class="variable">$&#123;output&#125;</span>; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;PW finished successfully&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Job <span class="variable">$JOB_ID</span> for <span class="variable">$input</span> ended succesffully&quot;</span> &gt;&gt; __submit_job.<span class="built_in">log</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;PW may not finished successfully&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Job <span class="variable">$JOB_ID</span> for <span class="variable">$input</span> FAILED!&quot;</span> &gt;&gt; __submit_job.<span class="built_in">log</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># echo job info on joblog:</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Job <span class="variable">$JOB_ID</span> ended on:   &quot;</span> `hostname -s`</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Job <span class="variable">$JOB_ID</span> ended on:   &quot;</span> `<span class="built_in">date</span> `</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot; &quot;</span></span><br><span class="line"><span class="comment">#### submit_job.sh STOP ####</span></span><br></pre></td></tr></table></figure>
-<p>When all the calculations are finished, we extract the forces from
-the output files by using the <code>extract.py</code> script that is
-also provided by <code>alamode</code>:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python extract.py --QE=si222.pw.in ./disp*.pw.out &gt; si222.DFSET_ANHARM3</span><br></pre></td></tr></table></figure>
-<h1 id="fit-ifcs-by-using-alm">Fit IFCs by using <code>alm</code></h1>
-<p>Make a copy of the <code>alm</code> input file
-<code>si222.alm.in</code>, name it as
-<code>si222.alm.optimize.in</code>, change the following settings:</p>
-<figure class="highlight diff"><figcaption><span>si222.alm.optimize.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;general</span><br><span class="line">...</span><br><span class="line"><span class="deletion">-  MODE = suggest</span></span><br><span class="line"><span class="addition">+  MODE = optimize</span></span><br><span class="line">...</span><br><span class="line">/</span><br><span class="line"><span class="addition">+&amp;optimize</span></span><br><span class="line"><span class="addition">+  DFSET = si222.DFSET_ANHARM3</span></span><br><span class="line"><span class="addition">+/</span></span><br></pre></td></tr></table></figure>
-<p>Then perfom the fitting:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">alm si222.alm.optimize.in &gt; si222.alm.optimize.log</span><br></pre></td></tr></table></figure>
-<p>This will generate <code>si222.xml</code>, <code>si222.fcs</code>
-that are the fitted IFCs, and <code>si222.alm.optimize.log</code> that
-is the log file of the fitting process.</p>
-<h1 id="phonon-dispersion-relation-and-density-of-states">Phonon
-dispersion relation and density of states</h1>
-<p>First create a new input file for <code>anphon</code>, which is one
-of the packages of <code>alamode</code>:</p>
-<figure class="highlight bash"><figcaption><span>si222.phonon.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;general</span><br><span class="line">  PREFIX = si222</span><br><span class="line">  MODE   = phonons</span><br><span class="line">  FCSXML = si222.xml</span><br><span class="line"></span><br><span class="line">  NKD = 1; KD = Si</span><br><span class="line">  MASS = 28.0855</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;cell</span><br><span class="line">  10.20753662109375</span><br><span class="line">  0.0 0.5 0.5</span><br><span class="line">  0.5 0.0 0.5</span><br><span class="line">  0.5 0.5 0.0</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;kpoint</span><br><span class="line">  1  <span class="comment"># KPMODE = 1: line mode</span></span><br><span class="line">  G 0.0 0.0 0.0 X 0.5 0.5 0.0 51</span><br><span class="line">  X 0.5 0.5 1.0 G 0.0 0.0 0.0 51</span><br><span class="line">  G 0.0 0.0 0.0 L 0.5 0.5 0.5 51</span><br><span class="line">/</span><br></pre></td></tr></table></figure>
-<p>It is worth noting that the <code>kpoint</code> field is selected to
-be the line mode, meaning that anphon will calculate phonon dispersion
-relation along the lines that are specified.</p>
-<p>Perform the calculation by:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">anphon si222.phonon.in &gt; si222.phonon.log</span><br></pre></td></tr></table></figure>
-<p>Using another script <code>plotband.py</code> provided by
-<code>alamode</code>, the phonon band structure can be quickly
-plotted:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python plotband.py si222.bands</span><br></pre></td></tr></table></figure>
-<img src="/images/2023/ab-initio/band.png" class="" width="500" title="Phonon band structure">
-<p>As for the density of states, just change the <code>kpoint</code>
-field to:</p>
-<figure class="highlight diff"><figcaption><span>si222.phonon.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;kpoint</span><br><span class="line"><span class="deletion">-  1  # KPMODE = 1: line mode</span></span><br><span class="line"><span class="deletion">-  G 0.0 0.0 0.0 X 0.5 0.5 0.0 51</span></span><br><span class="line"><span class="deletion">-  X 0.5 0.5 1.0 G 0.0 0.0 0.0 51</span></span><br><span class="line"><span class="deletion">-  G 0.0 0.0 0.0 L 0.5 0.5 0.5 51</span></span><br><span class="line"><span class="addition">+  2</span></span><br><span class="line"><span class="addition">+  20 20 20</span></span><br><span class="line">/</span><br></pre></td></tr></table></figure>
-<p>perform the same command again, <code>anphon</code> will create
-<code>si222.dos</code> and <code>si.thermo</code> that are the density
-of states and the thermodynamic properties. To see the DoS, just use
-<code>plotdos.py</code>, with the following command:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python plotdos.py --emax 550 --nokey si222.dos</span><br></pre></td></tr></table></figure>
-<img src="/images/2023/ab-initio/dos.png" class="" width="500" title="Density of states">
-<h1 id="calculate-thermal-conductivity">Calculate thermal
-conductivity</h1>
-<p>Now it is time to calculate the thermal conductivity. We still use
-<code>anphon</code>, and let's create a config file
-<code>si222.RTA.in</code> similar to the one of phonon dispersion
-relation:</p>
-<figure class="highlight bash"><figcaption><span>si222.RTA.in</span></figcaption><table><tr><td class="code"><pre><span class="line">&amp;general</span><br><span class="line">  PREFIX = si222</span><br><span class="line">  MODE   = RTA</span><br><span class="line">  FCSXML = si222.xml</span><br><span class="line"></span><br><span class="line">  NKD = 1; KD = Si</span><br><span class="line">  MASS = 28.0855</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;cell</span><br><span class="line">  10.20753662109375</span><br><span class="line">  0.0 0.5 0.5</span><br><span class="line">  0.5 0.0 0.5</span><br><span class="line">  0.5 0.5 0.0</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">&amp;kpoint</span><br><span class="line">  2</span><br><span class="line">  20 20 20</span><br><span class="line">/</span><br></pre></td></tr></table></figure>
-<p>where <code>mode=RTA</code> means that we are going to use
-relaxation-time approximation (RTA) to calculate the thermal
-conductivity. The <code>FCSXML</code> option specifies the IFCs file
-that we just obtained. The <code>cell</code> block, as you can see,
-specifies a primitive cell of Silicon monocrystalline, and it is surely
-different than the supercell that we used above. The <code>kpoint</code>
-block specifies the number of wavevectors in each direction of the
-reciprocal space, and it can be set to quite large comparing with that
-of the supercell.</p>
-<p>Perform the calculation by:</p>
-<div class="note primary"><p>Although the official documentation of <code>alamode</code> claims
-that <code>anphon</code> does support MPI, the parallel execution was
-not working on both my computer (M1 Max Macbook Pro) and on the cluster
-of my university (Intel x86). Luckily, it is not that slow to run on a
-single core. Just be patient for a while.</p>
-</div>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">anphon si222.RTA.<span class="keyword">in</span> &gt; si222.RTA.<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
-<p>will give the thermal conductivity up to 1000 K, stored in
-<code>si222.kl</code>, and all other information is stored in
-<code>si222.result</code>. Here we plot the thermal conductivity, and
-compare it with the data in literature, shown below:</p>
-<img src="/images/2023/ab-initio/thermal_conductivity.png" class="" width="500" title="Thermal conductivity">
-<p>If we redo all the stuff above for Si333, a nearly same result will
-be obtained, and we plot the data from 250 K to 450 K, it is shown that
-the difference between the calculated data for Si222 and Si333 is within
-4.22 W/mK, and is about 2.5% of the value of Si222.</p>
-<img src="/images/2023/ab-initio/thermal_conductivity_333.png" class="" width="500" title="Thermal conductivity comparing Si222 and Si333">
-<p>It is so amazing that the calculated thermal conductivity is just in
-very good agreement with the experimental data. This is the power of
-physics, that we can absoultely calculate anything in the <em>ab
-initio</em> way, and they just do the job!</p>
-<h1 id="references">References</h1>
-<ol type="1">
-<li><a
-href="https://alamode.readthedocs.io/en/latest/index.html">alamode
-documentation</a></li>
-<li><a href="https://www.quantum-espresso.org/">Quantum
-Espresso</a></li>
-<li><a href="https://phonopy.github.io/phonopy/">phonopy
-documentation</a></li>
-<li><a
-href="https://icme.hpc.msstate.edu/mediawiki/index.php/How_to_make_Supercell_for_Quantum_ESPRESSO.html">How
-to make Supercell for Quantum ESPRESSO</a></li>
-<li><a
-href="https://journals.aps.org/pr/abstract/10.1103/PhysRev.130.1743">H.
-R. Shanks, P. D. Maycock, P. H. Sidles, and G. C. Danielson. Thermal
-Conductivity of Silicon from 300 to 1400°K. <em>Phys. Rev.</em> 130,
-1743 – Published 1 June 1963</a></li>
-</ol>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="create-a-new-post">Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="run-server">Run server</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="generate-static-files">Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a
+href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
       <categories>
-        <category>Solid State Physics</category>
-        <category>Ab Initio Calculation</category>
+        <category>Hexo</category>
       </categories>
       <tags>
-        <tag>Ab initio calculation</tag>
-        <tag>Phonon</tag>
-        <tag>Interatomic force constant</tag>
-        <tag>Dispersion relation</tag>
-        <tag>Relaxation time approximation</tag>
+        <tag>Hexo</tag>
+        <tag>Blog</tag>
+        <tag>Test</tag>
       </tags>
   </entry>
   <entry>
@@ -1803,43 +1840,6 @@ is very small, for Si, it is about 0.3 W/(m K) at 300 K.</p>
         <tag>Ab initio calculation</tag>
         <tag>Relaxation time approximation</tag>
         <tag>ALAMODE</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2023/10/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very
-first post. Check <a href="https://hexo.io/docs/">documentation</a> for
-more info. If you get any problems when using Hexo, you can find the
-answer in <a
-href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or
-you can ask me on <a
-href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-<h2 id="quick-start">Quick Start</h2>
-<h3 id="create-a-new-post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="run-server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="generate-static-files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a
-href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-        <tag>Blog</tag>
-        <tag>Test</tag>
       </tags>
   </entry>
 </search>
