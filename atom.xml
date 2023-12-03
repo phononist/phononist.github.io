@@ -182,9 +182,9 @@ finally thermal conductivity.&lt;/li&gt;
     
     <category term="Phonon" scheme="https://phononist.github.io/tags/Phonon/"/>
     
-    <category term="Interatomic force constant" scheme="https://phononist.github.io/tags/Interatomic-force-constant/"/>
-    
     <category term="Scattering" scheme="https://phononist.github.io/tags/Scattering/"/>
+    
+    <category term="Interatomic force constant" scheme="https://phononist.github.io/tags/Interatomic-force-constant/"/>
     
     <category term="Fermi&#39;s golden rule" scheme="https://phononist.github.io/tags/Fermi-s-golden-rule/"/>
     
