@@ -31,7 +31,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://phononist.github.io/images/2023/dispersion.png">
 <meta property="article:published_time" content="2023-10-12T07:05:00.000Z">
-<meta property="article:modified_time" content="2023-10-12T07:05:00.000Z">
+<meta property="article:modified_time" content="2023-12-07T18:36:54.000Z">
 <meta property="article:author" content="Phononist">
 <meta property="article:tag" content="Phonon">
 <meta property="article:tag" content="Interatomic force constant">
@@ -196,7 +196,7 @@
 <!-- <img class="block-dark-only" src="/images/activities_dark.png">
 <img class="block-light-only" src="/images/activities_light.png"> -->
 
-<img class="always-on" src="/images/activities_dark.png">
+<img class="always-on animated" src="/images/activities_dark.png">
         </div>
       </div>
     </div>
@@ -248,6 +248,13 @@
       <span class="post-meta-item-text">Posted on</span>
 
       <time title="Created: 2023-10-12 00:05:00" itemprop="dateCreated datePublished" datetime="2023-10-12T00:05:00-07:00">2023-10-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-12-07 10:36:54" itemprop="dateModified" datetime="2023-12-07T10:36:54-08:00">2023-12-07</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -315,7 +322,8 @@ class="math inline">\(\mathcal{V}_2\)</span>. Using Newton's second law,
 <span class="math display">\[
 F_{\boldsymbol{l}\boldsymbol{b}\alpha} = m_{\boldsymbol{b}}
 \ddot{u}_{\alpha}(\boldsymbol{l}\boldsymbol{b}) =-\frac{\partial
-\mathcal{V}}{\mathcal{u_{\alpha}}(\boldsymbol{l}\boldsymbol{b})}= -
+\mathcal{V}}{\partial
+\mathcal{u_{\alpha}}(\boldsymbol{l}\boldsymbol{b})}= -
 \sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}
 \Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
 u_{\beta}(\boldsymbol{l}&#39;\boldsymbol{b}&#39;),\quad \forall
@@ -330,7 +338,7 @@ class="math display">\[
 u_{\alpha} (\boldsymbol{l}\boldsymbol{b}) =
 \frac{1}{\sqrt{m_{\boldsymbol{b}}}} \sum_{\boldsymbol{q}}
 U_{\alpha}(\boldsymbol{q};\boldsymbol{b})\exp \big[ i
-\boldsymbol{q}\cdot \boldsymbol{l}-\omega t\big]
+\boldsymbol{q}\cdot \boldsymbol{l}-i\omega t\big]
 \]</span></p>
 <div class="note info"><ul>
 <li>The purpose of seaking a solution that is multiplied by <span
@@ -348,9 +356,9 @@ class="math inline">\(\boldsymbol{q}\)</span> yields, <span
 class="math display">\[
 \omega^2 \sqrt{m_{\boldsymbol{b}}}
 U_{\alpha}(\boldsymbol{q};\boldsymbol{b}) \exp
-\big[i\boldsymbol{q}\cdot\boldsymbol{l}-\omega t\big] =
--\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
-\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;-\omega
+\big[i\boldsymbol{q}\cdot\boldsymbol{l}-i\omega t\big] =
+\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+\frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;-i\omega
 t\big]
 \]</span> Cancel the exponential term on both sides. Notice that due to
 translational invariance, <span
@@ -359,13 +367,13 @@ thus, <span class="math display">\[
 \begin{aligned}
   \omega^2 \sqrt{m_{\boldsymbol{b}}}
 U_{\alpha}(\boldsymbol{q};\boldsymbol{b}) &amp;=
--\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{l}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
 \frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot(\boldsymbol{l}&#39;-\boldsymbol{l})\big]\\
   &amp;=
--\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};(\boldsymbol{l}&#39;-\boldsymbol{l})\boldsymbol{b}&#39;)
+\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};(\boldsymbol{l}&#39;-\boldsymbol{l})\boldsymbol{b}&#39;)
 \frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot(\boldsymbol{l}&#39;-\boldsymbol{l})\big]\\
   &amp;=
--\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
+\sum_{\boldsymbol{l}&#39;\boldsymbol{b}&#39;}\sum_{\beta}\Phi_{\alpha,\beta}(\boldsymbol{0}\boldsymbol{b};\boldsymbol{l}&#39;\boldsymbol{b}&#39;)
 \frac{1}{\sqrt{m_{\boldsymbol{b}&#39;}}}U_{\beta}(\boldsymbol{q};\boldsymbol{b}&#39;)\exp\big[i\boldsymbol{q}\cdot\boldsymbol{l}&#39;\big]
 \end{aligned}
 \]</span> Therefore, if we note a matrix called "dynamical matrix", as:
